@@ -13,8 +13,6 @@ import HomeScreen from "./containers/HomeScreen";
 const AppStack = createStackNavigator({
   // Tab: TabNavigator,
   Home: HomeScreen,
-  // Other: OtherScreen,
-  // Room: RoomScreen,
 });
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 

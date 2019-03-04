@@ -7,7 +7,7 @@ export default class AssetExample extends React.Component {
       <View style={styles.container}>
         <Text style={styles.paragraph}>
           Local files and assets can be imported by dragging and dropping them
-          into the editor
+          into the editor!
         </Text>
         ©{" "}
       </View>
@@ -19,17 +19,17 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 24
+    padding: 24,
   },
   paragraph: {
     margin: 24,
     marginTop: 0,
     fontSize: 14,
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
   logo: {
     height: 128,
-    width: 128
-  }
+    width: 128,
+  },
 });

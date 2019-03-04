@@ -16,7 +16,7 @@ const googleCreds = {
   androidClientID:
     "218040000398-cvv2mgdrhhber8m0tn66uc4mj37uu8jm.apps.googleusercontent.com",
   iosClientID:
-    "489426297462-t2b25so438okp7j0t7rhi6vhn36g981i.apps.googleusercontent.com"
+    "489426297462-t2b25so438okp7j0t7rhi6vhn36g981i.apps.googleusercontent.com" // cette clé n'est plus valide
 };
 
 export default class App extends React.Component {
@@ -24,7 +24,7 @@ export default class App extends React.Component {
     user: "",
     password: "",
     loginInProgress: false,
-    ignedIn: false,
+    signedIn: false,
     name: "",
     photoUrl: ""
   };
@@ -43,7 +43,7 @@ export default class App extends React.Component {
       this.setState({ loginInProgress: false });
       if (result.type === "success") {
         this.setState({
-          ignedIn: true,
+          signedIn: true,
           name: result.user.name,
           photoUrl: result.user.photoUrl
         });
@@ -91,17 +91,21 @@ export default class App extends React.Component {
       <>
         <View style={styles.container}>
           <TextInput
+            placeholder="Nom d'utilisateur"
+            placeholderTextColor="white"
             style={styles.input}
             onChangeText={user => this.setState({ user })}
             value={this.state.user}
           />
           <TextInput
+            placeholder="Mot de passe"
+            placeholderTextColor="white"
             style={styles.input}
             onChangeText={password => this.setState({ password })}
             value={this.state.password}
           />
           <TouchableOpacity onPress={this.onPress} style={styles.button}>
-            <Text>Valider</Text>
+            <Text>Se connecter</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.onGoogleSignIn}>
             {this.state.loginInProgress ? <ActivityIndicator /> : null}
@@ -116,7 +120,7 @@ export default class App extends React.Component {
                   "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
               }}
             />
-            <Text>Login in With Google</Text>
+            <Text style={{ color: "white" }}>Login in With Google</Text>
           </TouchableOpacity>
         </View>
       </>

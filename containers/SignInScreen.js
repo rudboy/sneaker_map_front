@@ -8,11 +8,10 @@ import {
   AsyncStorage,
   ActivityIndicator,
   Image,
-  View,
 } from "react-native";
 import axios from "axios"; // const axios = require('axios');
 import { Constants, Google, Expo } from "expo";
-import HomeScreen from "./container/HomeScreen";
+import HomeScreen from "./HomeScreen";
 
 const googleCreds = {
   androidClientID:

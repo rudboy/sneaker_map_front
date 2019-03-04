@@ -4,9 +4,9 @@ import {
   createAppContainer,
 } from "react-navigation";
 
-import AuthLoadingScreen from "./src/containers/AuthLoadingScreen";
-import SignInScreen from "./src/containers/SignInScreen";
-import HomeScreen from "./src/containers/HomeScreen";
+import AuthLoadingScreen from "./containers/AuthLoadingScreen";
+import SignInScreen from "./containers/SignInScreen";
+import HomeScreen from "./containers/HomeScreen";
 
 // import TabNavigator from "./src/containers/TabNavigator";
 

@@ -13,7 +13,7 @@ class HomeScreen extends React.Component {
         <Text>Bienvenue {name}</Text>
         <Text>Photo :</Text>
         <Image
-          source={{ uri: userInfo.picture.data.url }}
+          // source={{ uri: userInfo.picture.data.url }}
           style={{ width: 45, height: 45, borderRadius: 23 }}
         />
       </View>

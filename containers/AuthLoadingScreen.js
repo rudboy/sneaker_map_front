@@ -3,8 +3,8 @@ import { ActivityIndicator, AsyncStorage, StatusBar, View } from "react-native";
 
 class AuthLoadingScreen extends React.Component {
   componentDidMount = async () => {
-    const userToken = await AsyncStorage.getItem("userToken");
-    this.props.navigation.navigate(userToken ? "App" : "Auth");
+    const userInfo = await AsyncStorage.getItem("userInfo");
+    this.props.navigation.navigate(userInfo ? "App" : "Auth");
   };
 
   render() {

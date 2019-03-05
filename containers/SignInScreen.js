@@ -21,6 +21,11 @@ const googleCreds = {
 };
 
 export default class App extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerBackTitle: "Connexion",
+    };
+  };
   state = {
     user: "",
     password: "",

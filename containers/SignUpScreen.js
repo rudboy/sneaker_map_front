@@ -53,7 +53,6 @@ class SignUpScreen extends React.Component {
     this.setState({
       [field]: text,
     });
-    console.log(text);
   };
 
   handleSubmit = async event => {
@@ -67,21 +66,21 @@ class SignUpScreen extends React.Component {
           email: this.state.email,
           username: this.state.username,
           password: this.state.password,
-          repassword: this.state.repassword,
           phone: this.state.phone,
         });
-        await AsyncStorage.setItem("userInfo", response.data);
+        const value = JSON.stringify(response.data);
+        await AsyncStorage.setItem("userInfo", value);
         this.props.navigation.navigate("Home");
-        // console.log(response.data);
+      } else {
+        alert("Verifiez votre mot de passe");
       }
     } catch (error) {
-      alert("L'un des champs n'est pas bien renseigné !");
+      console.log("axios OK", error);
+      alert(error);
     }
   };
 
-  onGoogleSignIn = async () => {
-    console.log("Trying google sign in");
-
+  onGoogleSignUp = async () => {
     this.setState({ loginInProgress: true });
     try {
       const result = await Google.logInAsync({
@@ -89,19 +88,41 @@ class SignUpScreen extends React.Component {
         iosClientId: googleCreds.iosClientID,
         scopes: ["profile", "email"],
       });
-      console.log({ result });
+      // console.log("result user : ", result.user);
+      // console.log("result idToken : ", result.idToken);
+      // console.log("result : ", result);
       this.setState({ loginInProgress: false });
+
       if (result.type === "success") {
         this.setState({
-          ignedIn: true,
-          name: result.user.name,
+          signedIn: true,
           photoUrl: result.user.photoUrl,
         });
-        const value = JSON.stringify(result.user);
-        alert("Login OK");
-        await AsyncStorage.setItem("userInfo", value);
 
-        return result.accessToken;
+        const user = JSON.stringify(result.user);
+
+        // Si l'email est dans la BDD : connexion et redirection vers le home screen
+        const response = await axios.post(
+          "http://localhost:5500/google_connection",
+          {
+            familyName: result.user.familyName,
+            givenName: result.user.givenName,
+            username: result.user.name,
+            email: result.user.email,
+            password: result.idToken,
+          }
+        );
+
+        if (response.data.token) {
+          const value = JSON.stringify(response.data);
+          alert("Login OK");
+          await AsyncStorage.setItem("userInfo", value);
+          this.props.navigation.navigate("Home", {
+            name: result.user.familyName,
+          }); // redirige vers l'écran d'accueil
+        }
+
+        await AsyncStorage.setItem("userInfo", user);
       } else {
         await AsyncStorage.setItem("userInfo", "");
 
@@ -207,7 +228,7 @@ class SignUpScreen extends React.Component {
           </View>
 
           <TouchableOpacity
-            onPress={this.onGoogleSignIn}
+            onPress={this.onGoogleSignUp}
             style={styles.googleContainer}
           >
             {this.state.loginInProgress ? <ActivityIndicator /> : null}

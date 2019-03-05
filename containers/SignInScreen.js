@@ -12,7 +12,7 @@ import {
   Platform
 } from "react-native";
 import axios from "axios"; // const axios = require('axios');
-import { Constants, Google, Location, Permissions } from "expo";
+import { Constants, Google, Facebook, Location, Permissions } from "expo";
 
 const googleCreds = {
   androidClientID:
@@ -23,6 +23,7 @@ const googleCreds = {
 
 export default class LogIn extends React.Component {
   state = {
+    userInfo: null,
     name: "",
     email: "",
     password: "",
@@ -35,7 +36,8 @@ export default class LogIn extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      header: null
+      header: null,
+      headerBackTitle: "connexion"
     };
   };
 
@@ -111,6 +113,53 @@ export default class LogIn extends React.Component {
     }
   };
 
+  // Se connecter avec Facebook
+  onFacebookSignIn = async () => {
+    try {
+      const {
+        type,
+        token,
+        permissions
+      } = await Facebook.logInWithReadPermissionsAsync("639212763201143", {
+        permissions: ["public_profile", "email"]
+      });
+      if (type === "success") {
+        this.setState({
+          signedIn: true
+        });
+        const response = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}&fields=id,name,first_name,last_name,picture,email`
+        );
+        const userInfo = await response.json();
+        this.setState({ userInfo });
+        console.log("userInfo : ", this.state.userInfo);
+
+        // Vérifier l'existence de l'utilisateur dans la BDD :
+        const serverResponse = await axios.post(
+          "http://localhost:5500/facebook_connection",
+          {
+            familyName: this.state.last_name,
+            givenName: this.state.first_name,
+            username: this.state.name,
+            email: this.state.email,
+            password: token
+          }
+        );
+
+        // Message de confirmation de connection :
+        alert("Logged in!");
+
+        this.props.navigation.navigate("Home", {
+          userInfo: this.state.userInfo
+        });
+      } else {
+        // type === 'cancel'
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+  };
+
   onPress = async () => {
     try {
       //console.log(this.state.user, this.state.password);
@@ -125,7 +174,9 @@ export default class LogIn extends React.Component {
         await AsyncStorage.setItem("userInfo", value);
 
         // redirige vers la page d'accueil :
-        this.props.navigation.navigate("Home");
+        this.props.navigation.navigate("Home", {
+          name: response.data.account.username
+        });
       } else {
         await AsyncStorage.setItem("userInfo", "");
         alert(response.data); // ici `response.data`renvoie le message `erreur dans l'adresse email`
@@ -214,6 +265,31 @@ export default class LogIn extends React.Component {
             />
             <Text style={{ color: "white" }}>
               Se connecter ou s'inscrire avec Google
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              width: "100%",
+              marginTop: 20,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-around"
+            }}
+            onPress={this.onFacebookSignIn}
+          >
+            {this.state.loginInProgress ? <ActivityIndicator /> : null}
+            <Image
+              style={{
+                width: 35,
+                height: 35
+              }}
+              source={{
+                uri:
+                  "https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png"
+              }}
+            />
+            <Text style={{ color: "white" }}>
+              Se connecter ou s'inscrire avec Facebook
             </Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>

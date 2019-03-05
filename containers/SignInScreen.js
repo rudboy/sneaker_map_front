@@ -21,6 +21,11 @@ const googleCreds = {
 };
 
 export default class App extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerBackTitle: "Connexion",
+    };
+  };
   state = {
     user: "",
     password: "",
@@ -119,6 +124,11 @@ export default class App extends React.Component {
               }}
             />
             <Text>Login in With Google</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("SignUp")}
+          >
+            <Text style={{ color: "#fff" }}>S'inscrire</Text>
           </TouchableOpacity>
         </View>
       </>

@@ -8,10 +8,11 @@ import {
   AsyncStorage,
   ActivityIndicator,
   KeyboardAvoidingView,
-  Image
+  Image,
+  Platform
 } from "react-native";
 import axios from "axios"; // const axios = require('axios');
-import { Constants, Google, Expo } from "expo";
+import { Constants, Google, Location, Permissions } from "expo";
 
 const googleCreds = {
   androidClientID:
@@ -27,7 +28,9 @@ export default class LogIn extends React.Component {
     password: "",
     loginInProgress: false,
     signedIn: false,
-    photoUrl: ""
+    photoUrl: "",
+    location: null,
+    errorMessage: null
   };
 
   static navigationOptions = ({ navigation }) => {
@@ -35,6 +38,24 @@ export default class LogIn extends React.Component {
       header: null
     };
   };
+
+  // Geolocalisation :
+  ////////////////////
+  componentDidMount() {
+    if (Platform.OS === "android" && !Constants.isDevice) {
+      this.setState({
+        errorMessage:
+          "La géolocalisation ne fonctionne pas sur le simulateur Android, tu peux tester sur ton device !"
+      });
+    } else {
+      this.getLocationAsync();
+    }
+  }
+
+  getLocationAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+  };
+  ////////////////////
 
   onGoogleSignIn = async () => {
     this.setState({ loginInProgress: true });
@@ -52,16 +73,12 @@ export default class LogIn extends React.Component {
       if (result.type === "success") {
         this.setState({
           signedIn: true,
-          email: result.user.email,
           photoUrl: result.user.photoUrl
         });
 
         const user = JSON.stringify(result.user);
 
-        console.log("password ", result.idToken);
         // Si l'email est dans la BDD : connexion et redirection vers le home screen
-
-        // Quand je teste; le serveur me renvoie une erreur 400
         const response = await axios.post(
           "http://localhost:5500/google_connection",
           {
@@ -72,25 +89,17 @@ export default class LogIn extends React.Component {
             password: result.idToken
           }
         );
-        console.log("response.data.token : ", response.data); // ce console log n'apparaît pas
 
         if (response.data.token) {
           const value = JSON.stringify(response.data);
           alert("Login OK");
           await AsyncStorage.setItem("userInfo", value);
-          this.props.navigation.navigate("Home"); // redirige vers l'écran d'accueil
-        }
-        // Sinon : création de compte via l'api
-        else {
-          //
+          this.props.navigation.navigate("Home", {
+            name: result.user.familyName
+          }); // redirige vers l'écran d'accueil
         }
 
-        // console.log("user ", user);
-        // alert("Login OK");
         await AsyncStorage.setItem("userInfo", user);
-        // redirige vers la page d'accueil :
-        // this.props.navigation.navigate("Home", { googleUserInfo: result.user });
-        // return result.accessToken;
       } else {
         await AsyncStorage.setItem("userInfo", "");
 
@@ -137,6 +146,9 @@ export default class LogIn extends React.Component {
           keyboardVerticalOffset={100}
           style={styles.container}
         >
+          <Text style={{ color: "white", fontSize: 44, marginVertical: 50 }}>
+            LOGO
+          </Text>
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}

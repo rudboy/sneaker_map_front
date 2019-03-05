@@ -13,6 +13,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Google } from "expo";
+import axios from "axios";
 
 const googleCreds = {
   androidClientID:
@@ -24,7 +25,7 @@ const googleCreds = {
 class SignUpScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: "Inscription   ",
+      title: "Inscription",
       headerStyle: {
         backgroundColor: "#111111",
       },
@@ -34,11 +35,48 @@ class SignUpScreen extends React.Component {
 
   state = {
     user: "",
+    nom: "",
+    prenom: "",
+    email: "",
+    username: "",
     password: "",
+    repassword: "",
+    phone: "",
+
     loginInProgress: false,
     ignedIn: false,
     name: "",
     photoUrl: "",
+  };
+
+  handleChange = (text, field) => {
+    this.setState({
+      [field]: text,
+    });
+    console.log(text);
+  };
+
+  handleSubmit = async event => {
+    event.preventDefault();
+    try {
+      if (this.state.password === this.state.repassword) {
+        const response = await axios.post("http://localhost:5500/sign_up", {
+          user: this.state.user,
+          nom: this.state.nom,
+          prenom: this.state.prenom,
+          email: this.state.email,
+          username: this.state.username,
+          password: this.state.password,
+          repassword: this.state.repassword,
+          phone: this.state.phone,
+        });
+        await AsyncStorage.setItem("userInfo", response.data);
+        this.props.navigation.navigate("Home");
+        // console.log(response.data);
+      }
+    } catch (error) {
+      alert("L'un des champs n'est pas bien renseigné !");
+    }
   };
 
   onGoogleSignIn = async () => {
@@ -85,47 +123,75 @@ class SignUpScreen extends React.Component {
           behavior="padding"
         >
           <TextInput
+            autoComplete="off"
             autoCapitalize="none"
             style={styles.textInputSignUp}
             placeholder="Nom"
             placeholderTextColor="#fff"
+            onChangeText={text => {
+              this.handleChange(text, "nom");
+            }}
           />
           <TextInput
+            autoComplete="off"
             autoCapitalize="none"
             style={styles.textInputSignUp}
             placeholder="Prénom"
             placeholderTextColor="#fff"
+            onChangeText={text => {
+              this.handleChange(text, "prenom");
+            }}
           />
           <TextInput
+            autoComplete="off"
             autoCapitalize="none"
             style={styles.textInputSignUp}
             placeholder="Username *"
             placeholderTextColor="#fff"
+            onChangeText={text => {
+              this.handleChange(text, "username");
+            }}
           />
           <TextInput
+            autoComplete="off"
             autoCapitalize="none"
             keyboardType="email-address"
             style={styles.textInputSignUp}
             placeholder="Email *"
             placeholderTextColor="#fff"
+            onChangeText={text => {
+              this.handleChange(text, "email");
+            }}
           />
           <TextInput
+            autoComplete="off"
             autoCapitalize="none"
             style={styles.textInputSignUp}
             placeholder="Téléphone"
             placeholderTextColor="#fff"
+            onChangeText={text => {
+              this.handleChange(text, "phone");
+            }}
           />
           <TextInput
+            autoComplete="off"
             autoCapitalize="none"
             style={styles.textInputSignUp}
             placeholder="Password *"
             placeholderTextColor="#fff"
+            onChangeText={text => {
+              this.handleChange(text, "password");
+            }}
           />
           <TextInput
+            autoComplete="off"
             autoCapitalize="none"
             style={styles.textInputSignUp}
             placeholder="Confirm password *"
             placeholderTextColor="#fff"
+            onChangeText={text => {
+              this.handleChange(text, "repassword");
+            }}
           />
           <TouchableOpacity
             style={styles.buttonSignUp}

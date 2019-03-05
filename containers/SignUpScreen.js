@@ -10,7 +10,7 @@ import {
   Image,
   AsyncStorage,
   KeyboardAvoidingView,
-  ScrollView,
+  ScrollView
 } from "react-native";
 import { Google } from "expo";
 import axios from "axios";
@@ -19,7 +19,7 @@ const googleCreds = {
   androidClientID:
     "218040000398-cvv2mgdrhhber8m0tn66uc4mj37uu8jm.apps.googleusercontent.com",
   iosClientID:
-    "489426297462-t2b25so438okp7j0t7rhi6vhn36g981i.apps.googleusercontent.com",
+    "489426297462-t2b25so438okp7j0t7rhi6vhn36g981i.apps.googleusercontent.com"
 };
 
 class SignUpScreen extends React.Component {
@@ -27,9 +27,9 @@ class SignUpScreen extends React.Component {
     return {
       title: "Inscription",
       headerStyle: {
-        backgroundColor: "#111111",
+        backgroundColor: "#111111"
       },
-      headerTintColor: "#fff",
+      headerTintColor: "#fff"
     };
   };
 
@@ -46,12 +46,12 @@ class SignUpScreen extends React.Component {
     loginInProgress: false,
     ignedIn: false,
     name: "",
-    photoUrl: "",
+    photoUrl: ""
   };
 
   handleChange = (text, field) => {
     this.setState({
-      [field]: text,
+      [field]: text
     });
   };
 
@@ -66,7 +66,7 @@ class SignUpScreen extends React.Component {
           email: this.state.email,
           username: this.state.username,
           password: this.state.password,
-          phone: this.state.phone,
+          phone: this.state.phone
         });
         const value = JSON.stringify(response.data);
         await AsyncStorage.setItem("userInfo", value);
@@ -86,7 +86,7 @@ class SignUpScreen extends React.Component {
       const result = await Google.logInAsync({
         androidClientId: googleCreds.androidClientID,
         iosClientId: googleCreds.iosClientID,
-        scopes: ["profile", "email"],
+        scopes: ["profile", "email"]
       });
       // console.log("result user : ", result.user);
       // console.log("result idToken : ", result.idToken);
@@ -96,7 +96,7 @@ class SignUpScreen extends React.Component {
       if (result.type === "success") {
         this.setState({
           signedIn: true,
-          photoUrl: result.user.photoUrl,
+          photoUrl: result.user.photoUrl
         });
 
         const user = JSON.stringify(result.user);
@@ -109,7 +109,7 @@ class SignUpScreen extends React.Component {
             givenName: result.user.givenName,
             username: result.user.name,
             email: result.user.email,
-            password: result.idToken,
+            password: result.idToken
           }
         );
 
@@ -118,7 +118,7 @@ class SignUpScreen extends React.Component {
           alert("Login OK");
           await AsyncStorage.setItem("userInfo", value);
           this.props.navigation.navigate("Home", {
-            name: result.user.familyName,
+            name: result.user.familyName
           }); // redirige vers l'écran d'accueil
         }
 
@@ -235,11 +235,11 @@ class SignUpScreen extends React.Component {
             <Image
               style={{
                 width: 50,
-                height: 50,
+                height: 50
               }}
               source={{
                 uri:
-                  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png",
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
               }}
             />
             <Text style={styles.googleConnectText}>S'inscrire avec Google</Text>
@@ -254,10 +254,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#111",
     flex: 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: 15
   },
   bottomContainer: {
-    flex: 1,
+    flex: 1
     // alignItems: "center"
   },
   textInputSignUp: {
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     paddingVertical: 10,
     paddingHorizontal: 10,
-    color: "#fff",
+    color: "#fff"
   },
   buttonSignUp: {
     marginTop: 20,
@@ -277,35 +277,35 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     marginTop: 40,
-    marginBottom: 20,
+    marginBottom: 20
   },
   buttonTextSignUp: {
-    textAlign: "center",
+    textAlign: "center"
   },
   or: {
     marginTop: 30,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 15,
+    marginBottom: 15
   },
   separator: {
     width: "42%",
     height: 1,
     backgroundColor: "#fff",
-    marginHorizontal: 15,
+    marginHorizontal: 15
   },
   googleContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 10,
-    marginTop: 10,
+    marginTop: 10
   },
   googleConnectText: {
     color: "#fff",
-    marginLeft: 20,
-  },
+    marginLeft: 20
+  }
 });
 
 export default SignUpScreen;

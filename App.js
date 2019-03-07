@@ -8,11 +8,12 @@ import AuthLoadingScreen from "./containers/AuthLoadingScreen";
 import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import HomeScreen from "./containers/HomeScreen";
+import TabNavigator from "./containers/TabNavigator";
 
 // import TabNavigator from "./src/containers/TabNavigator";
 
 const AppStack = createStackNavigator({
-  // Tab: TabNavigator,
+  Tab: TabNavigator,
   Home: HomeScreen,
   SignIn: SignInScreen,
   SignUp: SignUpScreen,

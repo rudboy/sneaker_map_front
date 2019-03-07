@@ -6,9 +6,13 @@ import {
   Text,
   TouchableOpacity,
   ImageEditor,
+<<<<<<< HEAD
   AsyncStorage,
   ActionSheetIOS,
   Image
+=======
+  AsyncStorage
+>>>>>>> pulled master branch from github
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Ionicons } from "@expo/vector-icons";
@@ -36,6 +40,7 @@ class GeoLocalisation extends React.Component {
     }
   };
 
+<<<<<<< HEAD
   pickgeoloc = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
@@ -49,6 +54,35 @@ class GeoLocalisation extends React.Component {
         }
       }
     );
+=======
+  getImage = async () => {
+    // Construct a crop data object.
+    cropData = {
+      offset: { x: 0, y: 0 },
+      size: { width: 20, height: 20 }
+      //  displaySize:{width:20, height:20}, THESE 2 ARE OPTIONAL.
+      //  resizeMode:'contain',
+    };
+    // Crop the image.
+    newurl = await AsyncStorage.getItem("imageForMarker");
+    //console.log(newurl);
+
+    try {
+      await ImageEditor.cropImage(
+        "https://stockx.imgix.net/Air-Jordan-1-Retro-High-OG-Defiant-Couture-Product.jpg?fit=fill&bg=FFFFFF&w=140&h=100&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1551112186",
+        cropData,
+        successURI => {
+          this.setState({ newmarker: successURI });
+          //console.log(successURI);
+        },
+        error => {
+          console.log("cropImage,", error);
+        }
+      );
+    } catch (error) {
+      console.log("Error caught in this.cropImage:", error);
+    }
+>>>>>>> pulled master branch from github
   };
 
   mapview = () => {
@@ -76,9 +110,14 @@ class GeoLocalisation extends React.Component {
               }}
               title={"Vous etes ici"}
               description={"?????"}
+<<<<<<< HEAD
             >
               {/* <Image source={{uri:""}}></Image> */}
             </MapView.Marker>
+=======
+              //image={require(this.state.newmarker)}
+            />
+>>>>>>> pulled master branch from github
           </MapView>
         </>
       );
@@ -103,7 +142,11 @@ class GeoLocalisation extends React.Component {
             // alignItems: "center",
             height: 40
           }}
+<<<<<<< HEAD
           onPress={this.pickgeoloc}
+=======
+          onPress={this.pickImage}
+>>>>>>> pulled master branch from github
         >
           <Text
             style={{
@@ -115,13 +158,20 @@ class GeoLocalisation extends React.Component {
             AJOUTER UNE LOCALISATION
           </Text>
         </TouchableOpacity>
+<<<<<<< HEAD
 
+=======
+>>>>>>> pulled master branch from github
         <View>{this.mapview()}</View>
       </View>
     );
   }
   componentDidMount() {
     this.getLocationAsync();
+<<<<<<< HEAD
+=======
+    this.getImage();
+>>>>>>> pulled master branch from github
   }
 }
 

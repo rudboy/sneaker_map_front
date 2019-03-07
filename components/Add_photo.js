@@ -5,8 +5,12 @@ import {
   TextInput,
   Text,
   Image,
+<<<<<<< HEAD
   TouchableOpacity,
   ActionSheetIOS
+=======
+  TouchableOpacity
+>>>>>>> pulled master branch from github
 } from "react-native";
 import { ImagePicker, Permissions } from "expo";
 import { Entypo } from "@expo/vector-icons";
@@ -28,6 +32,7 @@ class Add_photo extends React.Component {
       });
     }
   };
+<<<<<<< HEAD
   getCameraAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     if (status !== "granted") {
@@ -39,10 +44,20 @@ class Add_photo extends React.Component {
 
   pickImageLibrary = async () => {
     if (this.props.tab_photo.length === 3) {
+=======
+
+  pickImage = async () => {
+    if (
+      this.state.image !== null &&
+      this.state.image2 !== null &&
+      this.state.image3 !== null
+    ) {
+>>>>>>> pulled master branch from github
       alert("Vous ne pouvez pas ajouter plus de 3 images");
     } else {
       let result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
+<<<<<<< HEAD
         base64: true,
         aspect: [4, 3]
       });
@@ -69,10 +84,23 @@ class Add_photo extends React.Component {
       if (!result.cancelled) {
         temp.push("data:image/jpeg;base64," + result.base64);
         this.props.get_photo(temp);
+=======
+        aspect: [4, 3]
+      });
+
+      // console.log(result);
+      if (this.state.image === null && !result.cancelled) {
+        this.setState({ image: result.uri });
+      } else if (this.state.image2 === null && !result.cancelled) {
+        this.setState({ image2: result.uri });
+      } else if (this.state.image3 === null && !result.cancelled) {
+        this.setState({ image3: result.uri });
+>>>>>>> pulled master branch from github
       }
     }
   };
 
+<<<<<<< HEAD
   cameraOrRoll = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
@@ -94,6 +122,10 @@ class Add_photo extends React.Component {
 
   cross = () => {
     if (this.props.tab_photo.length > 0) {
+=======
+  cross = () => {
+    if (this.state.image !== null) {
+>>>>>>> pulled master branch from github
       return (
         <TouchableOpacity
           style={{ marginLeft: 60, marginTop: -35 }}
@@ -107,7 +139,11 @@ class Add_photo extends React.Component {
     }
   };
   cross2 = () => {
+<<<<<<< HEAD
     if (this.props.tab_photo.length > 1) {
+=======
+    if (this.state.image2 !== null) {
+>>>>>>> pulled master branch from github
       return (
         <TouchableOpacity
           style={{ marginLeft: 60, marginTop: -35 }}
@@ -121,7 +157,11 @@ class Add_photo extends React.Component {
     }
   };
   cross3 = () => {
+<<<<<<< HEAD
     if (this.props.tab_photo.length > 2) {
+=======
+    if (this.state.image3 !== null) {
+>>>>>>> pulled master branch from github
       return (
         <TouchableOpacity
           style={{ marginLeft: 60, marginTop: -35 }}
@@ -136,6 +176,7 @@ class Add_photo extends React.Component {
   };
 
   onPress = toto => {
+<<<<<<< HEAD
     let temptab = [...this.props.tab_photo];
     if (toto === 1) {
       temptab.splice(0, 1);
@@ -147,6 +188,15 @@ class Add_photo extends React.Component {
       temptab.splice(2, 1);
       this.props.get_photo(temptab);
     }
+=======
+    toto === 1
+      ? this.setState({ image: null })
+      : toto === 2
+      ? this.setState({ image2: null })
+      : toto === 3
+      ? this.setState({ image3: null })
+      : "";
+>>>>>>> pulled master branch from github
   };
 
   render() {
@@ -168,7 +218,11 @@ class Add_photo extends React.Component {
             alignItems: "center",
             height: 40
           }}
+<<<<<<< HEAD
           onPress={this.cameraOrRoll}
+=======
+          onPress={this.pickImage}
+>>>>>>> pulled master branch from github
         >
           <Text
             style={{
@@ -182,27 +236,45 @@ class Add_photo extends React.Component {
         </TouchableOpacity>
         <View style={{ flexDirection: "row" }}>
           <View style={styles.cadre}>
+<<<<<<< HEAD
             {this.props.tab_photo[0] && (
               <Image
                 source={{ uri: this.props.tab_photo[0] }}
+=======
+            {this.state.image && (
+              <Image
+                source={{ uri: this.state.image }}
+>>>>>>> pulled master branch from github
                 style={{ width: 85, height: 85 }}
               />
             )}
             {this.cross()}
           </View>
           <View style={styles.cadre}>
+<<<<<<< HEAD
             {this.props.tab_photo[1] && (
               <Image
                 source={{ uri: this.props.tab_photo[1] }}
+=======
+            {this.state.image2 && (
+              <Image
+                source={{ uri: this.state.image2 }}
+>>>>>>> pulled master branch from github
                 style={{ width: 85, height: 85 }}
               />
             )}
             {this.cross2()}
           </View>
           <View style={styles.cadre}>
+<<<<<<< HEAD
             {this.props.tab_photo[2] && (
               <Image
                 source={{ uri: this.props.tab_photo[2] }}
+=======
+            {this.state.image3 && (
+              <Image
+                source={{ uri: this.state.image3 }}
+>>>>>>> pulled master branch from github
                 style={{ width: 85, height: 85 }}
               />
             )}
@@ -214,7 +286,10 @@ class Add_photo extends React.Component {
   }
   componentDidMount() {
     this.getCameraRollAsync();
+<<<<<<< HEAD
     this.getCameraAsync();
+=======
+>>>>>>> pulled master branch from github
   }
 }
 

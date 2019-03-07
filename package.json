@@ -7,14 +7,24 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@types/expo__vector-icons": "^9.0.1",
     "axios": "^0.18.0",
     "expo": "^32.0.0",
+    "expo-facebook": "^3.0.0",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
-    "react-native-paper": "^2.12.0"
+    "react-native-paper": "^2.12.0",
+    "react-native-vector-icons": "^6.3.0",
+    "react-navigation": "^3.3.2",
+    "react-navigation-material-bottom-tabs": "^1.0.0",
+    "react-native-picker-select": "^6.0.0"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0"
+    "babel-eslint": "^10.0.1",
+    "babel-preset-expo": "^5.0.0",
+    "eslint": "^5.15.0",
+    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react-native": "^3.6.0"
   },
   "private": true
 }

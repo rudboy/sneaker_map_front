@@ -24,7 +24,7 @@ const AuthStack = createStackNavigator({ SignIn: ProductScreen });
 export default createAppContainer(
   createSwitchNavigator(
     {
-      AuthLoading: AuthLoadingScreen,
+      AuthLoading: NewProduct,
       App: AppStack,
       Auth: AuthStack
     },

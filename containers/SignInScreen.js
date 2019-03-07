@@ -12,7 +12,7 @@ import {
   Platform
 } from "react-native";
 import axios from "axios"; // const axios = require('axios');
-import { Constants, Google, Facebook, Location, Permissions } from "expo";
+import { Constants, Google, Facebook, Permissions } from "expo";
 
 const googleCreds = {
   androidClientID:
@@ -27,7 +27,8 @@ export default class LogIn extends React.Component {
     name: "",
     email: "",
     password: "",
-    loginInProgress: false,
+    googleConnect: false,
+    facebookConnect: false,
     signedIn: false,
     photoUrl: "",
     location: null,
@@ -60,7 +61,7 @@ export default class LogIn extends React.Component {
   ////////////////////
 
   onGoogleSignIn = async () => {
-    this.setState({ loginInProgress: true });
+    this.setState({ googleConnect: true });
     try {
       const result = await Google.logInAsync({
         androidClientId: googleCreds.androidClientID,
@@ -70,7 +71,7 @@ export default class LogIn extends React.Component {
       // console.log("result user : ", result.user);
       // console.log("result idToken : ", result.idToken);
       // console.log("result : ", result);
-      this.setState({ loginInProgress: false });
+      this.setState({ googleConnect: false });
 
       if (result.type === "success") {
         this.setState({
@@ -115,14 +116,17 @@ export default class LogIn extends React.Component {
 
   // Se connecter avec Facebook
   onFacebookSignIn = async () => {
+    this.setState({ facebookConnect: true });
     try {
       const {
         type,
-        token,
-        permissions
+        token
+        // permissions
       } = await Facebook.logInWithReadPermissionsAsync("639212763201143", {
         permissions: ["public_profile", "email"]
       });
+      this.setState({ facebookConnect: false });
+
       if (type === "success") {
         this.setState({
           signedIn: true
@@ -138,10 +142,10 @@ export default class LogIn extends React.Component {
         const serverResponse = await axios.post(
           "http://localhost:5500/facebook_connection",
           {
-            familyName: this.state.last_name,
-            givenName: this.state.first_name,
-            username: this.state.name,
-            email: this.state.email,
+            familyName: this.state.userInfo.last_name,
+            givenName: this.state.userInfo.first_name,
+            username: this.state.userInfo.name,
+            email: this.state.userInfo.email,
             password: token
           }
         );
@@ -168,6 +172,8 @@ export default class LogIn extends React.Component {
         email: this.state.email,
         password: this.state.password
       });
+      console.log("response data", response.data);
+
       if (response.data.token) {
         const value = JSON.stringify(response.data);
         alert("Login OK");
@@ -224,10 +230,15 @@ export default class LogIn extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigate("SignUp")}>
-            {/* navigate = destructuring de `this.props.navigation` (voir ligne 103) */}
-            <Text style={{ color: "white" }}>
+            {/* navigate = destructuring de `this.props.navigation` (voir ligne 197) */}
+            <Text style={{ color: "white", marginBottom: 16 }}>
               Pas encore inscrit ? Créez un compte
             </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigate("PasswordReset")}>
+            {/* navigate = destructuring de `this.props.navigation` (voir ligne 103) */}
+            <Text style={{ color: "white" }}>J'ai oublié mon mot de passe</Text>
           </TouchableOpacity>
 
           <View
@@ -252,7 +263,7 @@ export default class LogIn extends React.Component {
             }}
             onPress={this.onGoogleSignIn}
           >
-            {this.state.loginInProgress ? <ActivityIndicator /> : null}
+            {this.state.googleConnect ? <ActivityIndicator /> : null}
             <Image
               style={{
                 width: 35,
@@ -277,7 +288,7 @@ export default class LogIn extends React.Component {
             }}
             onPress={this.onFacebookSignIn}
           >
-            {this.state.loginInProgress ? <ActivityIndicator /> : null}
+            {this.state.facebookConnect ? <ActivityIndicator /> : null}
             <Image
               style={{
                 width: 35,

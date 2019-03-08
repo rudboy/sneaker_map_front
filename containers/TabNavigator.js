@@ -4,6 +4,7 @@ import {
   // createDrawerNavigator,
 } from "react-navigation";
 import HomeScreen from "./HomeScreen";
+import ProfileScreen from "./ProfileScreen";
 // import SettingsScreen from "./SettingsScreen";
 // import ChatScreen from "./ChatScreen";
 
@@ -12,6 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeScreen,
+    Profile: ProfileScreen,
     // Chat: ChatScreen,
     // Settings: SettingsScreen,
   },
@@ -24,7 +26,10 @@ const TabNavigator = createBottomTabNavigator(
         switch (routeName) {
           case "Home":
             iconName = "ios-home";
+            break;
 
+          case "Profile":
+            iconName = "ios-person";
             break;
           // case "Settings":
           //   iconName = "ios-settings";
@@ -56,8 +61,12 @@ TabNavigator.navigationOptions = ({ navigation }) => {
   switch (routeName) {
     case "Home":
       headerTitle = "Home";
-
       break;
+
+    case "Profile":
+      headerTitle = "Profil";
+      break;
+
     case "Settings":
       headerTitle = "Paramètres";
       break;
@@ -69,7 +78,7 @@ TabNavigator.navigationOptions = ({ navigation }) => {
     headerTitle,
     headerBackTitle,
     headerStyle: {
-      backgroundColor: "#000",
+      backgroundColor: "#111",
     },
     headerTitleStyle: {
       fontSize: 30,

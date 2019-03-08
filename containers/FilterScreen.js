@@ -3,26 +3,21 @@ import {
   Text,
   View,
   StyleSheet,
-  Image,
   AsyncStorage,
   ScrollView,
   TouchableOpacity
 } from "react-native";
-import RNPickerSelect from "react-native-picker-select";
-import { Ionicons } from "@expo/vector-icons";
 import axios from "axios"; // const axios = require('axios');
 import Picker_mark from "../components/picker_mark";
 import Picker_category from "../components/picker_category";
 import Picker_model from "../components/picker_model";
 import Picker_size from "../components/picker_size";
-import Input_price from "../components/input_price";
 import Etat from "../components/etat";
-import Add_photo from "../components/Add_photo";
-import GeoLocalisation from "../components/GeoLocalisation";
+import PriceSelect from "../components/PriceSelect";
 
 const jordan = require("../assets/json/Jordan/Jordan.json");
 
-class NewProduct extends React.Component {
+class FilterScreen extends React.Component {
   state = {
     mark: "",
     tab_model: [],
@@ -38,12 +33,10 @@ class NewProduct extends React.Component {
     size: "",
     tab_location: "",
     title: "",
-    styleID: "",
-    tab_photo: []
+    styleID: ""
   };
 
   Get_Category = mark => {
-    //console.log(this.state.mark);
     if (mark === "Jordan") {
       this.setState({
         tabcategory: require("../assets/json/Jordan/Jordan.json")
@@ -73,9 +66,7 @@ class NewProduct extends React.Component {
   };
 
   addToDB = async () => {
-    //console.log(this.state.tab_photo);
     try {
-      // On charge les données ici
       const response = await axios.post(
         "http://localhost:5500/create_product",
         {
@@ -88,8 +79,7 @@ class NewProduct extends React.Component {
             this.state.tab_location.coords.latitude,
             this.state.tab_location.coords.longitude
           ],
-          id_style: this.state.styleID,
-          pictures: this.state.tab_photo
+          id_style: this.state.styleID
         },
         {
           headers: {
@@ -111,35 +101,22 @@ class NewProduct extends React.Component {
   get_title = (title, styleID) => {
     this.setState({ title: title, styleID: styleID });
   };
-  get_location = location => {
-    //console.log(location);
-    this.setState({ tab_location: location });
-  };
-  get_price = price => {
-    this.setState({ price: price });
-  };
-  get_photo = tab => {
-    this.setState({ tab_photo: tab });
-  };
 
   render() {
-    // {
-    //   console.log(
-    //     this.state.styleID,
-    //     this.state.title,
-    //     this.state.price,
-    //     this.state.size,
-    //     this.state.tab_location
-    //   );
-    // }
     return (
       <ScrollView style={styles.container}>
         <View style={styles.principal}>
-          <View style={{ marginBottom: 40 }}>
-            <Text style={styles.text}>Ajouter une Sneaker a Vendre</Text>
-          </View>
+          <Text
+            style={{
+              color: "white",
+              fontSize: 30,
+              fontWeight: "400",
+              marginBottom: 30
+            }}
+          >
+            TRIER PAR
+          </Text>
           <Picker_mark Get_Category={this.Get_Category} />
-
           <Picker_category
             Get_Model={this.Get_Model}
             tabcategory={this.state.tabcategory}
@@ -161,15 +138,19 @@ class NewProduct extends React.Component {
             switchValue2={this.state.usager}
             toggleSwitch={this.toggleSwitch}
           />
-          <Input_price get_price={this.get_price} price={this.state.price} />
-          <Add_photo
-            get_photo={this.get_photo}
-            tab_photo={this.state.tab_photo}
-          />
-          <GeoLocalisation
-            get_location={this.get_location}
-            location={this.state.tab_location}
-          />
+          <Text
+            style={{
+              color: "white",
+              fontSize: 20,
+              fontWeight: "600",
+              marginRight: 10,
+              marginBottom: 10,
+              marginTop: 20
+            }}
+          >
+            Prix
+          </Text>
+          <PriceSelect />
           <TouchableOpacity style={styles.valider} onPress={this.addToDB}>
             <Text
               style={{
@@ -185,34 +166,22 @@ class NewProduct extends React.Component {
       </ScrollView>
     );
   }
-
-  componentDidMount = async () => {
-    try {
-      // On charge les données ici
-      for (let i = 0; i < jordan.length; i++) {
-        const response = await axios.get(
-          "http://sneakersmap.fr/sneaker_map/jordan/" +
-            jordan[i].value +
-            ".json"
-        );
-        const value = JSON.stringify(response.data);
-        await AsyncStorage.setItem(jordan[i].value, value);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     backgroundColor: "black",
-    color: "white"
+    color: "white",
+    paddingTop: 30
   },
   principal: {
     justifyContent: "center",
     alignItems: "center"
+  },
+  sizeselect: {
+    height: 100,
+    width: 300
   },
   text: {
     fontSize: 25,
@@ -232,4 +201,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default NewProduct;
+export default FilterScreen;

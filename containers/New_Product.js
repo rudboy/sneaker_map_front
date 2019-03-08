@@ -38,7 +38,8 @@ class NewProduct extends React.Component {
     size: "",
     tab_location: "",
     title: "",
-    styleID: ""
+    styleID: "",
+    tab_photo: []
   };
 
   Get_Category = mark => {
@@ -72,6 +73,7 @@ class NewProduct extends React.Component {
   };
 
   addToDB = async () => {
+    //console.log(this.state.tab_photo);
     try {
       // On charge les données ici
       const response = await axios.post(
@@ -86,8 +88,8 @@ class NewProduct extends React.Component {
             this.state.tab_location.coords.latitude,
             this.state.tab_location.coords.longitude
           ],
-          id_style: this.state.styleID
-          //pictures:
+          id_style: this.state.styleID,
+          pictures: this.state.tab_photo
         },
         {
           headers: {
@@ -116,7 +118,9 @@ class NewProduct extends React.Component {
   get_price = price => {
     this.setState({ price: price });
   };
-  get_photo = () => {};
+  get_photo = tab => {
+    this.setState({ tab_photo: tab });
+  };
 
   render() {
     // {
@@ -158,7 +162,10 @@ class NewProduct extends React.Component {
             toggleSwitch={this.toggleSwitch}
           />
           <Input_price get_price={this.get_price} price={this.state.price} />
-          <Add_photo />
+          <Add_photo
+            get_photo={this.get_photo}
+            tab_photo={this.state.tab_photo}
+          />
           <GeoLocalisation
             get_location={this.get_location}
             location={this.state.tab_location}

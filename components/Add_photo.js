@@ -5,7 +5,8 @@ import {
   TextInput,
   Text,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  ActionSheetIOS
 } from "react-native";
 import { ImagePicker, Permissions } from "expo";
 import { Entypo } from "@expo/vector-icons";
@@ -27,33 +28,72 @@ class Add_photo extends React.Component {
       });
     }
   };
+  getCameraAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    if (status !== "granted") {
+      this.setState({
+        errorMessage: "Permission refusée"
+      });
+    }
+  };
 
-  pickImage = async () => {
-    if (
-      this.state.image !== null &&
-      this.state.image2 !== null &&
-      this.state.image3 !== null
-    ) {
+  pickImageLibrary = async () => {
+    if (this.props.tab_photo.length === 3) {
       alert("Vous ne pouvez pas ajouter plus de 3 images");
     } else {
       let result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
+        base64: true,
         aspect: [4, 3]
       });
-
-      // console.log(result);
-      if (this.state.image === null && !result.cancelled) {
-        this.setState({ image: result.uri });
-      } else if (this.state.image2 === null && !result.cancelled) {
-        this.setState({ image2: result.uri });
-      } else if (this.state.image3 === null && !result.cancelled) {
-        this.setState({ image3: result.uri });
+      let temp = this.props.tab_photo;
+      console.log(result);
+      if (!result.cancelled) {
+        temp.push("data:image/jpeg;base64," + result.base64);
+        this.props.get_photo(temp);
       }
     }
   };
 
+  pickImageCamera = async () => {
+    if (this.props.tab_photo.length === 3) {
+      alert("Vous ne pouvez pas ajouter plus de 3 images");
+    } else {
+      let result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        base64: true,
+        aspect: [4, 3]
+      });
+      let temp = this.props.tab_photo;
+      console.log(result);
+      if (!result.cancelled) {
+        temp.push("data:image/jpeg;base64," + result.base64);
+        this.props.get_photo(temp);
+      }
+    }
+  };
+
+  cameraOrRoll = () => {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ["Cancel", "Prendre une photo", "Choisir une photo"],
+        title: "Which one do you like ?",
+        rollButtonIndex: 2,
+        cameraButtonIndex: 1,
+        cancelButtonIndex: 0
+      },
+      buttonIndex => {
+        if (buttonIndex === 1) {
+          this.pickImageCamera();
+        } else if (buttonIndex === 2) {
+          this.pickImageLibrary();
+        }
+      }
+    );
+  };
+
   cross = () => {
-    if (this.state.image !== null) {
+    if (this.props.tab_photo.length > 0) {
       return (
         <TouchableOpacity
           style={{ marginLeft: 60, marginTop: -35 }}
@@ -67,7 +107,7 @@ class Add_photo extends React.Component {
     }
   };
   cross2 = () => {
-    if (this.state.image2 !== null) {
+    if (this.props.tab_photo.length > 1) {
       return (
         <TouchableOpacity
           style={{ marginLeft: 60, marginTop: -35 }}
@@ -81,7 +121,7 @@ class Add_photo extends React.Component {
     }
   };
   cross3 = () => {
-    if (this.state.image3 !== null) {
+    if (this.props.tab_photo.length > 2) {
       return (
         <TouchableOpacity
           style={{ marginLeft: 60, marginTop: -35 }}
@@ -96,13 +136,17 @@ class Add_photo extends React.Component {
   };
 
   onPress = toto => {
-    toto === 1
-      ? this.setState({ image: null })
-      : toto === 2
-      ? this.setState({ image2: null })
-      : toto === 3
-      ? this.setState({ image3: null })
-      : "";
+    let temptab = [...this.props.tab_photo];
+    if (toto === 1) {
+      temptab.splice(0, 1);
+      this.props.get_photo(temptab);
+    } else if (toto === 2) {
+      temptab.splice(1, 1);
+      this.props.get_photo(temptab);
+    } else if (toto === 3) {
+      temptab.splice(2, 1);
+      this.props.get_photo(temptab);
+    }
   };
 
   render() {
@@ -124,7 +168,7 @@ class Add_photo extends React.Component {
             alignItems: "center",
             height: 40
           }}
-          onPress={this.pickImage}
+          onPress={this.cameraOrRoll}
         >
           <Text
             style={{
@@ -138,27 +182,27 @@ class Add_photo extends React.Component {
         </TouchableOpacity>
         <View style={{ flexDirection: "row" }}>
           <View style={styles.cadre}>
-            {this.state.image && (
+            {this.props.tab_photo[0] && (
               <Image
-                source={{ uri: this.state.image }}
+                source={{ uri: this.props.tab_photo[0] }}
                 style={{ width: 85, height: 85 }}
               />
             )}
             {this.cross()}
           </View>
           <View style={styles.cadre}>
-            {this.state.image2 && (
+            {this.props.tab_photo[1] && (
               <Image
-                source={{ uri: this.state.image2 }}
+                source={{ uri: this.props.tab_photo[1] }}
                 style={{ width: 85, height: 85 }}
               />
             )}
             {this.cross2()}
           </View>
           <View style={styles.cadre}>
-            {this.state.image3 && (
+            {this.props.tab_photo[2] && (
               <Image
-                source={{ uri: this.state.image3 }}
+                source={{ uri: this.props.tab_photo[2] }}
                 style={{ width: 85, height: 85 }}
               />
             )}
@@ -170,6 +214,7 @@ class Add_photo extends React.Component {
   }
   componentDidMount() {
     this.getCameraRollAsync();
+    this.getCameraAsync();
   }
 }
 

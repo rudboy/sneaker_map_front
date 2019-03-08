@@ -106,6 +106,16 @@ class FilterScreen extends React.Component {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.principal}>
+          <Text
+            style={{
+              color: "white",
+              fontSize: 30,
+              fontWeight: "400",
+              marginBottom: 30
+            }}
+          >
+            TRIER PAR
+          </Text>
           <Picker_mark Get_Category={this.Get_Category} />
           <Picker_category
             Get_Model={this.Get_Model}
@@ -128,7 +138,18 @@ class FilterScreen extends React.Component {
             switchValue2={this.state.usager}
             toggleSwitch={this.toggleSwitch}
           />
-          <Text style={{ color: "white" }}>Prix minimum - Prix maximum</Text>
+          <Text
+            style={{
+              color: "white",
+              fontSize: 20,
+              fontWeight: "600",
+              marginRight: 10,
+              marginBottom: 10,
+              marginTop: 20
+            }}
+          >
+            Prix
+          </Text>
           <PriceSelect />
           <TouchableOpacity style={styles.valider} onPress={this.addToDB}>
             <Text
@@ -152,7 +173,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
     color: "white",
-    paddingTop: 150
+    paddingTop: 30
   },
   principal: {
     justifyContent: "center",

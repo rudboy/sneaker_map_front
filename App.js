@@ -12,20 +12,22 @@ import TabNavigator from "./containers/TabNavigator";
 import ProductScreen from "./containers/ProductScreen";
 import PasswordResetScreen from "./containers/PasswordResetScreen";
 import NewProduct from "./containers/New_Product";
+import FilterScreen from "./containers/FilterScreen";
 
 const AppStack = createStackNavigator({
   Tab: TabNavigator,
+  Filter: FilterScreen,
   Home: HomeScreen,
   SignIn: SignInScreen,
   SignUp: SignUpScreen,
   PasswordReset: PasswordResetScreen
 });
-const AuthStack = createStackNavigator({ SignIn: ProductScreen });
+const AuthStack = createStackNavigator({ Home: HomeScreen });
 
 export default createAppContainer(
   createSwitchNavigator(
     {
-      AuthLoading: NewProduct,
+      AuthLoading: HomeScreen,
       App: AppStack,
       Auth: AuthStack
     },

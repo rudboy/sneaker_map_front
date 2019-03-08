@@ -17,9 +17,12 @@ const AppStack = createStackNavigator({
   Home: HomeScreen,
   SignIn: SignInScreen,
   SignUp: SignUpScreen,
-  PasswordReset: PasswordResetScreen
+  PasswordReset: PasswordResetScreen,
+  Product: ProductScreen,
+  Chat: ChatScreen,
+  SellerProfile: SellerProfileScreen
 });
-const AuthStack = createStackNavigator({ SignIn: SignInScreen });
+const AuthStack = createStackNavigator({ Product: ProductScreen });
 
 export default createAppContainer(
   createSwitchNavigator(

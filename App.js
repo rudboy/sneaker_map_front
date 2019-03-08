@@ -18,7 +18,9 @@ const AppStack = createStackNavigator({
   SignIn: SignInScreen,
   SignUp: SignUpScreen,
   PasswordReset: PasswordResetScreen,
-  Product: ProductScreen
+  Product: ProductScreen,
+  Chat: ChatScreen,
+  SellerProfile: SellerProfileScreen
 });
 const AuthStack = createStackNavigator({ Product: ProductScreen });
 

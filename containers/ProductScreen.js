@@ -149,12 +149,11 @@ class ProductScreen extends React.Component {
         }
       }
     );
-
     //////////test:
     // Changer le state :
-    // this.setState({
-    //   isFavorite: this.state.isFavorite === true ? false : true
-    // });
+    this.setState({
+      isFavorite: this.state.isFavorite === true ? false : true
+    });
   };
 
   render() {

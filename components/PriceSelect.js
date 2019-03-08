@@ -24,17 +24,6 @@ class PriceSelect extends React.Component {
       >
         <Text
           style={{
-            color: "white",
-            fontSize: 20,
-            fontWeight: "600",
-            marginRight: 10,
-            marginBottom: 10
-          }}
-        >
-          Prix
-        </Text>
-        <Text
-          style={{
             color: "white"
           }}
         >
@@ -45,7 +34,7 @@ class PriceSelect extends React.Component {
           sliderLength={280}
           onValuesChange={this.multiSliderValuesChange}
           min={0}
-          max={500}
+          max={1000}
           step={1}
         />
       </View>

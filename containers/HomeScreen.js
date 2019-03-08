@@ -6,10 +6,11 @@ import {
   FlatList,
   TouchableOpacity,
   TextInput,
-  Dimensions
+  Dimensions,
+  Text
 } from "react-native";
 import SneakerCard from "../components/SneakerCard";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import PriceSelect from "../components/PriceSelect";
 
 class HomeScreen extends React.Component {
@@ -62,41 +63,48 @@ class HomeScreen extends React.Component {
 
     return (
       <View style={styles.container}>
+        <View>
+          <Text
+            style={{
+              color: "white",
+              marginTop: 30,
+              fontSize: 30,
+              fontWeight: "500"
+            }}
+          >
+            Bienvenue
+          </Text>
+        </View>
         <View style={{ position: "relative" }}>
           <TextInput
             style={styles.searchbar}
             onChangeText={text => this.SearchFilterFunction(text)}
             value={this.state.text}
             underlineColorAndroid="transparent"
-            placeholder="What do you want ?"
+            placeholder="Que recherchez-vous ?"
           />
           <TouchableOpacity
             style={{
-              position: "absolute",
-              left: 40
-            }}
-            onPress={() => console.log("Pressed!")}
-          >
-            <View>
-              <MaterialIcons name="filter-variant" size={32} color="green" />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              position: "absolute",
-              right: 40
+              backgroundColor: "grey",
+              fontSize: 15,
+              fontWeight: "500",
+              justifyContent: "center",
+              alignItems: "center",
+              alignContent: "center",
+              marginBottom: 10
             }}
             onPress={() =>
-              this.props.navigation.navigate("Filter", { name: "Jane" })
+              this.props.navigation.navigate("Filter", { name: "Filtres" })
             }
           >
-            <View>
-              <MaterialIcons name="filter-variant" size={32} color="black" />
-            </View>
+            <Text
+              style={{
+                color: "white"
+              }}
+            >
+              FILTRER
+            </Text>
           </TouchableOpacity>
-        </View>
-        <View>
-          <PriceSelect />
         </View>
         <View>
           <FlatList
@@ -135,10 +143,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width,
     height: 50,
     backgroundColor: "white",
-    textAlign: "center"
-  },
-  iconsearch: {
-    marginTop: 300
+    textAlign: "center",
+    marginTop: 20
   }
 });
 

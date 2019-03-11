@@ -7,6 +7,7 @@ import HomeScreen from "./HomeScreen";
 import ProfileScreen from "./ProfileScreen";
 import NewProductScreen from "./New_Product";
 import SellerProfileScreen from "./SellerProfileScreen";
+import ChatScreen from "./ChatScreen";
 // import SettingsScreen from "./SettingsScreen";
 // import ChatScreen from "./ChatScreen";
 

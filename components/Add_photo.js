@@ -6,7 +6,8 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  ActionSheetIOS,
+  ActionSheetIOS
+
 } from "react-native";
 import { ImagePicker, Permissions } from "expo";
 import { Entypo } from "@expo/vector-icons";
@@ -20,22 +21,7 @@ class Add_photo extends React.Component {
     image3: null,
   };
 
-  getCameraRollAsync = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    if (status !== "granted") {
-      this.setState({
-        errorMessage: "Permission refusée",
-      });
-    }
-  };
-  getCameraAsync = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    if (status !== "granted") {
-      this.setState({
-        errorMessage: "Permission refusée",
-      });
-    }
-  };
+  //recupere une image de la librairie photo du telephone
 
   pickImageLibrary = async () => {
     if (this.props.tab_photo.length === 3) {
@@ -47,14 +33,14 @@ class Add_photo extends React.Component {
         aspect: [4, 3],
       });
       let temp = this.props.tab_photo;
-      console.log(result);
+      //console.log(result);
       if (!result.cancelled) {
         temp.push("data:image/jpeg;base64," + result.base64);
         this.props.get_photo(temp);
       }
     }
   };
-
+  //recupere une photo faite avec l'apareil phote
   pickImageCamera = async () => {
     if (this.props.tab_photo.length === 3) {
       alert("Vous ne pouvez pas ajouter plus de 3 images");
@@ -72,6 +58,7 @@ class Add_photo extends React.Component {
       }
     }
   };
+  //menu pour choisir entre la librerie et l'appareil photo
 
   cameraOrRoll = () => {
     ActionSheetIOS.showActionSheetWithOptions(
@@ -92,6 +79,7 @@ class Add_photo extends React.Component {
     );
   };
 
+  //affiche une croix sur la photo
   cross = () => {
     if (this.props.tab_photo.length > 0) {
       return (
@@ -134,7 +122,7 @@ class Add_photo extends React.Component {
       );
     }
   };
-
+  // clique sur la croix pour pouvoir la suprimer
   onPress = toto => {
     let temptab = [...this.props.tab_photo];
     if (toto === 1) {
@@ -152,7 +140,6 @@ class Add_photo extends React.Component {
   render() {
     {
     }
-    //let { image } = this.state;
     return (
       <View
         style={{
@@ -167,6 +154,8 @@ class Add_photo extends React.Component {
             justifyContent: "center",
             alignItems: "center",
             height: 40,
+            width: 250
+
           }}
           onPress={this.cameraOrRoll}
         >
@@ -180,7 +169,12 @@ class Add_photo extends React.Component {
             AJOUTER PHOTOS
           </Text>
         </TouchableOpacity>
-        <View style={{ flexDirection: "row" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            display: this.props.tab_photo.length === 0 ? "none" : ""
+          }}
+        >
           <View style={styles.cadre}>
             {this.props.tab_photo[0] && (
               <Image
@@ -212,10 +206,8 @@ class Add_photo extends React.Component {
       </View>
     );
   }
-  componentDidMount() {
-    this.getCameraRollAsync();
-    this.getCameraAsync();
-  }
+  componentDidMount() {}
+
 }
 
 const styles = StyleSheet.create({

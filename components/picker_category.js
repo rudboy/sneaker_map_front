@@ -13,7 +13,7 @@ class NewProduct extends React.Component {
     return (
       <View
         style={{
-          width: 250
+          width: 300
         }}
       >
         <RNPickerSelect

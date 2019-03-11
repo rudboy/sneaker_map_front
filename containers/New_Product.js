@@ -7,6 +7,8 @@ import {
   AsyncStorage,
   ScrollView,
   TouchableOpacity,
+  Alert
+
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Ionicons } from "@expo/vector-icons";
@@ -21,25 +23,50 @@ import Add_photo from "../components/Add_photo";
 import GeoLocalisation from "../components/GeoLocalisation";
 
 const jordan = require("../assets/json/Jordan/Jordan.json");
+const initialState = {
+  mark: null,
+  tab_model: [],
+  tab_async: [],
+  tabcategory: [],
+  tabsize: [],
+  category: null,
+  model: null,
+  index: 0,
+  childindex: "",
+  neuf: true,
+  usager: false,
+  price: null,
+  size: null,
+  tab_location: null,
+  title: null,
+  styleID: null,
+  tab_photo: [],
+  url: "",
+  token: null
+};
 
 class NewProduct extends React.Component {
   state = {
-    mark: "",
+    mark: null,
     tab_model: [],
     tab_async: [],
     tabcategory: [],
     tabsize: [],
-    category: "",
-    model: "",
+    category: null,
+    model: null,
     index: 0,
+    childindex: "",
     neuf: true,
     usager: false,
-    price: "",
-    size: "",
-    tab_location: "",
-    title: "",
-    styleID: "",
+    price: null,
+    size: null,
+    tab_location: null,
+    title: null,
+    styleID: null,
     tab_photo: [],
+    url: "",
+    token: null
+
   };
 
   Get_Category = mark => {
@@ -69,39 +96,84 @@ class NewProduct extends React.Component {
   };
   toggleSwitch = value => {
     this.setState({ neuf: value, usager: !value });
-    console.log("Switch 1 is: " + value);
+    //console.log("Switch 1 is: " + value);
+  };
+  reset_state = () => {
+    this.setState(initialState);
   };
 
   addToDB = async () => {
-    //console.log(this.state.tab_photo);
-    try {
-      // On charge les données ici
-      const response = await axios.post(
-        "http://localhost:5500/create_product",
-        {
-          title: this.state.title,
-          description: this.state.title,
-          price: this.state.price,
-          size: this.state.size,
-          etat: this.state.neuf ? this.state.neuf : this.state.usager,
-          localisation: [
-            this.state.tab_location.coords.latitude,
-            this.state.tab_location.coords.longitude,
-          ],
-          id_style: this.state.styleID,
-          pictures: this.state.tab_photo,
-        },
-        {
-          headers: {
-            authorization:
-              "Bearer " +
-              "QgYUcG9McBGs4qPzPuohYTawoLK5tD4BB6gHb0uUOb0MrsxjSvAHGwvKIN9ff5Yn",
+    if (
+      this.state.title === null ||
+      this.state.price === null ||
+      this.state.size === null
+    ) {
+      alert("Veuillez Remplir tous les Champs");
+    } else if (this.state.tab_photo.length !== 0) {
+      try {
+        // On charge les données ici
+        const response = await axios.post(
+          "https://sneaker-map-api.herokuapp.com/create_product",
+          {
+            title: this.state.title,
+            description: this.state.title,
+            price: this.state.price,
+            size: this.state.size,
+            etat: this.state.neuf ? this.state.neuf : false,
+            localisation: [
+              this.state.tab_location.coords.latitude,
+              this.state.tab_location.coords.longitude
+            ],
+            id_style: this.state.styleID,
+            pictures: this.state.tab_photo
           },
+          {
+            headers: {
+              authorization: "Bearer " + this.state.token
+            }
+          }
+        );
+        if (response.data.creator._id) {
+          this.props.navigation.navigate("Home");
+          this.reset_state();
+
         }
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        // On charge les données ici
+        const response = await axios.post(
+          "https://sneaker-map-api.herokuapp.com/create_product",
+          {
+            title: this.state.title,
+            description: this.state.title,
+            price: this.state.price,
+            size: this.state.size,
+            etat: this.state.neuf ? this.state.neuf : this.state.usager,
+            localisation: [
+              this.state.tab_location.coords.latitude,
+              this.state.tab_location.coords.longitude
+            ],
+            id_style: this.state.styleID,
+            pictures: [this.state.url]
+          },
+          {
+            headers: {
+              authorization: "Bearer " + this.state.token
+            }
+          }
+        );
+        if (response.data.creator._id) {
+          this.props.navigation.navigate("Home");
+          this.reset_state();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      //alert("Vous devais ajouter au moin une photo de la Sneaker a vendre");
     }
   };
 
@@ -112,7 +184,7 @@ class NewProduct extends React.Component {
     this.setState({ title: title, styleID: styleID });
   };
   get_location = location => {
-    //console.log(location);
+    // console.log("toto", location);
     this.setState({ tab_location: location });
   };
   get_price = price => {
@@ -121,17 +193,12 @@ class NewProduct extends React.Component {
   get_photo = tab => {
     this.setState({ tab_photo: tab });
   };
+  getURL = url => {
+    this.setState({ url: url });
+  };
+
 
   render() {
-    // {
-    //   console.log(
-    //     this.state.styleID,
-    //     this.state.title,
-    //     this.state.price,
-    //     this.state.size,
-    //     this.state.tab_location
-    //   );
-    // }
     return (
       <ScrollView style={styles.container}>
         <View style={styles.principal}>
@@ -150,6 +217,8 @@ class NewProduct extends React.Component {
             category={this.state.category}
             Get_Size={this.Get_Size}
             get_title={this.get_title}
+            getURL={this.getURL}
+            childindex={this.state.childindex}
           />
           <Picker_size
             tab_size={this.state.tabsize}
@@ -169,6 +238,8 @@ class NewProduct extends React.Component {
           <GeoLocalisation
             get_location={this.get_location}
             location={this.state.tab_location}
+            title={this.state.title}
+            url={this.state.url}
           />
           <TouchableOpacity style={styles.valider} onPress={this.addToDB}>
             <Text
@@ -201,18 +272,26 @@ class NewProduct extends React.Component {
     } catch (error) {
       console.log(error);
     }
+
+    let tempToken = await AsyncStorage.getItem("userInfo");
+    tempToken = JSON.parse(tempToken);
+    this.setState({ token: tempToken.token });
+    //console.log(this.state.token);
   };
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    backgroundColor: "black",
-    color: "white",
+    backgroundColor: "#212429",
+    color: "white"
+
   },
   principal: {
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 30
+
   },
   text: {
     fontSize: 25,

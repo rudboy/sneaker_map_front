@@ -5,6 +5,7 @@ import {
 } from "react-navigation";
 import HomeScreen from "./HomeScreen";
 import ProfileScreen from "./ProfileScreen";
+
 import New_Product from "./New_Product";
 import SellerProfileScreen from "./SellerProfileScreen";
 // import SettingsScreen from "./SettingsScreen";
@@ -16,7 +17,8 @@ const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeScreen,
     Profile: ProfileScreen,
-    NewProduct: New_Product,
+    NewProduct: NewProductScreen
+
     // Chat: ChatScreen,
     // Settings: SettingsScreen,
   },
@@ -35,20 +37,15 @@ const TabNavigator = createBottomTabNavigator(
             iconName = "ios-person";
             break;
 
+
           case "NewProduct":
-            iconName = "ios-add";
+            iconName = "ios-settings";
             break;
-          // case "Settings":
-          //   iconName = "ios-settings";
 
-          //   break;
-          // case "Chat":
-          //   iconName = "ios-chatboxes";
-
-          //   break;
           default:
             iconName = null;
         }
+
 
         return <Ionicons name={iconName} size={25} color={tintColor} />;
       },
@@ -81,6 +78,7 @@ TabNavigator.navigationOptions = ({ navigation }) => {
     case "Settings":
       headerTitle = "Paramètres";
       break;
+
     default:
       headerTitle = routeName;
   }

@@ -52,11 +52,29 @@ export default class LogIn extends React.Component {
       });
     } else {
       this.getLocationAsync();
+      this.getCameraRollAsync();
+      this.getCameraAsync();
     }
   }
 
   getLocationAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
+  };
+  getCameraRollAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status !== "granted") {
+      this.setState({
+        errorMessage: "Permission refusée"
+      });
+    }
+  };
+  getCameraAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    if (status !== "granted") {
+      this.setState({
+        errorMessage: "Permission refusée"
+      });
+    }
   };
   ////////////////////
 
@@ -83,7 +101,7 @@ export default class LogIn extends React.Component {
 
         // Si l'email est dans la BDD : connexion et redirection vers le home screen
         const response = await axios.post(
-          "http://localhost:5500/google_connection",
+          "https://sneaker-map-api.herokuapp.com/google_connection",
           {
             familyName: result.user.familyName,
             givenName: result.user.givenName,
@@ -92,17 +110,18 @@ export default class LogIn extends React.Component {
             password: result.idToken
           }
         );
-
+        //console.log(response.data);
         if (response.data.token) {
           const value = JSON.stringify(response.data);
           alert("Login OK");
+          console.log(value);
           await AsyncStorage.setItem("userInfo", value);
           this.props.navigation.navigate("Home", {
             name: result.user.familyName
           }); // redirige vers l'écran d'accueil
         }
 
-        await AsyncStorage.setItem("userInfo", user);
+        //await AsyncStorage.setItem("userInfo", user);
       } else {
         await AsyncStorage.setItem("userInfo", "");
 
@@ -140,7 +159,7 @@ export default class LogIn extends React.Component {
 
         // Vérifier l'existence de l'utilisateur dans la BDD :
         const serverResponse = await axios.post(
-          "http://localhost:5500/facebook_connection",
+          "https://sneaker-map-api.herokuapp.com/facebook_connection",
           {
             familyName: this.state.userInfo.last_name,
             givenName: this.state.userInfo.first_name,
@@ -168,10 +187,13 @@ export default class LogIn extends React.Component {
     try {
       //console.log(this.state.user, this.state.password);
       // On charge les données ici
-      const response = await axios.post("http://localhost:5500/login", {
-        email: this.state.email,
-        password: this.state.password
-      });
+      const response = await axios.post(
+        "https://sneaker-map-api.herokuapp.com/login",
+        {
+          email: this.state.email,
+          password: this.state.password
+        }
+      );
       console.log("response data", response.data);
 
       if (response.data.token) {

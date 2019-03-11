@@ -39,7 +39,7 @@ class ProductScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       headerStyle: {
-        height: 40
+        height: 30
       }
     };
   };

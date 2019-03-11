@@ -3,8 +3,8 @@ import { View, Platform, KeyboardAvoidingView } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 
 const user = {
-  _id: String(Math.random()),
-  name: "Farid Safi"
+  _id: String(Math.random()), // récupérer l'id via async storage
+  name: "Farid Safi" // idem nom
 };
 
 class Chat extends React.Component {

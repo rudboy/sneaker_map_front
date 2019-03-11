@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert
+
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Ionicons } from "@expo/vector-icons";
@@ -65,13 +66,14 @@ class NewProduct extends React.Component {
     tab_photo: [],
     url: "",
     token: null
+
   };
 
   Get_Category = mark => {
     //console.log(this.state.mark);
     if (mark === "Jordan") {
       this.setState({
-        tabcategory: require("../assets/json/Jordan/Jordan.json")
+        tabcategory: require("../assets/json/Jordan/Jordan.json"),
       });
     }
   };
@@ -79,7 +81,7 @@ class NewProduct extends React.Component {
     for (let i = 0; i < jordan.length; i++) {
       if (category === jordan[i].value) {
         this.setState({
-          tab_async: await AsyncStorage.getItem(category)
+          tab_async: await AsyncStorage.getItem(category),
         });
         this.setState({ tab_async: JSON.parse(this.state.tab_async) });
         this.setState({ tab_model: this.state.tab_async });
@@ -134,6 +136,7 @@ class NewProduct extends React.Component {
         if (response.data.creator._id) {
           this.props.navigation.navigate("Home");
           this.reset_state();
+
         }
       } catch (error) {
         console.log(error);
@@ -194,6 +197,7 @@ class NewProduct extends React.Component {
     this.setState({ url: url });
   };
 
+
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -242,7 +246,7 @@ class NewProduct extends React.Component {
               style={{
                 color: "black",
                 fontSize: 20,
-                fontWeight: "600"
+                fontWeight: "600",
               }}
             >
               VALIDER
@@ -281,16 +285,18 @@ const styles = StyleSheet.create({
 
     backgroundColor: "#212429",
     color: "white"
+
   },
   principal: {
     justifyContent: "center",
     alignItems: "center",
     marginTop: 30
+
   },
   text: {
     fontSize: 25,
     fontWeight: "600",
-    color: "white"
+    color: "white",
   },
   valider: {
     color: "black",
@@ -301,8 +307,8 @@ const styles = StyleSheet.create({
     width: 250,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 40
-  }
+    marginBottom: 40,
+  },
 });
 
 export default NewProduct;

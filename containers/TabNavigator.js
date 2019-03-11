@@ -1,12 +1,13 @@
 import React from "react";
 import {
-  createBottomTabNavigator
+  createBottomTabNavigator,
   // createDrawerNavigator,
 } from "react-navigation";
 import HomeScreen from "./HomeScreen";
 import ProfileScreen from "./ProfileScreen";
-import NewProductScreen from "./New_Product";
 
+import New_Product from "./New_Product";
+import SellerProfileScreen from "./SellerProfileScreen";
 // import SettingsScreen from "./SettingsScreen";
 // import ChatScreen from "./ChatScreen";
 
@@ -17,6 +18,7 @@ const TabNavigator = createBottomTabNavigator(
     Home: HomeScreen,
     Profile: ProfileScreen,
     NewProduct: NewProductScreen
+
     // Chat: ChatScreen,
     // Settings: SettingsScreen,
   },
@@ -35,6 +37,7 @@ const TabNavigator = createBottomTabNavigator(
             iconName = "ios-person";
             break;
 
+
           case "NewProduct":
             iconName = "ios-settings";
             break;
@@ -43,17 +46,14 @@ const TabNavigator = createBottomTabNavigator(
             iconName = null;
         }
 
-        return (
-          <>
-            <Ionicons name={iconName} size={25} color={tintColor} />
-          </>
-        );
-      }
+
+        return <Ionicons name={iconName} size={25} color={tintColor} />;
+      },
     }),
     tabBarOptions: {
       activeTintColor: "tomato",
-      inactiveTintColor: "gray"
-    }
+      inactiveTintColor: "gray",
+    },
   }
 );
 
@@ -71,6 +71,10 @@ TabNavigator.navigationOptions = ({ navigation }) => {
       headerTitle = "Profil";
       break;
 
+    case "NewProduct":
+      headerTitle = "Ajouter Produit";
+      break;
+
     case "Settings":
       headerTitle = "Paramètres";
       break;
@@ -83,13 +87,13 @@ TabNavigator.navigationOptions = ({ navigation }) => {
     headerTitle,
     headerBackTitle,
     headerStyle: {
-      backgroundColor: "#111"
+      backgroundColor: "#111",
     },
     headerTitleStyle: {
       fontSize: 30,
-      fontWeight: "200"
+      fontWeight: "200",
     },
-    headerTintColor: "#fff"
+    headerTintColor: "#fff",
   };
 };
 

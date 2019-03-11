@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   ActionSheetIOS
+
 } from "react-native";
 import { ImagePicker, Permissions } from "expo";
 import { Entypo } from "@expo/vector-icons";
@@ -17,10 +18,11 @@ class Add_photo extends React.Component {
     errorMessage: null,
     image: null,
     image2: null,
-    image3: null
+    image3: null,
   };
 
   //recupere une image de la librairie photo du telephone
+
   pickImageLibrary = async () => {
     if (this.props.tab_photo.length === 3) {
       alert("Vous ne pouvez pas ajouter plus de 3 images");
@@ -28,7 +30,7 @@ class Add_photo extends React.Component {
       let result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         base64: true,
-        aspect: [4, 3]
+        aspect: [4, 3],
       });
       let temp = this.props.tab_photo;
       //console.log(result);
@@ -46,7 +48,7 @@ class Add_photo extends React.Component {
       let result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
         base64: true,
-        aspect: [4, 3]
+        aspect: [4, 3],
       });
       let temp = this.props.tab_photo;
       console.log(result);
@@ -57,6 +59,7 @@ class Add_photo extends React.Component {
     }
   };
   //menu pour choisir entre la librerie et l'appareil photo
+
   cameraOrRoll = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
@@ -64,7 +67,7 @@ class Add_photo extends React.Component {
         title: "Which one do you like ?",
         rollButtonIndex: 2,
         cameraButtonIndex: 1,
-        cancelButtonIndex: 0
+        cancelButtonIndex: 0,
       },
       buttonIndex => {
         if (buttonIndex === 1) {
@@ -140,7 +143,7 @@ class Add_photo extends React.Component {
     return (
       <View
         style={{
-          marginTop: 25
+          marginTop: 25,
         }}
       >
         <TouchableOpacity
@@ -152,6 +155,7 @@ class Add_photo extends React.Component {
             alignItems: "center",
             height: 40,
             width: 250
+
           }}
           onPress={this.cameraOrRoll}
         >
@@ -159,7 +163,7 @@ class Add_photo extends React.Component {
             style={{
               color: "black",
               fontSize: 20,
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             AJOUTER PHOTOS
@@ -203,6 +207,7 @@ class Add_photo extends React.Component {
     );
   }
   componentDidMount() {}
+
 }
 
 const styles = StyleSheet.create({
@@ -215,8 +220,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 20,
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });
 
 export default Add_photo;

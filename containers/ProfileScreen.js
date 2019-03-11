@@ -9,14 +9,23 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
+  ActionSheetIOS,
+  Image,
+  TouchableHighlight,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
+import { ImagePicker, Permissions } from "expo";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 class ProfileScreen extends React.Component {
   state = {
     profile: {},
     editable: true,
+    tab_photo: [],
+    isLoading: true,
+    profileModified: false,
   };
 
   async componentDidMount() {
@@ -30,8 +39,11 @@ class ProfileScreen extends React.Component {
 
         this.setState({
           profile: response.data,
+          isLoading: false,
         });
-        console.log(this.state);
+        // console.log(this.state);
+        this.getCameraRollAsync();
+        this.getCameraAsync();
       } else {
         alert("toto");
       }
@@ -39,6 +51,125 @@ class ProfileScreen extends React.Component {
       alert(error);
     }
   }
+
+  getCameraRollAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status !== "granted") {
+      this.setState({
+        errorMessage: "Permission refusée",
+      });
+    }
+  };
+  getCameraAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    if (status !== "granted") {
+      this.setState({
+        errorMessage: "Permission refusée",
+      });
+    }
+  };
+
+  get_photo = tab => {
+    this.setState({ tab_photo: tab });
+  };
+
+  pickImageLibrary = async () => {
+    if (this.state.tab_photo.length === 1) {
+      // alert("Vous ne pouvez pas ajouter plus d' une image");
+      this.setState({ tab_photo: [] });
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        base64: true,
+        aspect: [4, 3],
+      });
+      let temp = this.state.tab_photo;
+      console.log(result);
+      if (!result.cancelled) {
+        temp.push("data:image/jpeg;base64," + result.base64);
+        this.get_photo(temp);
+      }
+      console.log(this.state.tab_photo);
+    } else {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        base64: true,
+        aspect: [4, 3],
+      });
+      let temp = this.state.tab_photo;
+      console.log(result);
+      if (!result.cancelled) {
+        temp.push("data:image/jpeg;base64," + result.base64);
+        this.get_photo(temp);
+      }
+    }
+    console.log(this.state.tab_photo);
+  };
+
+  pickImageCamera = async () => {
+    if (this.state.tab_photo.length === 1) {
+      alert("Vous ne pouvez pas ajouter plus d' 1 image");
+    } else {
+      let result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        base64: true,
+        aspect: [4, 3],
+      });
+      let temp = this.state.tab_photo;
+      console.log(result);
+      if (!result.cancelled) {
+        temp.push("data:image/jpeg;base64," + result.base64);
+        this.get_photo(temp);
+      }
+    }
+  };
+
+  cameraOrRoll = () => {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ["Cancel", "Prendre une photo", "Choisir une photo"],
+        title: "Which one do you like ?",
+        rollButtonIndex: 2,
+        cameraButtonIndex: 1,
+        cancelButtonIndex: 0,
+      },
+      buttonIndex => {
+        if (buttonIndex === 1) {
+          this.pickImageCamera();
+        } else if (buttonIndex === 2) {
+          this.pickImageLibrary();
+        }
+      }
+    );
+  };
+
+  renderPosterProfile = () => {
+    if (this.state.profile.poster_profile[0]) {
+      return (
+        <Image
+          source={{ uri: this.state.profile.poster_profile[0] }}
+          style={{ width: 110, height: 110, borderRadius: 55 }}
+        />
+      );
+    }
+    if (this.state.tab_photo[0]) {
+      return (
+        <Image
+          source={{ uri: this.state.tab_photo[0] }}
+          style={{ width: 110, height: 110, borderRadius: 55 }}
+        />
+      );
+    }
+    if (!this.state.profile.poster_profile[0]) {
+      return (
+        <Ionicons
+          style={styles.posterBorder}
+          name="ios-person"
+          size={100}
+          color="#fff"
+        />
+      );
+    }
+  };
 
   editableFn = () => {
     if (this.state.editable === false) {
@@ -61,6 +192,7 @@ class ProfileScreen extends React.Component {
           prenom: this.state.profile.prenom,
           adresse: this.state.profile.adresse,
           size: this.state.profile.size,
+          poster_profile: this.state.tab_photo,
         },
         {
           headers: {
@@ -73,7 +205,13 @@ class ProfileScreen extends React.Component {
     }
   };
 
-  change = (value, name) => {
+  validateButton = () => {
+    this.updateFn();
+    this.profileModified();
+    this.setState({ editable: true });
+  };
+
+  changeInput = (value, name) => {
     const newState = {
       profile: {
         ...this.state.profile,
@@ -83,22 +221,50 @@ class ProfileScreen extends React.Component {
     this.setState(newState);
   };
 
+  profileModified = () => {
+    this.timeoutHandle = setTimeout(() => {
+      this.setState({ profileModified: false });
+    }, 3000);
+    this.setState({ profileModified: true });
+  };
+
   render() {
+    console.log("this.state.tab_photo.length", this.state.tab_photo.length);
+    console.log(
+      "this.state.profile.poster_profile",
+      this.state.profile.poster_profile
+    );
+    console.log(this.state.profileModified);
+    if (this.state.isLoading === true) {
+      return (
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <StatusBar barStyle="light-content" />
+          <ActivityIndicator size="large" color="#111" />
+        </View>
+      );
+    }
     return (
       <>
-        <ScrollView>
+        <KeyboardAwareScrollView>
           <StatusBar barStyle="light-content" />
           <View style={styles.headerProfile}>
             <Text />
             <View style={{ alignItems: "center", position: "relative" }}>
-              <Ionicons
-                style={styles.posterBorder}
-                name="ios-person"
-                size={100}
-                color="#fff"
-              />
+              {this.renderPosterProfile()}
+              {this.state.editable === false ? (
+                <TouchableHighlight onPress={() => this.cameraOrRoll()}>
+                  <View style={styles.cameraView}>
+                    <Ionicons
+                      style={{ textAlign: "center" }}
+                      name="ios-camera"
+                      size={30}
+                      color="#000"
+                    />
+                  </View>
+                </TouchableHighlight>
+              ) : null}
 
-              <TouchableOpacity>
+              {/* <TouchableOpacity onPress={() => this.cameraOrRoll()}>
                 <View style={styles.cameraView}>
                   <Ionicons
                     style={{ textAlign: "center" }}
@@ -107,7 +273,7 @@ class ProfileScreen extends React.Component {
                     color="#000"
                   />
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
 
             <View style={styles.usernameContainer}>
@@ -118,18 +284,22 @@ class ProfileScreen extends React.Component {
                 selectTextOnFocus={false}
                 placeholder={
                   this.state.profile.username === ""
-                    ? "Votre téléphone"
+                    ? "Votre nom d'utilisateur"
                     : this.state.profile.username
                 }
                 placeholderTextColor={"#fff"}
               />
             </View>
+            {this.state.profileModified === true ? (
+              <Text style={styles.profileModified}>Profil modifié</Text>
+            ) : null}
           </View>
+
           <View
             style={{
               position: "relative",
               paddingHorizontal: 15,
-              marginTop: 20,
+              paddingTop: 30,
             }}
           >
             <TouchableOpacity
@@ -147,7 +317,7 @@ class ProfileScreen extends React.Component {
               <View>
                 <TextInput
                   onChangeText={text => {
-                    this.change(text, "nom");
+                    this.changeInput(text, "nom");
                   }}
                   // value={this.state.profile.nom}
                   editable={this.state.editable === true ? false : true}
@@ -165,7 +335,7 @@ class ProfileScreen extends React.Component {
               <View>
                 <TextInput
                   onChangeText={text => {
-                    this.change(text, "prenom");
+                    this.changeInput(text, "prenom");
                   }}
                   // value={this.state.profile.prenom}
                   editable={this.state.editable === true ? false : true}
@@ -199,7 +369,7 @@ class ProfileScreen extends React.Component {
                   />
                   <TextInput
                     onChangeText={text => {
-                      this.change(text, "telephone");
+                      this.changeInput(text, "telephone");
                     }}
                     editable={this.state.editable === true ? false : true}
                     style={styles.inputText}
@@ -222,7 +392,7 @@ class ProfileScreen extends React.Component {
                   />
                   <TextInput
                     onChangeText={text => {
-                      this.change(text, "email");
+                      this.changeInput(text, "email");
                     }}
                     autoCapitalize="none"
                     keyboardType="email-address"
@@ -249,7 +419,7 @@ class ProfileScreen extends React.Component {
                 />
                 <TextInput
                   onChangeText={text => {
-                    this.change(text, "adresse");
+                    this.changeInput(text, "adresse");
                   }}
                   editable={this.state.editable === true ? false : true}
                   style={styles.inputText}
@@ -272,7 +442,7 @@ class ProfileScreen extends React.Component {
                 />
                 <TextInput
                   onChangeText={text => {
-                    this.change(text, "size");
+                    this.changeInput(text, "size");
                   }}
                   editable={this.state.editable === true ? false : true}
                   style={styles.inputText}
@@ -283,15 +453,18 @@ class ProfileScreen extends React.Component {
                 />
               </View>
               {this.state.editable === false ? (
-                <TouchableOpacity onPress={() => this.updateFn()}>
-                  <Text>Confirmer</Text>
+                <TouchableOpacity
+                  style={styles.updateButton}
+                  onPress={() => this.validateButton()}
+                >
+                  <Text style={styles.updateButtonText}>Confirmer</Text>
                 </TouchableOpacity>
               ) : (
                 <Text />
               )}
             </KeyboardAvoidingView>
           </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </>
     );
   }
@@ -362,6 +535,28 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "grey",
     marginVertical: 20,
+  },
+  updateButton: {
+    borderRadius: 5,
+    borderWidth: 1,
+    padding: 10,
+    backgroundColor: "#111",
+    marginTop: 20,
+  },
+  updateButtonText: {
+    textAlign: "center",
+    color: "#fff",
+    fontSize: 20,
+  },
+  profileModified: {
+    textAlign: "center",
+    backgroundColor: "#4cae4c",
+    color: "#fff",
+    position: "absolute",
+    bottom: -35,
+    width: "100%",
+    fontSize: 16,
+    padding: 10,
   },
 });
 

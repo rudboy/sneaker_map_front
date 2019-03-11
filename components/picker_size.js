@@ -10,17 +10,14 @@ class PickerSIze extends React.Component {
     return (
       <View
         style={{
-          width: 250
+          width: 300
         }}
       >
         <RNPickerSelect
           placeholder={{
             label:
               this.props.tab_size.length <= 0 ? "" : "Selectionner une Taille",
-            value:
-              this.props.tab_size.length <= 0
-                ? null
-                : "Selectionner une Taille",
+            value: this.props.tab_size.length <= 0 ? null : null,
             color: "#9EA0A4"
           }}
           items={this.props.tab_size}
@@ -53,7 +50,6 @@ const pickerSelectStyles = StyleSheet.create({
     paddingHorizontal: 10,
     borderWidth: 1,
     marginBottom: 20,
-
     borderColor: "gray",
     borderRadius: 4,
     color: "white",

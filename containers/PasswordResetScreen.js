@@ -21,7 +21,7 @@ class PasswordReset extends React.Component {
     try {
       // On charge les données ici
       const response = await axios.post(
-        "http://localhost:5500/password_forgotten",
+        "https://sneaker-map-api.herokuapp.com/password_forgotten",
         {
           email: this.state.email
         }

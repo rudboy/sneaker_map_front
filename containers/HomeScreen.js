@@ -7,11 +7,14 @@ import {
   TouchableOpacity,
   TextInput,
   Dimensions,
-  Text
+  Text,
+  ScrollView
 } from "react-native";
 import SneakerCard from "../components/SneakerCard";
 import { Ionicons } from "@expo/vector-icons";
 import PriceSelect from "../components/PriceSelect";
+
+let arrayholder = [];
 
 class HomeScreen extends React.Component {
   state = {
@@ -19,14 +22,12 @@ class HomeScreen extends React.Component {
     isLoading: true
   };
 
-  arrayholder = [];
-
   static navigationOptions = ({ navigation }) => ({
     title: "Welcome"
   });
 
-  componentDidMount() {
-    return fetch("http://localhost:5500/all_product")
+  async componentDidMount() {
+    return await fetch("https://sneaker-map-api.herokuapp.com/all_product")
       .then(response => response.json())
       .then(responseJson => {
         this.setState(
@@ -56,11 +57,31 @@ class HomeScreen extends React.Component {
     });
   }
 
+  get_all_product = async () => {
+    return fetch("http://localhost:5500/all_product")
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState(
+          {
+            isLoading: false,
+            sneakers: responseJson
+          },
+          function() {
+            arrayholder = responseJson;
+          }
+        );
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
   render() {
+    {
+    }
     if (this.state.isLoading === true) {
       return <ActivityIndicator />;
     }
-
     return (
       <View style={styles.container}>
         <View>
@@ -94,7 +115,7 @@ class HomeScreen extends React.Component {
               marginBottom: 10
             }}
             onPress={() =>
-              this.props.navigation.navigate("Filter", { name: "Filtres" })
+              this.props.navigation.navigate("Product", { name: "Filtres" })
             }
           >
             <Text
@@ -106,7 +127,7 @@ class HomeScreen extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
-        <View>
+        <ScrollView>
           <FlatList
             numColumns={2}
             data={this.state.sneakers}
@@ -117,7 +138,7 @@ class HomeScreen extends React.Component {
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    this.props.navigation.navigate("Sneaker", {
+                    this.props.navigation.navigate("Product", {
                       id: obj.item._id
                     });
                   }}
@@ -127,7 +148,7 @@ class HomeScreen extends React.Component {
               );
             }}
           />
-        </View>
+        </ScrollView>
       </View>
     );
   }

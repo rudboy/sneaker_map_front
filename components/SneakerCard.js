@@ -9,6 +9,7 @@ import {
 
 class SneakerCard extends React.Component {
   renderImages(sneaker) {
+    //console.log(sneaker);
     return (
       <View style={styles.container}>
         <View>
@@ -28,10 +29,16 @@ class SneakerCard extends React.Component {
               <Text numberOfLines={1} style={styles.text}>
                 {sneaker.title}{" "}
               </Text>
-              <Text style={styles.price}>
-                {sneaker.price}
-                {" €"}
-              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.price}>
+                  {sneaker.price}
+                  {" €"}
+                </Text>
+                <Text style={styles.price}>
+                  {"                       "}
+                  {sneaker.size}
+                </Text>
+              </View>
             </View>
           </ImageBackground>
         </View>
@@ -54,7 +61,9 @@ const styles = StyleSheet.create({
   },
   pictures: {
     width: Dimensions.get("window").width / 2 - 10,
-    height: 200
+    height: 120,
+    width: 170,
+    resizeMode: "contain"
   },
   text: {
     width: 150,

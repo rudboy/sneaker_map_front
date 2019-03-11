@@ -13,6 +13,7 @@ import ProductScreen from "./containers/ProductScreen";
 import PasswordResetScreen from "./containers/PasswordResetScreen";
 import ChatScreen from "./containers/ChatScreen";
 import SellerProfileScreen from "./containers/SellerProfileScreen";
+import NewProductScreen from "./containers/New_Product";
 
 const AppStack = createStackNavigator({
   Tab: TabNavigator,
@@ -22,7 +23,8 @@ const AppStack = createStackNavigator({
   PasswordReset: PasswordResetScreen,
   Product: ProductScreen,
   Chat: ChatScreen,
-  SellerProfile: SellerProfileScreen
+  SellerProfile: SellerProfileScreen,
+  New_Product: NewProductScreen
 });
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 

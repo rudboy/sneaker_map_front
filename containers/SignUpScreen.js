@@ -59,15 +59,18 @@ class SignUpScreen extends React.Component {
     event.preventDefault();
     try {
       if (this.state.password === this.state.repassword) {
-        const response = await axios.post("http://localhost:5500/sign_up", {
-          user: this.state.user,
-          nom: this.state.nom,
-          prenom: this.state.prenom,
-          email: this.state.email,
-          username: this.state.username,
-          password: this.state.password,
-          phone: this.state.phone
-        });
+        const response = await axios.post(
+          "https://sneaker-map-api.herokuapp.com/sign_up",
+          {
+            user: this.state.user,
+            nom: this.state.nom,
+            prenom: this.state.prenom,
+            email: this.state.email,
+            username: this.state.username,
+            password: this.state.password,
+            phone: this.state.phone
+          }
+        );
         const value = JSON.stringify(response.data);
         await AsyncStorage.setItem("userInfo", value);
         this.props.navigation.navigate("Home");
@@ -103,7 +106,7 @@ class SignUpScreen extends React.Component {
 
         // Si l'email est dans la BDD : connexion et redirection vers le home screen
         const response = await axios.post(
-          "http://localhost:5500/google_connection",
+          "https://sneaker-map-api.herokuapp.com/google_connection",
           {
             familyName: result.user.familyName,
             givenName: result.user.givenName,

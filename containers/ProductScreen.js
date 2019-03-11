@@ -7,12 +7,15 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
-  AppRegistry
+  AppRegistry,
+  AsyncStorage,
+  FlatList
 } from "react-native";
 import { MapView } from "expo";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
 import Communications from "react-native-communications";
+import Swiper from "react-native-swiper";
 
 class ProductScreen extends React.Component {
   state = {
@@ -28,22 +31,27 @@ class ProductScreen extends React.Component {
     isOpen: false,
     favory: [],
     userToken: null,
-    phone: null
+    phone: null,
+    picture: [],
+    styleId: null
   };
 
   static navigationOptions = ({ navigation }) => {
     return {
       headerStyle: {
-        height: 5
+        height: 40
       }
     };
   };
 
   componentDidMount = async () => {
+    const { navigation } = this.props;
+    const itemId = navigation.getParam("id");
+    //console.log(itemId);
     const response = await axios.get(
-      "http://localhost:5500/get_product_info?id=5c80f22710b1f405ffdfd7b5" // remplacer l'id par la props reçue de la page précédente
+      "https://sneaker-map-api.herokuapp.com/get_product_info?id=" + itemId // remplacer l'id par la props reçue de la page précédente
     );
-    console.log("response.data ", response.data);
+    //console.log("response.data ", response.data);
     const title = response.data.title;
     const description = response.data.description;
     const price = response.data.price;
@@ -51,13 +59,19 @@ class ProductScreen extends React.Component {
     const size = response.data.size;
     const productId = response.data._id;
     const localisation = response.data.localisation;
+    const picture = response.data.pictures;
+    const styleId = response.data.id_style;
 
-    // const userInfo = await AsyncStorage.getItem("userInfo");
-    // console.log("userInfo ", userInfo);
+    let userInfo = await AsyncStorage.getItem("userInfo");
+    userInfo = JSON.parse(userInfo);
+    // console.log("userInfo ", userInfo.token);
 
     const userResponse = await axios.get(
-      "http://localhost:5500/get_my_user_info"
+      "https://sneaker-map-api.herokuapp.com/get_my_user_info?token=" +
+        userInfo.token
     );
+
+    // console.log(userResponse.data);
 
     this.setState(
       {
@@ -68,10 +82,12 @@ class ProductScreen extends React.Component {
         price: price,
         etat: etat,
         size: size,
+        picture: picture,
         favory: userResponse.data.favory,
         userToken: userResponse.data.token,
         phone: userResponse.data.phone,
-        localisation: localisation
+        localisation: localisation,
+        styleId: styleId
       },
       () => {
         // vérifier si l'id produit se trouve dans le tableau de favoris
@@ -106,7 +122,9 @@ class ProductScreen extends React.Component {
     if (this.state.isOpen === true) {
       return (
         <>
-          <Text style={styles.p}>{this.state.description}</Text>
+          <Text style={styles.p}>
+            {this.state.description + " StyleId : " + this.state.styleId}
+          </Text>
           <Ionicons
             style={{ textAlign: "center" }}
             name="ios-arrow-up"
@@ -152,7 +170,7 @@ class ProductScreen extends React.Component {
     // Modifier tableau de favoris de l'utilisateur:
     // appeler la route update user
     const response = await axios.post(
-      "http://192.168.86.54:5500/update_user_info",
+      "https://sneaker-map-api.herokuapp.com/update_user_info",
       {
         //body
         favory: this.state.productId
@@ -177,17 +195,27 @@ class ProductScreen extends React.Component {
       return (
         <>
           <ScrollView contentContainerStyle={styles.container}>
-            <View style={{ position: "relative" }}>
-              <Image
-                resizeMode="cover"
-                style={styles.productPic}
-                source={{
-                  uri:
-                    "https://www.lesitedelasneaker.com/wp-content/images/2018/04/air-jordan-3-katrina-136064-116-3.jpg"
-                }}
-              />
-              {this.renderFavorite()}
-            </View>
+            <Swiper
+              style={{ height: 350 }}
+              activeDotColor={"black"}
+              showsButtons={true}
+              showsPagination={true}
+            >
+              {this.state.picture.map((photo, i) => {
+                return (
+                  <View style={{ position: "relative" }} key={i}>
+                    <Image
+                      resizeMode="contain"
+                      style={styles.productPic}
+                      source={{
+                        uri: photo
+                      }}
+                    />
+                    {this.renderFavorite()}
+                  </View>
+                );
+              })}
+            </Swiper>
             <View style={styles.contentWrapper}>
               <Text style={styles.title}>{this.state.title}</Text>
               <Text style={styles.title}>Description</Text>
@@ -240,33 +268,41 @@ class ProductScreen extends React.Component {
             <MapView
               style={{ height: 250 }}
               initialRegion={{
-                latitude: this.state.localisation[1],
-                longitude: this.state.localisation[0],
+                latitude: this.state.localisation[0],
+                longitude: this.state.localisation[1],
                 latitudeDelta: 0.025,
                 longitudeDelta: 0.0029
               }}
             >
               <MapView.Marker
                 coordinate={{
-                  latitude: this.state.localisation[1],
-                  longitude: this.state.localisation[0]
+                  latitude: this.state.localisation[0],
+                  longitude: this.state.localisation[1]
                 }}
                 title={"La sneaker dont tu rêves"}
                 description={"Elle est là, elle t'attend !"}
               >
-                <Image
-                  source={{
-                    uri:
-                      "https://www.lesitedelasneaker.com/wp-content/images/2018/04/air-jordan-3-katrina-136064-116-3.jpg"
-                  }}
+                <View
                   style={{
                     width: 60,
                     height: 60,
                     borderRadius: 30,
-                    borderWidth: 1,
-                    borderColor: "grey"
+                    backgroundColor: "white"
                   }}
-                />
+                >
+                  <Image
+                    source={{
+                      uri: this.state.picture[0]
+                    }}
+                    resizeMode="contain"
+                    style={{
+                      width: 45,
+                      height: 45,
+                      marginTop: 5,
+                      marginLeft: 6
+                    }}
+                  />
+                </View>
               </MapView.Marker>
             </MapView>
           </ScrollView>
@@ -329,8 +365,9 @@ const styles = StyleSheet.create({
   },
   productPic: {
     // width: "100%",
-    height: 425,
-    resizeMode: "cover"
+    marginTop: 35,
+    height: 280,
+    resizeMode: "contain"
   },
   title: {
     fontSize: 24,
@@ -346,7 +383,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     marginTop: 6,
-    marginBottom: 10,
+    marginBottom: 20,
     height: 56
   },
   iconWrapper: {

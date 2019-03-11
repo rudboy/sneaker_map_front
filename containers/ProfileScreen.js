@@ -8,7 +8,7 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView,
+  KeyboardAvoidingView
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
@@ -16,7 +16,7 @@ import axios from "axios";
 class ProfileScreen extends React.Component {
   state = {
     profile: {},
-    editable: true,
+    editable: true
   };
 
   async componentDidMount() {
@@ -25,11 +25,12 @@ class ProfileScreen extends React.Component {
       tempToken = JSON.parse(tempToken);
       if (this.state.password === this.state.repassword) {
         const response = await axios.get(
-          "http://localhost:5500/get_my_user_info?token=" + tempToken.token
+          "https://sneaker-map-api.herokuapp.com/get_my_user_info?token=" +
+            tempToken.token
         );
 
         this.setState({
-          profile: response.data,
+          profile: response.data
         });
         console.log(this.state);
       } else {
@@ -53,19 +54,19 @@ class ProfileScreen extends React.Component {
     tempToken = JSON.parse(tempToken);
     try {
       await axios.post(
-        "http://localhost:5500/update_user_info",
+        "https://sneaker-map-api.herokuapp.com/update_user_info",
         {
           username: this.state.profile.username,
           email: this.state.profile.email,
           nom: this.state.profile.nom,
           prenom: this.state.profile.prenom,
           adresse: this.state.profile.adresse,
-          size: this.state.profile.size,
+          size: this.state.profile.size
         },
         {
           headers: {
-            authorization: "Bearer " + tempToken.token,
-          },
+            authorization: "Bearer " + tempToken.token
+          }
         }
       );
     } catch (error) {
@@ -77,8 +78,8 @@ class ProfileScreen extends React.Component {
     const newState = {
       profile: {
         ...this.state.profile,
-        [name]: value,
-      },
+        [name]: value
+      }
     };
     this.setState(newState);
   };
@@ -129,7 +130,7 @@ class ProfileScreen extends React.Component {
             style={{
               position: "relative",
               paddingHorizontal: 15,
-              marginTop: 20,
+              marginTop: 20
             }}
           >
             <TouchableOpacity
@@ -184,14 +185,14 @@ class ProfileScreen extends React.Component {
               <View
                 style={{
                   flexDirection: "row",
-                  justifyContent: "space-between",
+                  justifyContent: "space-between"
                 }}
               >
                 <View style={{ width: "50%" }}>
                   <Ionicons
                     style={{
                       position: "absolute",
-                      top: "25%",
+                      top: "25%"
                     }}
                     name="ios-phone-portrait"
                     size={20}
@@ -304,7 +305,7 @@ const styles = StyleSheet.create({
   headerProfile: {
     paddingVertical: 20,
     backgroundColor: "#111",
-    alignItems: "center",
+    alignItems: "center"
   },
   posterBorder: {
     borderWidth: 2,
@@ -313,7 +314,7 @@ const styles = StyleSheet.create({
     width: 110,
     justifyContent: "center",
     alignItems: "center",
-    textAlign: "center",
+    textAlign: "center"
   },
   cameraView: {
     backgroundColor: "#fff",
@@ -323,15 +324,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
     bottom: 0,
-    left: 30,
+    left: 30
   },
   usernameContainer: {
     position: "relative",
-    marginTop: 20,
+    marginTop: 20
   },
   usernameInput: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 20
   },
   modifProfile: {
     position: "absolute",
@@ -345,24 +346,24 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
-    shadowRadius: 2,
+    shadowRadius: 2
   },
   inputTextName: {
     fontSize: 30,
-    marginTop: 5,
+    marginTop: 5
   },
   inputText: {
     fontSize: 16,
     marginTop: 10,
     marginBottom: 10,
-    paddingLeft: 25,
+    paddingLeft: 25
   },
   separator: {
     width: "100%",
     height: 1,
     backgroundColor: "grey",
-    marginVertical: 20,
-  },
+    marginVertical: 20
+  }
 });
 
 export default ProfileScreen;

@@ -1,22 +1,7 @@
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  Text,
-  TouchableOpacity,
-  ImageEditor,
-<<<<<<< HEAD
-  AsyncStorage,
-  ActionSheetIOS,
-  Image
-=======
-  AsyncStorage
->>>>>>> pulled master branch from github
-} from "react-native";
-import RNPickerSelect from "react-native-picker-select";
-import { Ionicons } from "@expo/vector-icons";
+import { View, StyleSheet, ActionSheetIOS, Image } from "react-native";
 import { MapView, Location, Permissions } from "expo";
+import InputGeoloc from "./googleAutoComplete";
 
 class GeoLocalisation extends React.Component {
   state = {
@@ -24,7 +9,7 @@ class GeoLocalisation extends React.Component {
     errorMessage: null,
     newmarker: null
   };
-
+  //Verifie si la permission de la localisation
   getLocationAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== "granted") {
@@ -32,77 +17,59 @@ class GeoLocalisation extends React.Component {
         errorMessage: "Permission refusée"
       });
     } else {
+      //si la permission est activé on recupere la position actuel
       const Currentlocation = await Location.getCurrentPositionAsync({});
       this.setState({
         location: Currentlocation
       });
+      //on renvois la localisation au parent New_Product
       this.props.get_location(Currentlocation);
     }
   };
-
-<<<<<<< HEAD
-  pickgeoloc = () => {
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options: ["Cancel", "Remove"],
-        destructiveButtonIndex: 1,
-        cancelButtonIndex: 0
-      },
-      buttonIndex => {
-        if (buttonIndex === 1) {
-          /* destructive action */
-        }
-      }
-    );
-=======
-  getImage = async () => {
-    // Construct a crop data object.
-    cropData = {
-      offset: { x: 0, y: 0 },
-      size: { width: 20, height: 20 }
-      //  displaySize:{width:20, height:20}, THESE 2 ARE OPTIONAL.
-      //  resizeMode:'contain',
-    };
-    // Crop the image.
-    newurl = await AsyncStorage.getItem("imageForMarker");
-    //console.log(newurl);
-
-    try {
-      await ImageEditor.cropImage(
-        "https://stockx.imgix.net/Air-Jordan-1-Retro-High-OG-Defiant-Couture-Product.jpg?fit=fill&bg=FFFFFF&w=140&h=100&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1551112186",
-        cropData,
-        successURI => {
-          this.setState({ newmarker: successURI });
-          //console.log(successURI);
-        },
-        error => {
-          console.log("cropImage,", error);
-        }
-      );
-    } catch (error) {
-      console.log("Error caught in this.cropImage:", error);
-    }
->>>>>>> pulled master branch from github
+  //fonction pour mettre a jour la localisation
+  onRegionChange = location => {
+    //console.log(location);
+    this.setState({
+      location: location
+    });
   };
 
-  mapview = () => {
-    if (this.state.location) {
+  //afficher la map
+  mapview = location => {
+    if (location) {
       return (
         <>
+          <View>
+            {/* ici on recupere la lagitude et la longitude des adressse rentrer en input */}
+            <InputGeoloc
+              get_location={this.props.get_location}
+              mapViewer={this.onRegionChange}
+            />
+          </View>
+
           <MapView
             style={{
               width: 300,
               height: 150,
-              marginTop: 20,
+              marginTop: 5,
               borderRadius: 8
             }}
+            //localisation initial positition actuel
             initialRegion={{
               latitude: this.state.location.coords.latitude,
               longitude: this.state.location.coords.longitude,
               latitudeDelta: 0.002,
               longitudeDelta: 0.002
             }}
+            //localisation apres la mise a jour de l'adressse
+            region={{
+              latitude: this.state.location.coords.latitude,
+              longitude: this.state.location.coords.longitude,
+              latitudeDelta: 0.002,
+              longitudeDelta: 0.002
+            }}
           >
+            {/* affichage un marker sur la map */}
             <MapView.Marker
               coordinate={{
                 latitude: this.state.location.coords.latitude,
@@ -110,14 +77,36 @@ class GeoLocalisation extends React.Component {
               }}
               title={"Vous etes ici"}
               description={"?????"}
-<<<<<<< HEAD
             >
-              {/* <Image source={{uri:""}}></Image> */}
+              <View
+                style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: 30,
+                  //  borderWidth: 1,
+                  // borderColor: "grey",
+                  backgroundColor: "white",
+                  display: this.props.url === "" ? "none" : ""
+                }}
+              >
+                {/* customa du marquer avec la photo de la sneaker */}
+                <Image
+                  source={{
+                    uri:
+                      this.props.url === ""
+                        ? "https://upload.wikimedia.org/wikipedia/commons/4/48/BLANK_ICON.png"
+                        : this.props.url
+                  }}
+                  resizeMode="contain"
+                  style={{
+                    width: 45,
+                    height: 45,
+                    marginTop: 5,
+                    marginLeft: 6
+                  }}
+                />
+              </View>
             </MapView.Marker>
-=======
-              //image={require(this.state.newmarker)}
-            />
->>>>>>> pulled master branch from github
           </MapView>
         </>
       );
@@ -130,10 +119,10 @@ class GeoLocalisation extends React.Component {
     return (
       <View
         style={{
-          marginTop: 25
+          marginTop: 20
         }}
       >
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             color: "black",
             backgroundColor: "white",
@@ -142,11 +131,7 @@ class GeoLocalisation extends React.Component {
             // alignItems: "center",
             height: 40
           }}
-<<<<<<< HEAD
           onPress={this.pickgeoloc}
-=======
-          onPress={this.pickImage}
->>>>>>> pulled master branch from github
         >
           <Text
             style={{
@@ -157,22 +142,15 @@ class GeoLocalisation extends React.Component {
           >
             AJOUTER UNE LOCALISATION
           </Text>
-        </TouchableOpacity>
-<<<<<<< HEAD
-
-=======
->>>>>>> pulled master branch from github
-        <View>{this.mapview()}</View>
+        </TouchableOpacity> */}
+        <View>{this.mapview(this.state.location)}</View>
       </View>
     );
   }
   componentDidMount() {
     this.getLocationAsync();
-<<<<<<< HEAD
-=======
-    this.getImage();
->>>>>>> pulled master branch from github
   }
 }
+const styles = StyleSheet.create({});
 
 export default GeoLocalisation;

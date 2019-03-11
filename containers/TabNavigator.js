@@ -5,6 +5,8 @@ import {
 } from "react-navigation";
 import HomeScreen from "./HomeScreen";
 import ProfileScreen from "./ProfileScreen";
+import NewProductScreen from "./New_Product";
+
 // import SettingsScreen from "./SettingsScreen";
 // import ChatScreen from "./ChatScreen";
 
@@ -13,7 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeScreen,
-    Profile: ProfileScreen
+    Profile: ProfileScreen,
+    NewProduct: NewProductScreen
     // Chat: ChatScreen,
     // Settings: SettingsScreen,
   },
@@ -31,19 +34,20 @@ const TabNavigator = createBottomTabNavigator(
           case "Profile":
             iconName = "ios-person";
             break;
-          // case "Settings":
-          //   iconName = "ios-settings";
 
-          //   break;
-          // case "Chat":
-          //   iconName = "ios-chatboxes";
+          case "NewProduct":
+            iconName = "ios-settings";
+            break;
 
-          //   break;
           default:
             iconName = null;
         }
 
-        return <Ionicons name={iconName} size={25} color={tintColor} />;
+        return (
+          <>
+            <Ionicons name={iconName} size={25} color={tintColor} />
+          </>
+        );
       }
     }),
     tabBarOptions: {
@@ -70,6 +74,7 @@ TabNavigator.navigationOptions = ({ navigation }) => {
     case "Settings":
       headerTitle = "Paramètres";
       break;
+
     default:
       headerTitle = routeName;
   }

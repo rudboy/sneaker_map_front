@@ -8,12 +8,11 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-
   KeyboardAvoidingView,
   ActionSheetIOS,
   Image,
   TouchableHighlight,
-  ActivityIndicator,
+  ActivityIndicator
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
@@ -23,11 +22,10 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 class ProfileScreen extends React.Component {
   state = {
     profile: {},
-
     editable: true,
     tab_photo: [],
     isLoading: true,
-    profileModified: false,
+    profileModified: false
   };
 
   async componentDidMount() {
@@ -41,9 +39,8 @@ class ProfileScreen extends React.Component {
         );
 
         this.setState({
-
           profile: response.data,
-          isLoading: false,
+          isLoading: false
         });
         // console.log(this.state);
         this.getCameraRollAsync();
@@ -60,7 +57,7 @@ class ProfileScreen extends React.Component {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (status !== "granted") {
       this.setState({
-        errorMessage: "Permission refusée",
+        errorMessage: "Permission refusée"
       });
     }
   };
@@ -68,7 +65,7 @@ class ProfileScreen extends React.Component {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     if (status !== "granted") {
       this.setState({
-        errorMessage: "Permission refusée",
+        errorMessage: "Permission refusée"
       });
     }
   };
@@ -84,7 +81,7 @@ class ProfileScreen extends React.Component {
       let result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         base64: true,
-        aspect: [4, 3],
+        aspect: [4, 3]
       });
       let temp = this.state.tab_photo;
       console.log(result);
@@ -97,7 +94,7 @@ class ProfileScreen extends React.Component {
       let result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         base64: true,
-        aspect: [4, 3],
+        aspect: [4, 3]
       });
       let temp = this.state.tab_photo;
       console.log(result);
@@ -116,7 +113,7 @@ class ProfileScreen extends React.Component {
       let result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
         base64: true,
-        aspect: [4, 3],
+        aspect: [4, 3]
       });
       let temp = this.state.tab_photo;
       console.log(result);
@@ -134,7 +131,7 @@ class ProfileScreen extends React.Component {
         title: "Which one do you like ?",
         rollButtonIndex: 2,
         cameraButtonIndex: 1,
-        cancelButtonIndex: 0,
+        cancelButtonIndex: 0
       },
       buttonIndex => {
         if (buttonIndex === 1) {
@@ -195,9 +192,8 @@ class ProfileScreen extends React.Component {
           nom: this.state.profile.nom,
           prenom: this.state.profile.prenom,
           adresse: this.state.profile.adresse,
-
           size: this.state.profile.size,
-          poster_profile: this.state.tab_photo,
+          poster_profile: this.state.tab_photo
         },
         {
           headers: {
@@ -304,8 +300,7 @@ class ProfileScreen extends React.Component {
             style={{
               position: "relative",
               paddingHorizontal: 15,
-
-              paddingTop: 30,
+              paddingTop: 30
             }}
           >
             <TouchableOpacity
@@ -540,20 +535,19 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 1,
     backgroundColor: "grey",
-
-    marginVertical: 20,
+    marginVertical: 20
   },
   updateButton: {
     borderRadius: 5,
     borderWidth: 1,
     padding: 10,
     backgroundColor: "#111",
-    marginTop: 20,
+    marginTop: 20
   },
   updateButtonText: {
     textAlign: "center",
     color: "#fff",
-    fontSize: 20,
+    fontSize: 20
   },
   profileModified: {
     textAlign: "center",
@@ -563,8 +557,8 @@ const styles = StyleSheet.create({
     bottom: -35,
     width: "100%",
     fontSize: 16,
-    padding: 10,
-  },
+    padding: 10
+  }
 });
 
 export default ProfileScreen;

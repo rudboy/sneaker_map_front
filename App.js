@@ -1,7 +1,7 @@
 import {
   createSwitchNavigator,
   createStackNavigator,
-  createAppContainer,
+  createAppContainer
 } from "react-navigation";
 
 import AuthLoadingScreen from "./containers/AuthLoadingScreen";
@@ -15,7 +15,6 @@ import ChatScreen from "./containers/ChatScreen";
 import SellerProfileScreen from "./containers/SellerProfileScreen";
 import NewProductScreen from "./containers/New_Product";
 
-
 const AppStack = createStackNavigator({
   Tab: TabNavigator,
   Home: HomeScreen,
@@ -26,7 +25,6 @@ const AppStack = createStackNavigator({
   Chat: ChatScreen,
   SellerProfile: SellerProfileScreen,
   New_Product: NewProductScreen
-
 });
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
@@ -35,10 +33,10 @@ export default createAppContainer(
     {
       AuthLoading: SignInScreen,
       App: AppStack,
-      Auth: AuthStack,
+      Auth: AuthStack
     },
     {
-      initialRouteName: "AuthLoading",
+      initialRouteName: "AuthLoading"
     }
   )
 );

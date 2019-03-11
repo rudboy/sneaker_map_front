@@ -6,7 +6,7 @@ import {
   Image,
   AsyncStorage,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Ionicons } from "@expo/vector-icons";
@@ -38,19 +38,15 @@ class NewProduct extends React.Component {
     size: "",
     tab_location: "",
     title: "",
-<<<<<<< HEAD
     styleID: "",
-    tab_photo: []
-=======
-    styleID: ""
->>>>>>> pulled master branch from github
+    tab_photo: [],
   };
 
   Get_Category = mark => {
     //console.log(this.state.mark);
     if (mark === "Jordan") {
       this.setState({
-        tabcategory: require("../assets/json/Jordan/Jordan.json")
+        tabcategory: require("../assets/json/Jordan/Jordan.json"),
       });
     }
   };
@@ -58,7 +54,7 @@ class NewProduct extends React.Component {
     for (let i = 0; i < jordan.length; i++) {
       if (category === jordan[i].value) {
         this.setState({
-          tab_async: await AsyncStorage.getItem(category)
+          tab_async: await AsyncStorage.getItem(category),
         });
         this.setState({ tab_async: JSON.parse(this.state.tab_async) });
         this.setState({ tab_model: this.state.tab_async });
@@ -77,10 +73,7 @@ class NewProduct extends React.Component {
   };
 
   addToDB = async () => {
-<<<<<<< HEAD
     //console.log(this.state.tab_photo);
-=======
->>>>>>> pulled master branch from github
     try {
       // On charge les données ici
       const response = await axios.post(
@@ -93,22 +86,17 @@ class NewProduct extends React.Component {
           etat: this.state.neuf ? this.state.neuf : this.state.usager,
           localisation: [
             this.state.tab_location.coords.latitude,
-            this.state.tab_location.coords.longitude
+            this.state.tab_location.coords.longitude,
           ],
-<<<<<<< HEAD
           id_style: this.state.styleID,
-          pictures: this.state.tab_photo
-=======
-          id_style: this.state.styleID
-          //pictures:
->>>>>>> pulled master branch from github
+          pictures: this.state.tab_photo,
         },
         {
           headers: {
             authorization:
               "Bearer " +
-              "QgYUcG9McBGs4qPzPuohYTawoLK5tD4BB6gHb0uUOb0MrsxjSvAHGwvKIN9ff5Yn"
-          }
+              "QgYUcG9McBGs4qPzPuohYTawoLK5tD4BB6gHb0uUOb0MrsxjSvAHGwvKIN9ff5Yn",
+          },
         }
       );
       console.log(response.data);
@@ -130,13 +118,9 @@ class NewProduct extends React.Component {
   get_price = price => {
     this.setState({ price: price });
   };
-<<<<<<< HEAD
   get_photo = tab => {
     this.setState({ tab_photo: tab });
   };
-=======
-  get_photo = () => {};
->>>>>>> pulled master branch from github
 
   render() {
     // {
@@ -178,14 +162,10 @@ class NewProduct extends React.Component {
             toggleSwitch={this.toggleSwitch}
           />
           <Input_price get_price={this.get_price} price={this.state.price} />
-<<<<<<< HEAD
           <Add_photo
             get_photo={this.get_photo}
             tab_photo={this.state.tab_photo}
           />
-=======
-          <Add_photo />
->>>>>>> pulled master branch from github
           <GeoLocalisation
             get_location={this.get_location}
             location={this.state.tab_location}
@@ -195,7 +175,7 @@ class NewProduct extends React.Component {
               style={{
                 color: "black",
                 fontSize: 20,
-                fontWeight: "600"
+                fontWeight: "600",
               }}
             >
               VALIDER
@@ -228,16 +208,16 @@ const styles = StyleSheet.create({
     flex: 1,
 
     backgroundColor: "black",
-    color: "white"
+    color: "white",
   },
   principal: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   text: {
     fontSize: 25,
     fontWeight: "600",
-    color: "white"
+    color: "white",
   },
   valider: {
     color: "black",
@@ -248,8 +228,8 @@ const styles = StyleSheet.create({
     width: 250,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 40
-  }
+    marginBottom: 40,
+  },
 });
 
 export default NewProduct;

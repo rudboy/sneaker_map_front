@@ -22,10 +22,10 @@ class Chat extends React.Component {
     id: null
   };
 
-  componentDidMount = async () => {
-    const response = await axios.get("http://localhost:3000/get_messages");
-    console.log(response.data);
-  };
+  // componentDidMount = async () => {
+  //   const response = await axios.get("http://localhost:3000/get_messages");
+  //   console.log(response.data);
+  // };
 
   componentWillUnmount() {}
 

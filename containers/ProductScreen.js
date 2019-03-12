@@ -205,7 +205,7 @@ class ProductScreen extends React.Component {
                 return (
                   <View style={{ position: "relative" }} key={i}>
                     <Image
-                      resizeMode="contain"
+                      resizeMode="cover"
                       style={styles.productPic}
                       source={{
                         uri: photo

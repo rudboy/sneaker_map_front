@@ -15,6 +15,8 @@ import Picker_size from "../components/picker_size";
 import Etat from "../components/etat";
 import PriceSelect from "../components/PriceSelect";
 import SizeSelect from "../components/filter_pickerSize";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import geolib from "geolib";
 
 const jordan = require("../assets/json/Jordan/Jordan.json");
 
@@ -37,7 +39,127 @@ class FilterScreen extends React.Component {
     styleID: "",
     url: "",
     latitude: "",
-    longitude: ""
+    longitude: "",
+    localisationTab: []
+  };
+
+  // checks if 51.525, 7.4575 is within a radius of 5km from 51.5175, 7.4678
+  // triGeoloc = () => {
+  //   return geolib.isPointInCircle(
+  //     { latitude: 48.874883, longitude: 2.373836 },
+  //     { latitude: this.state.latitude, longitude: this.state.longitude },
+  //     5000
+  //   );
+  // };
+
+  triGeoloc = tableau => {
+    console.log(tableau[0].localisation[0]);
+    for (let i = 0; i < tableau.length; i++) {
+      let lat = tableau[i].localisation[0];
+      let lon = tableau[i].localisation[1];
+      var points = [{ latitude: lat, longitude: lon }];
+      var everyPointInCircle = points.some(point => {
+        return geolib.isPointInCircle(
+          point,
+          {
+            latitude: Number(this.state.latitude),
+            longitude: Number(this.state.longitude)
+          },
+          5000
+        );
+      });
+      console.log(everyPointInCircle);
+      if (everyPointInCircle === true) {
+        let temptab = [...this.state.localisationTab];
+        console.log(tableau[i]);
+        temptab.push(tableau[i]);
+        this.setState({ localisationTab: temptab });
+      }
+    }
+    console.log(this.state.localisationTab);
+  };
+
+  GooglePlacesInput = () => {
+    return (
+      <GooglePlacesAutocomplete
+        placeholder="Entrer une Adresse de localisation"
+        minLength={2} // minimum length of text to search
+        autoFocus={false}
+        returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+        keyboardAppearance={"light"} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
+        listViewDisplayed="auto" // true/false/undefined
+        fetchDetails={true}
+        renderDescription={row => row.description} // custom description render
+        onPress={(data, details = null) => {
+          // 'details' is provided when fetchDetails = true
+          let coords = {
+            coords: {
+              latitude: details.geometry.location.lat,
+              longitude: details.geometry.location.lng
+            }
+          };
+          // this.props.get_location(coords);
+          // this.props.mapViewer(coords);
+          this.setState({
+            latitude: coords.coords.latitude,
+            longitude: coords.coords.longitude
+          });
+          // console.log(coords);
+        }}
+        getDefaultValue={() => ""}
+        query={{
+          // available options: https://developers.google.com/places/web-service/autocomplete
+          key: "AIzaSyB1o6dYvykmEjwLDrttX6GWu1rGZQFa-Us",
+          language: "fr", // language of the results
+          types: "geocode" // default: ''(cities)
+        }}
+        styles={{
+          textInputContainer: {
+            width: "100%",
+            backgroundColor: "white"
+          },
+          textInput: {
+            backgroundColor: "#2d2d2d",
+            height: 30,
+            color: "white"
+          },
+          description: {
+            fontWeight: "bold",
+            color: "white"
+          },
+          predefinedPlacesDescription: {
+            color: "#1faadb"
+          }
+        }}
+        currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+        currentLocationLabel="Position Actuel"
+        nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+        GoogleReverseGeocodingQuery={
+          {
+            // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+          }
+        }
+        GooglePlacesSearchQuery={{
+          // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+          rankby: "distance",
+          type: "cafe"
+        }}
+        GooglePlacesDetailsQuery={{
+          // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
+          fields: "formatted_address"
+        }}
+        filterReverseGeocodingByTypes={[
+          "locality",
+          "administrative_area_level_3"
+        ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+        //predefinedPlaces={[homePlace, workPlace]}
+        debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+        // renderLeftButton={() => (
+        //   <Image source={require("../assets/images/google-plus.png")} />
+        // )}
+        // renderRightButton={() => <Text>Custom text after the input</Text>}
+      />
+    );
   };
 
   Get_Category = mark => {
@@ -118,8 +240,10 @@ class FilterScreen extends React.Component {
           }
         }
       );
-      console.log(this.state.usager);
+      //console.log(this.state.usager);
       console.log(response.data);
+      this.setState({ tab_location: response.data });
+      this.triGeoloc(this.state.tab_location);
     } catch (error) {
       console.log(error);
     }
@@ -153,6 +277,9 @@ class FilterScreen extends React.Component {
           >
             TRIER PAR
           </Text>
+          <View style={{ height: 80, width: 300 }}>
+            {this.GooglePlacesInput()}
+          </View>
           <Picker_mark Get_Category={this.Get_Category} />
           <Picker_category
             Get_Model={this.Get_Model}
@@ -190,7 +317,12 @@ class FilterScreen extends React.Component {
             Prix
           </Text>
           <PriceSelect price={this.getPrice} pricevalue={this.state.price} />
-          <TouchableOpacity style={styles.valider} onPress={this.getinfo}>
+          <TouchableOpacity
+            style={styles.valider}
+            onPress={() => {
+              this.getinfo();
+            }}
+          >
             <Text
               style={{
                 color: "black",

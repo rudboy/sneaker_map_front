@@ -1,49 +1,32 @@
 import React from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, AsyncStorage } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Ionicons } from "@expo/vector-icons";
 
 class NewProduct extends React.Component {
   state = {
     model: "",
-    index: this.props.childindex
+    tab_model: [],
+    index: "",
+    styleID: ""
   };
 
-  getImg = () => {
+  saveimg = async () => {
     if (this.props.tab_model.length > 0) {
-      try {
-        console.log();
-        if (this.state.index === "") {
-          return "https://upload.wikimedia.org/wikipedia/commons/4/48/BLANK_ICON.png";
-        } else if (this.state.index === 0 && this.props.tab_model.length > 0) {
-          return this.props.tab_model[0].photo;
-        } else if (
-          this.state.index === 0 &&
-          this.props.tab_model.length === 0
-        ) {
-          return "https://upload.wikimedia.org/wikipedia/commons/4/48/BLANK_ICON.png";
-        }
-        if (this.props.tab_model.length > 0 && this.state.index > 0) {
-          return this.props.tab_model[Number(this.state.index) - 1].photo;
-        } else {
-          return "https://upload.wikimedia.org/wikipedia/commons/4/48/BLANK_ICON.png";
-        }
-      } catch (error) {
-        console.log(error);
-      }
+      await AsyncStorage.setItem("imageForMarker", "url");
     }
   };
 
   render() {
     {
+      this.state.index !== "" ? this.saveimg() : "";
     }
 
     return (
       <>
         <View
           style={{
-            width: 300,
-            flexDirection: "row"
+            width: 250
           }}
         >
           <RNPickerSelect
@@ -68,23 +51,10 @@ class NewProduct extends React.Component {
                 () => {
                   this.props.Get_Size();
 
-                  this.props.tab_model.length > 0 && Number(index) === 0
-                    ? this.props.getURL(this.props.tab_model[index].photo)
-                    : this.props.tab_model.length > 0 && Number(index) > 0
-                    ? this.props.getURL(this.props.tab_model[index - 1].photo)
-                    : this.props.getURL("");
-
-                  this.props.tab_model.length > 0 && Number(index) === 0
-                    ? this.props.get_title(
-                        this.state.model,
-                        this.props.tab_model[index].styleId
-                      )
-                    : this.props.tab_model.length > 0 && Number(index) > 0
-                    ? this.props.get_title(
-                        this.state.model,
-                        this.props.tab_model[index - 1].styleId
-                      )
-                    : this.props.get_title("");
+                  this.props.get_title(
+                    this.state.model,
+                    this.props.tab_model[index].styleId
+                  );
                 }
               );
             }}
@@ -102,14 +72,16 @@ class NewProduct extends React.Component {
               return <Ionicons name="md-arrow-down" size={24} color="white" />;
             }}
           />
+        </View>
+        <View>
           <Image
-            style={{
-              height: 40,
-              width: 50
-            }}
+            style={{ height: 40, width: 50, marginBottom: 10 }}
             resizeMode="contain"
             source={{
-              uri: this.getImg()
+              uri:
+                this.state.index === ""
+                  ? ""
+                  : this.props.tab_model[this.state.index].photo
             }}
           />
         </View>
@@ -133,15 +105,13 @@ const pickerSelectStyles = StyleSheet.create({
     paddingHorizontal: 10,
     borderWidth: 1,
     marginBottom: 10,
-    width: 230,
+
     borderColor: "gray",
     borderRadius: 4,
     color: "white",
-    marginRight: 10,
     paddingRight: 30 // to ensure the text is never behind the icon
   },
   inputAndroid: {
-    width: 230,
     fontSize: 16,
     paddingHorizontal: 10,
     paddingVertical: 8,
@@ -149,7 +119,6 @@ const pickerSelectStyles = StyleSheet.create({
     borderColor: "grey",
     borderRadius: 8,
     color: "white",
-    marginRight: 10,
     paddingRight: 30 // to ensure the text is never behind the icon
   }
 });

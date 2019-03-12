@@ -11,8 +11,7 @@ import {
   ScrollView
 } from "react-native";
 import SneakerCard from "../components/SneakerCard";
-import { Ionicons } from "@expo/vector-icons";
-import PriceSelect from "../components/PriceSelect";
+import Geoloc from "../components/GeoLocalisation";
 
 let arrayholder = [];
 
@@ -57,25 +56,6 @@ class HomeScreen extends React.Component {
     });
   }
 
-  get_all_product = async () => {
-    return fetch("http://localhost:5500/all_product")
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState(
-          {
-            isLoading: false,
-            sneakers: responseJson
-          },
-          function() {
-            arrayholder = responseJson;
-          }
-        );
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-
   render() {
     {
     }
@@ -115,7 +95,7 @@ class HomeScreen extends React.Component {
               marginBottom: 10
             }}
             onPress={() =>
-              this.props.navigation.navigate("Product", { name: "Filtres" })
+              this.props.navigation.navigate("Filter", { name: "Filtres" })
             }
           >
             <Text

@@ -14,6 +14,7 @@ import PasswordResetScreen from "./containers/PasswordResetScreen";
 import ChatScreen from "./containers/ChatScreen";
 import SellerProfileScreen from "./containers/SellerProfileScreen";
 import NewProductScreen from "./containers/New_Product";
+import FilterScreen from "./containers/FilterScreen";
 
 const AppStack = createStackNavigator({
   Tab: TabNavigator,
@@ -23,6 +24,7 @@ const AppStack = createStackNavigator({
   PasswordReset: PasswordResetScreen,
   Product: ProductScreen,
   Chat: ChatScreen,
+  Filter: FilterScreen,
   SellerProfile: SellerProfileScreen,
   New_Product: NewProductScreen
 });
@@ -31,7 +33,7 @@ const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 export default createAppContainer(
   createSwitchNavigator(
     {
-      AuthLoading: SignInScreen,
+      AuthLoading: AuthLoadingScreen,
       App: AppStack,
       Auth: AuthStack
     },

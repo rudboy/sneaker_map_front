@@ -8,12 +8,13 @@ import {
   TouchableOpacity
 } from "react-native";
 import axios from "axios"; // const axios = require('axios');
-import Picker_mark from "../components/picker_mark";
-import Picker_category from "../components/picker_category";
-import Picker_model from "../components/picker_model";
+import Picker_mark from "../components/filter_pickerMark";
+import Picker_category from "../components/filter_pickerCategory";
+import Picker_model from "../components/filter_pickerModel";
 import Picker_size from "../components/picker_size";
 import Etat from "../components/etat";
 import PriceSelect from "../components/PriceSelect";
+import SizeSelect from "../components/filter_pickerSize";
 
 const jordan = require("../assets/json/Jordan/Jordan.json");
 
@@ -33,7 +34,10 @@ class FilterScreen extends React.Component {
     size: "",
     tab_location: "",
     title: "",
-    styleID: ""
+    styleID: "",
+    url: "",
+    latitude: "",
+    longitude: ""
   };
 
   Get_Category = mark => {
@@ -42,6 +46,7 @@ class FilterScreen extends React.Component {
         tabcategory: require("../assets/json/Jordan/Jordan.json")
       });
     }
+    this.setState({ mark: mark });
   };
   Get_Model = async category => {
     for (let i = 0; i < jordan.length; i++) {
@@ -52,6 +57,7 @@ class FilterScreen extends React.Component {
         this.setState({ tab_async: JSON.parse(this.state.tab_async) });
         this.setState({ tab_model: this.state.tab_async });
       }
+      this.setState({ category: category });
     }
   };
   Get_Size = () => {
@@ -62,30 +68,42 @@ class FilterScreen extends React.Component {
   };
   toggleSwitch = value => {
     this.setState({ neuf: value, usager: !value });
-    console.log("Switch 1 is: " + value);
+    //console.log("Switch 1 is: " + value);
   };
 
-  addToDB = async () => {
+  getinfo = async () => {
+    let token = await AsyncStorage.getItem("userInfo");
+    token = JSON.parse(token);
+
     try {
+      let findThisText = "";
+      if (
+        this.state.model === "" &&
+        this.state.category === "" &&
+        this.state.mark !== ""
+      ) {
+        findThisText = this.state.mark;
+      } else if (
+        this.state.model === "" &&
+        this.state.category !== "" &&
+        this.state.mark !== ""
+      ) {
+        findThisText = this.state.category;
+      } else {
+        findThisText = this.state.model;
+      }
+      console.log(findThisText);
       const response = await axios.post(
-        "http://localhost:5500/create_product",
+        "https://sneaker-map-api.herokuapp.com/Product",
         {
-          title: this.state.title,
-          description: this.state.title,
-          price: this.state.price,
+          title: findThisText,
           size: this.state.size,
-          etat: this.state.neuf ? this.state.neuf : this.state.usager,
-          localisation: [
-            this.state.tab_location.coords.latitude,
-            this.state.tab_location.coords.longitude
-          ],
-          id_style: this.state.styleID
+          etat: this.state.neuf ? this.state.neuf : false,
+          priceMax: this.state.price
         },
         {
           headers: {
-            authorization:
-              "Bearer " +
-              "QgYUcG9McBGs4qPzPuohYTawoLK5tD4BB6gHb0uUOb0MrsxjSvAHGwvKIN9ff5Yn"
+            authorization: "Bearer " + token.token
           }
         }
       );
@@ -100,6 +118,12 @@ class FilterScreen extends React.Component {
   };
   get_title = (title, styleID) => {
     this.setState({ title: title, styleID: styleID });
+  };
+  getURL = url => {
+    this.setState({ url: url });
+  };
+  getPriceMax = price => {
+    this.setState({ price: price });
   };
 
   render() {
@@ -127,8 +151,9 @@ class FilterScreen extends React.Component {
             category={this.state.category}
             Get_Size={this.Get_Size}
             get_title={this.get_title}
+            getURL={this.getURL}
           />
-          <Picker_size
+          <SizeSelect
             tab_size={this.state.tabsize}
             get_size_db={this.get_size_db}
             size={this.state.size}
@@ -150,8 +175,8 @@ class FilterScreen extends React.Component {
           >
             Prix
           </Text>
-          <PriceSelect />
-          <TouchableOpacity style={styles.valider} onPress={this.addToDB}>
+          <PriceSelect priceMax={this.getPriceMax} price={this.state.price} />
+          <TouchableOpacity style={styles.valider} onPress={this.getinfo}>
             <Text
               style={{
                 color: "black",

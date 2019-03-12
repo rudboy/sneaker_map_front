@@ -27,12 +27,15 @@ class PriceSelect extends React.Component {
             color: "white"
           }}
         >
-          {this.state.values[0]} € - {this.state.values[1]} €
+          {this.state.values[0]} € - {this.props.price[1]} €
         </Text>
         <MultiSlider
-          values={[this.state.values[0], this.state.values[1]]}
+          enabledOne={false}
+          values={[this.state.values[0], this.props.price[1]]}
           sliderLength={280}
-          onValuesChange={this.multiSliderValuesChange}
+          onValuesChange={price => {
+            this.props.priceMax(price);
+          }}
           min={0}
           max={1000}
           step={1}

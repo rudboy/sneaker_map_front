@@ -11,8 +11,13 @@ import {
   ScrollView
 } from "react-native";
 import SneakerCard from "../components/SneakerCard";
+<<<<<<< HEAD
 import { Ionicons } from "@expo/vector-icons";
 import PriceSelect from "../components/PriceSelect";
+=======
+import Geoloc from "../components/GeoLocalisation";
+
+>>>>>>> add filter
 let arrayholder = [];
 
 class HomeScreen extends React.Component {
@@ -95,7 +100,7 @@ class HomeScreen extends React.Component {
               marginBottom: 10
             }}
             onPress={() =>
-              this.props.navigation.navigate("Product", { name: "Filtres" })
+              this.props.navigation.navigate("Filter", { name: "Filtres" })
             }
           >
             <Text

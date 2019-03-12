@@ -68,7 +68,7 @@ class Etat extends React.Component {
           </Text>
           <Switch
             onValueChange={() => {
-              this.props.toggleSwitch(!this.props.switchValue);
+              this.props.toggleSwitch2(!this.props.switchValue2);
             }}
             value={this.props.switchValue2}
           />

@@ -30,7 +30,7 @@ class FilterScreen extends React.Component {
     index: 0,
     neuf: true,
     usager: false,
-    price: "",
+    price: [0, 1000],
     size: "",
     tab_location: "",
     title: "",
@@ -67,8 +67,12 @@ class FilterScreen extends React.Component {
     }
   };
   toggleSwitch = value => {
-    this.setState({ neuf: value, usager: !value });
+    this.setState({ neuf: value });
     //console.log("Switch 1 is: " + value);
+  };
+
+  toggleSwitch2 = value => {
+    this.setState({ usager: value });
   };
 
   getinfo = async () => {
@@ -92,14 +96,21 @@ class FilterScreen extends React.Component {
       } else {
         findThisText = this.state.model;
       }
-      console.log(findThisText);
       const response = await axios.post(
         "https://sneaker-map-api.herokuapp.com/Product",
         {
           title: findThisText,
           size: this.state.size,
-          etat: this.state.neuf ? this.state.neuf : false,
-          priceMax: this.state.price
+          etat:
+            this.state.neuf && this.state.usager
+              ? ""
+              : this.state.neuf
+              ? this.state.neuf
+              : this.state.usager
+              ? false
+              : "",
+          priceMin: this.state.price[0],
+          priceMax: this.state.price[1]
         },
         {
           headers: {
@@ -107,6 +118,7 @@ class FilterScreen extends React.Component {
           }
         }
       );
+      console.log(this.state.usager);
       console.log(response.data);
     } catch (error) {
       console.log(error);
@@ -122,7 +134,8 @@ class FilterScreen extends React.Component {
   getURL = url => {
     this.setState({ url: url });
   };
-  getPriceMax = price => {
+  getPrice = price => {
+    console.log(price);
     this.setState({ price: price });
   };
 
@@ -162,6 +175,7 @@ class FilterScreen extends React.Component {
             switchValue={this.state.neuf}
             switchValue2={this.state.usager}
             toggleSwitch={this.toggleSwitch}
+            toggleSwitch2={this.toggleSwitch2}
           />
           <Text
             style={{
@@ -175,7 +189,7 @@ class FilterScreen extends React.Component {
           >
             Prix
           </Text>
-          <PriceSelect priceMax={this.getPriceMax} price={this.state.price} />
+          <PriceSelect price={this.getPrice} pricevalue={this.state.price} />
           <TouchableOpacity style={styles.valider} onPress={this.getinfo}>
             <Text
               style={{

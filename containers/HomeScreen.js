@@ -13,7 +13,6 @@ import {
 import SneakerCard from "../components/SneakerCard";
 import { Ionicons } from "@expo/vector-icons";
 import PriceSelect from "../components/PriceSelect";
-
 let arrayholder = [];
 
 class HomeScreen extends React.Component {
@@ -56,25 +55,6 @@ class HomeScreen extends React.Component {
       text: text
     });
   }
-
-  get_all_product = async () => {
-    return fetch("http://localhost:5500/all_product")
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState(
-          {
-            isLoading: false,
-            sneakers: responseJson
-          },
-          function() {
-            arrayholder = responseJson;
-          }
-        );
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
 
   render() {
     {

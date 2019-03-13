@@ -1,7 +1,7 @@
 import {
   createSwitchNavigator,
   createStackNavigator,
-  createAppContainer,
+  createAppContainer
 } from "react-navigation";
 
 import AuthLoadingScreen from "./containers/AuthLoadingScreen";
@@ -14,6 +14,7 @@ import PasswordResetScreen from "./containers/PasswordResetScreen";
 import ChatScreen from "./containers/ChatScreen";
 import SellerProfileScreen from "./containers/SellerProfileScreen";
 import NewProductScreen from "./containers/New_Product";
+import FilterScreen from "./containers/FilterScreen";
 import ProfileScreen from "./containers/ProfileScreen";
 
 const AppStack = createStackNavigator({
@@ -24,8 +25,9 @@ const AppStack = createStackNavigator({
   PasswordReset: PasswordResetScreen,
   Product: ProductScreen,
   Chat: ChatScreen,
+  Filter: FilterScreen,
   SellerProfile: SellerProfileScreen,
-  New_Product: NewProductScreen,
+  New_Product: NewProductScreen
 });
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
@@ -34,10 +36,10 @@ export default createAppContainer(
     {
       AuthLoading: AuthLoadingScreen,
       App: AppStack,
-      Auth: AuthStack,
+      Auth: AuthStack
     },
     {
-      initialRouteName: "AuthLoading",
+      initialRouteName: "AuthLoading"
     }
   )
 );

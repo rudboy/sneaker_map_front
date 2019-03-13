@@ -10,7 +10,7 @@ import {
   ScrollView,
   FlatList,
   TouchableHighlight,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
@@ -28,7 +28,7 @@ class SellerProfileScreen extends React.Component {
     etat: "",
     size: "",
     localisation: null,
-    sellerProduct: [],
+    sellerProduct: []
   };
 
   async componentDidMount() {
@@ -49,7 +49,7 @@ class SellerProfileScreen extends React.Component {
       this.setState({
         sellerProfile: response.data,
         sellerProduct: productResponse.data,
-        isLoading: false,
+        isLoading: false
       });
     } catch (error) {
       alert(error);
@@ -78,6 +78,10 @@ class SellerProfileScreen extends React.Component {
   };
 
   render() {
+    // console.log(
+    //   "this.state.sellerProfile dans le render : ",
+    //   this.state.sellerProfile
+    // );
     if (this.state.isLoading === true) {
       return (
         <View style={{ flex: 1, justifyContent: "center" }}>
@@ -107,7 +111,7 @@ class SellerProfileScreen extends React.Component {
             style={{
               position: "relative",
               paddingHorizontal: 15,
-              paddingTop: 30,
+              paddingTop: 30
             }}
           >
             <View>
@@ -133,14 +137,14 @@ class SellerProfileScreen extends React.Component {
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "space-between",
+                justifyContent: "space-between"
               }}
             >
               <View style={{ width: "50%" }}>
                 <Ionicons
                   style={{
                     position: "absolute",
-                    top: "25%",
+                    top: "25%"
                   }}
                   name="ios-phone-portrait"
                   size={20}
@@ -214,7 +218,7 @@ const styles = StyleSheet.create({
   headerProfile: {
     paddingVertical: 20,
     backgroundColor: "#111",
-    alignItems: "center",
+    alignItems: "center"
   },
   posterBorder: {
     borderWidth: 2,
@@ -223,32 +227,32 @@ const styles = StyleSheet.create({
     width: 110,
     justifyContent: "center",
     alignItems: "center",
-    textAlign: "center",
+    textAlign: "center"
   },
   usernameContainer: {
     position: "relative",
-    marginTop: 20,
+    marginTop: 20
   },
   usernameInput: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 20
   },
   inputTextName: {
     fontSize: 30,
-    marginTop: 5,
+    marginTop: 5
   },
   inputText: {
     fontSize: 16,
     marginTop: 10,
     marginBottom: 10,
-    paddingLeft: 25,
+    paddingLeft: 25
   },
   separator: {
     width: "100%",
     height: 1,
     backgroundColor: "grey",
-    marginVertical: 20,
-  },
+    marginVertical: 20
+  }
 });
 
 export default SellerProfileScreen;

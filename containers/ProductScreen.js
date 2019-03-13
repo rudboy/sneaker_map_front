@@ -40,7 +40,7 @@ class ProductScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       headerStyle: {
-        height: 30
+        height: 40
       }
     };
   };
@@ -64,6 +64,7 @@ class ProductScreen extends React.Component {
     const styleId = response.data.id_style;
     const creator = response.data.creator; // pouvoir envoyer l'id creator vers SellerProfileScreen
 
+    console.log("response.data.pictures ", response.data.pictures);
     let userInfo = await AsyncStorage.getItem("userInfo");
     userInfo = JSON.parse(userInfo);
 
@@ -158,10 +159,9 @@ class ProductScreen extends React.Component {
     return (
       <Ionicons
         onPress={this.handleFavorite}
-        style={{ position: "absolute", right: 8, top: 12 }}
-        name={this.state.isFavorite === false ? "ios-heart-empty" : "ios-heart"}
-        size={35}
-        color={this.state.isFavorite === true ? "red" : null}
+        name="ios-heart"
+        size={36}
+        color={this.state.isFavorite === true ? "red" : "#ECE9E8"}
       />
     );
   };
@@ -189,36 +189,56 @@ class ProductScreen extends React.Component {
   };
 
   render() {
+    console.log("this.state.picture ", this.state.picture);
     if (this.state.isLoading === true) {
       return <ActivityIndicator style={{ flex: 1 }} />;
     } else {
       return (
         <>
           <ScrollView contentContainerStyle={styles.container}>
-            <Swiper
-              style={{ height: 350 }}
-              activeDotColor={"black"}
-              showsButtons={true}
-              showsPagination={true}
-            >
-              {this.state.picture.map((photo, i) => {
-                return (
-                  <View style={{ position: "relative" }} key={i}>
+            <View style={{ position: "relative" }}>
+              <Swiper
+                loop={false}
+                style={{ height: 350 }}
+                activeDotColor={"black"}
+                showsButtons={this.state.picture.length > 1 ? true : false}
+                showsPagination={this.state.picture.length > 1 ? true : false}
+              >
+                {this.state.picture.map((photo, i) => {
+                  return (
                     <Image
-                      resizeMode="cover"
+                      key={i}
+                      resizeMode="contain"
                       style={styles.productPic}
                       source={{
                         uri: photo
                       }}
                     />
-                    {this.renderFavorite()}
-                  </View>
-                );
-              })}
-            </Swiper>
+                  );
+                })}
+              </Swiper>
+              <View
+                style={{
+                  position: "absolute",
+                  right: 12,
+                  top: 12
+                }}
+              >
+                {this.renderFavorite()}
+                <Ionicons
+                  // style={{
+                  //   position: "absolute",
+                  //   right: 12,
+                  //   top: 48
+                  // }}
+                  name="md-share"
+                  size={32}
+                />
+              </View>
+            </View>
             <View style={styles.contentWrapper}>
               <Text style={styles.title}>{this.state.title}</Text>
-              <Text style={styles.title}>Description</Text>
+              <Text style={styles.subtitle}>Description</Text>
               <TouchableOpacity onPress={this.handlePress}>
                 {this.renderDesc()}
               </TouchableOpacity>
@@ -235,7 +255,7 @@ class ProductScreen extends React.Component {
                     flex: 1
                   }}
                 >
-                  <Text style={styles.title}>Pointure</Text>
+                  <Text style={styles.subtitle}>Pointure</Text>
 
                   <Text style={styles.p}>{this.state.size}</Text>
                 </View>
@@ -245,7 +265,7 @@ class ProductScreen extends React.Component {
                     flex: 1
                   }}
                 >
-                  <Text style={styles.title}>Prix</Text>
+                  <Text style={styles.subtitle}>Prix</Text>
 
                   <Text style={styles.p}>{this.state.price} €</Text>
                 </View>
@@ -255,14 +275,14 @@ class ProductScreen extends React.Component {
                     flex: 1
                   }}
                 >
-                  <Text style={styles.title}>Etat</Text>
+                  <Text style={styles.subtitle}>Etat</Text>
 
                   <Text style={styles.p}>
                     {this.state.etat === true ? "Neuf" : "Occasion"}
                   </Text>
                 </View>
               </View>
-              <Text style={styles.title}>Localisation</Text>
+              <Text style={styles.subtitle}>Localisation</Text>
             </View>
 
             <MapView
@@ -368,18 +388,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16
   },
   productPic: {
-    // width: "100%",
-    marginTop: 35,
-    height: 280,
-    resizeMode: "contain"
+    flex: 1
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     marginTop: 10,
     marginBottom: 8
   },
+  subtitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    marginTop: 15,
+    marginBottom: 8
+  },
   p: {
-    fontSize: 16
+    fontSize: 13
   },
   footer: {
     flexDirection: "row",

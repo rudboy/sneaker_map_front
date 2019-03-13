@@ -18,6 +18,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
 import { ImagePicker, Permissions } from "expo";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import SliderProduct from "../components/SliderProduct";
 
 class ProfileScreen extends React.Component {
   state = {
@@ -26,28 +27,56 @@ class ProfileScreen extends React.Component {
     tab_photo: [],
     isLoading: true,
     profileModified: false,
+    userProduct: [],
+    favProduct: [],
+    refreshing: false,
   };
 
   async componentDidMount() {
     try {
       let tempToken = await AsyncStorage.getItem("userInfo");
       tempToken = JSON.parse(tempToken);
-      if (this.state.password === this.state.repassword) {
-        const response = await axios.get(
-          "https://sneaker-map-api.herokuapp.com/get_my_user_info?token=" +
-            tempToken.token
+
+      const response = await axios.get(
+        "https://sneaker-map-api.herokuapp.com/get_my_user_info?token=" +
+          tempToken.token
+      );
+
+      const productResponse = await axios.get(
+        `https://sneaker-map-api.herokuapp.com/get_seller_product_info?id=${
+          response.data._id
+        }`
+      );
+      this.setState({ userProduct: productResponse.data });
+
+      const tab = [];
+      for (let i = 0; i < response.data.favory.length; i++) {
+        const favResponse = await axios.get(
+          `https://sneaker-map-api.herokuapp.com/get_product_info?id=${
+            response.data.favory[i]
+          }`
         );
 
-        this.setState({
-          profile: response.data,
-          isLoading: false,
-        });
-        // console.log(this.state);
-        this.getCameraRollAsync();
-        this.getCameraAsync();
-      } else {
-        alert("toto");
+        tab.push(favResponse.data);
       }
+
+      // console.log("tab", tab);
+
+      //console.log("response.data.favory", response.data.favory);
+
+      this.setState({
+        profile: response.data,
+        // userProduct: productResponse.data,
+        favProduct: tab,
+        isLoading: false,
+      });
+
+      //console.log("this.state.userProduct", this.state.userProduct);
+
+      // console.log("this.state.favProduct", this.state.favProduct);
+
+      this.getCameraRollAsync();
+      this.getCameraAsync();
     } catch (error) {
       alert(error);
     }
@@ -84,12 +113,12 @@ class ProfileScreen extends React.Component {
         aspect: [4, 3],
       });
       let temp = this.state.tab_photo;
-      console.log(result);
+      // console.log(result);
       if (!result.cancelled) {
         temp.push("data:image/jpeg;base64," + result.base64);
         this.get_photo(temp);
       }
-      console.log(this.state.tab_photo);
+      // console.log(this.state.tab_photo);
     } else {
       let result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
@@ -97,13 +126,12 @@ class ProfileScreen extends React.Component {
         aspect: [4, 3],
       });
       let temp = this.state.tab_photo;
-      console.log(result);
+      // console.log(result);
       if (!result.cancelled) {
         temp.push("data:image/jpeg;base64," + result.base64);
         this.get_photo(temp);
       }
     }
-    console.log(this.state.tab_photo);
   };
 
   pickImageCamera = async () => {
@@ -116,7 +144,7 @@ class ProfileScreen extends React.Component {
         aspect: [4, 3],
       });
       let temp = this.state.tab_photo;
-      console.log(result);
+      // console.log(result);
       if (!result.cancelled) {
         temp.push("data:image/jpeg;base64," + result.base64);
         this.get_photo(temp);
@@ -230,8 +258,19 @@ class ProfileScreen extends React.Component {
     this.setState({ profileModified: true });
   };
 
+  deleteProduct = product => {
+    this.setState({
+      userProduct: product,
+    });
+  };
+
+  deleteFavorite = favorite => {
+    this.setState({
+      favProduct: favorite,
+    });
+  };
+
   render() {
-    console.log(this.state.profile);
     if (this.state.isLoading === true) {
       return (
         <View style={{ flex: 1, justifyContent: "center" }}>
@@ -240,247 +279,242 @@ class ProfileScreen extends React.Component {
         </View>
       );
     }
+
     return (
       <>
-        <KeyboardAwareScrollView>
-          <StatusBar barStyle="light-content" />
-          <View style={styles.headerProfile}>
-            <Text />
-            <View style={{ alignItems: "center", position: "relative" }}>
-              {this.renderPosterProfile()}
-              {this.state.editable === false ? (
-                <TouchableHighlight onPress={() => this.cameraOrRoll()}>
-                  <View style={styles.cameraView}>
+        <ScrollView>
+          <KeyboardAwareScrollView>
+            <StatusBar barStyle="light-content" />
+            <View style={styles.headerProfile}>
+              <Text />
+              <View style={{ alignItems: "center", position: "relative" }}>
+                {this.renderPosterProfile()}
+                {this.state.editable === false ? (
+                  <TouchableHighlight onPress={() => this.cameraOrRoll()}>
+                    <View style={styles.cameraView}>
+                      <Ionicons
+                        style={{ textAlign: "center" }}
+                        name="ios-camera"
+                        size={30}
+                        color="#000"
+                      />
+                    </View>
+                  </TouchableHighlight>
+                ) : null}
+              </View>
+
+              <View style={styles.usernameContainer}>
+                <TextInput
+                  keyboardType="numeric"
+                  style={styles.usernameInput}
+                  editable={this.state.editable === true ? false : true}
+                  selectTextOnFocus={false}
+                  placeholder={
+                    this.state.profile.username === ""
+                      ? "Votre nom d'utilisateur"
+                      : this.state.profile.username
+                  }
+                  placeholderTextColor={"#fff"}
+                />
+              </View>
+              {this.state.profileModified === true ? (
+                <Text style={styles.profileModified}>Profil modifié</Text>
+              ) : null}
+            </View>
+
+            <View
+              style={{
+                position: "relative",
+                paddingHorizontal: 15,
+                paddingTop: 30,
+              }}
+            >
+              <TouchableOpacity
+                style={styles.modifProfile}
+                onPress={() => this.editableFn()}
+              >
+                <MaterialCommunityIcons
+                  style={{ textAlign: "center" }}
+                  name="pencil"
+                  size={30}
+                  color="#000"
+                />
+              </TouchableOpacity>
+              <KeyboardAvoidingView enabled behavior="padding">
+                <View>
+                  <TextInput
+                    onChangeText={text => {
+                      this.changeInput(text, "nom");
+                    }}
+                    // value={this.state.profile.nom}
+                    editable={this.state.editable === true ? false : true}
+                    style={styles.inputTextName}
+                    placeholder={
+                      this.state.profile.nom === ""
+                        ? "Votre nom"
+                        : this.state.profile.nom
+                    }
+                    placeholderTextColor={
+                      this.state.editable === false ? "grey" : "#000"
+                    }
+                  />
+                </View>
+                <View>
+                  <TextInput
+                    onChangeText={text => {
+                      this.changeInput(text, "prenom");
+                    }}
+                    // value={this.state.profile.prenom}
+                    editable={this.state.editable === true ? false : true}
+                    style={styles.inputTextName}
+                    placeholder={
+                      this.state.profile.prenom === ""
+                        ? "Votre prénom"
+                        : this.state.profile.prenom
+                    }
+                    placeholderTextColor={
+                      this.state.editable === false ? "grey" : "#000"
+                    }
+                  />
+                </View>
+                <View style={styles.separator} />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={{ width: "50%" }}>
                     <Ionicons
-                      style={{ textAlign: "center" }}
-                      name="ios-camera"
-                      size={30}
+                      style={{
+                        position: "absolute",
+                        top: "25%",
+                      }}
+                      name="ios-phone-portrait"
+                      size={20}
                       color="#000"
                     />
+                    <TextInput
+                      onChangeText={text => {
+                        this.changeInput(text, "phone");
+                      }}
+                      editable={this.state.editable === true ? false : true}
+                      style={styles.inputText}
+                      placeholder={
+                        this.state.profile.phone === ""
+                          ? "Votre téléphone"
+                          : this.state.profile.phone
+                      }
+                      placeholderTextColor={
+                        this.state.editable === false ? "grey" : "#000"
+                      }
+                    />
                   </View>
-                </TouchableHighlight>
-              ) : null}
-
-              {/* <TouchableOpacity onPress={() => this.cameraOrRoll()}>
-                <View style={styles.cameraView}>
-                  <Ionicons
-                    style={{ textAlign: "center" }}
-                    name="ios-camera"
-                    size={30}
-                    color="#000"
-                  />
+                  <View style={{ width: "50%" }}>
+                    <Ionicons
+                      style={{ position: "absolute", top: "25%" }}
+                      name="ios-mail"
+                      size={20}
+                      color="#000"
+                    />
+                    <TextInput
+                      onChangeText={text => {
+                        this.changeInput(text, "email");
+                      }}
+                      autoCapitalize="none"
+                      keyboardType="email-address"
+                      editable={this.state.editable === true ? false : true}
+                      style={styles.inputText}
+                      placeholder={
+                        this.state.profile.email === null
+                          ? "Votre mail"
+                          : this.state.profile.email
+                      }
+                      placeholderTextColor={
+                        this.state.editable === false ? "grey" : "#000"
+                      }
+                    />
+                  </View>
                 </View>
-              </TouchableOpacity> */}
-            </View>
-
-            <View style={styles.usernameContainer}>
-              <TextInput
-                keyboardType="number-pad"
-                style={styles.usernameInput}
-                editable={this.state.editable === true ? false : true}
-                selectTextOnFocus={false}
-                placeholder={
-                  this.state.profile.username === ""
-                    ? "Votre nom d'utilisateur"
-                    : this.state.profile.username
-                }
-                placeholderTextColor={"#fff"}
-              />
-            </View>
-            {this.state.profileModified === true ? (
-              <Text style={styles.profileModified}>Profil modifié</Text>
-            ) : null}
-          </View>
-
-          <View
-            style={{
-              position: "relative",
-              paddingHorizontal: 15,
-              paddingTop: 30,
-            }}
-          >
-            <TouchableOpacity
-              style={styles.modifProfile}
-              onPress={() => this.editableFn()}
-            >
-              <MaterialCommunityIcons
-                style={{ textAlign: "center" }}
-                name="pencil"
-                size={30}
-                color="#000"
-              />
-            </TouchableOpacity>
-            <KeyboardAvoidingView enabled behavior="padding">
-              <View>
-                <TextInput
-                  onChangeText={text => {
-                    this.changeInput(text, "nom");
-                  }}
-                  // value={this.state.profile.nom}
-                  editable={this.state.editable === true ? false : true}
-                  style={styles.inputTextName}
-                  placeholder={
-                    this.state.profile.nom === ""
-                      ? "Votre nom"
-                      : this.state.profile.nom
-                  }
-                  placeholderTextColor={
-                    this.state.editable === false ? "grey" : "#000"
-                  }
-                />
-              </View>
-              <View>
-                <TextInput
-                  onChangeText={text => {
-                    this.changeInput(text, "prenom");
-                  }}
-                  // value={this.state.profile.prenom}
-                  editable={this.state.editable === true ? false : true}
-                  style={styles.inputTextName}
-                  placeholder={
-                    this.state.profile.prenom === ""
-                      ? "Votre prénom"
-                      : this.state.profile.prenom
-                  }
-                  placeholderTextColor={
-                    this.state.editable === false ? "grey" : "#000"
-                  }
-                />
-              </View>
-              <View style={styles.separator} />
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View style={{ width: "50%" }}>
-                  <Ionicons
-                    style={{
-                      position: "absolute",
-                      top: "25%",
-                    }}
-                    name="ios-phone-portrait"
-                    size={20}
-                    color="#000"
-                  />
-                  <TextInput
-                    onChangeText={text => {
-                      this.changeInput(text, "phone");
-                    }}
-                    editable={this.state.editable === true ? false : true}
-                    style={styles.inputText}
-                    placeholder={
-                      this.state.profile.phone === ""
-                        ? "Votre téléphone"
-                        : this.state.profile.phone
-                    }
-                    placeholderTextColor={
-                      this.state.editable === false ? "grey" : "#000"
-                    }
-                  />
-                </View>
-                <View style={{ width: "50%" }}>
+                <View style={styles.separator} />
+                <View>
                   <Ionicons
                     style={{ position: "absolute", top: "25%" }}
-                    name="ios-mail"
+                    name="ios-pin"
                     size={20}
                     color="#000"
                   />
                   <TextInput
                     onChangeText={text => {
-                      this.changeInput(text, "email");
+                      this.changeInput(text, "adresse");
                     }}
-                    autoCapitalize="none"
-                    keyboardType="email-address"
                     editable={this.state.editable === true ? false : true}
                     style={styles.inputText}
                     placeholder={
-                      this.state.profile.email === null
-                        ? "Votre mail"
-                        : this.state.profile.email
+                      this.state.profile.adresse === ""
+                        ? "Votre adresse"
+                        : this.state.profile.adresse
                     }
                     placeholderTextColor={
                       this.state.editable === false ? "grey" : "#000"
                     }
                   />
                 </View>
-              </View>
-              <View style={styles.separator} />
-              <View>
-                <Ionicons
-                  style={{ position: "absolute", top: "25%" }}
-                  name="ios-pin"
-                  size={20}
-                  color="#000"
-                />
-                <TextInput
-                  onChangeText={text => {
-                    this.changeInput(text, "adresse");
-                  }}
-                  editable={this.state.editable === true ? false : true}
-                  style={styles.inputText}
-                  placeholder={
-                    this.state.profile.adresse === ""
-                      ? "Votre adresse"
-                      : this.state.profile.adresse
-                  }
-                  placeholderTextColor={
-                    this.state.editable === false ? "grey" : "#000"
-                  }
-                />
-              </View>
-              <View>
-                <MaterialCommunityIcons
-                  style={{ position: "absolute", top: "25%" }}
-                  name="shoe-formal"
-                  size={20}
-                  color="#000"
-                />
-                <TextInput
-                  onChangeText={text => {
-                    this.changeInput(text, "size");
-                  }}
-                  editable={this.state.editable === true ? false : true}
-                  style={styles.inputText}
-                  placeholder={
-                    this.state.profile.size === ""
-                      ? "Votre pointure"
-                      : this.state.profile.size
-                  }
-                  placeholderTextColor={
-                    this.state.editable === false ? "grey" : "#000"
-                  }
-                />
-                {/* <TextInput
-                  onChangeText={text => {
-                    this.changeInput(text, "size");
-                  }}
-                  editable={this.state.editable === true ? false : true}
-                  style={styles.inputText}
-                  placeholder={
-                    this.state.profile.size === ""
-                      ? "Votre pointure"
-                      : this.state.profile.size
-                  }
-                  placeholderTextColor={
-                    this.state.editable === false ? "grey" : "#000"
-                  }
-                /> */}
-              </View>
-              {this.state.editable === false ? (
-                <TouchableOpacity
-                  style={styles.updateButton}
-                  onPress={() => this.validateButton()}
-                >
-                  <Text style={styles.updateButtonText}>Confirmer</Text>
-                </TouchableOpacity>
-              ) : (
-                <Text />
-              )}
-            </KeyboardAvoidingView>
-          </View>
-        </KeyboardAwareScrollView>
+                <View>
+                  <MaterialCommunityIcons
+                    style={{ position: "absolute", top: "25%" }}
+                    name="shoe-formal"
+                    size={20}
+                    color="#000"
+                  />
+
+                  <TextInput
+                    onChangeText={text => {
+                      this.changeInput(text, "size");
+                    }}
+                    editable={this.state.editable === true ? false : true}
+                    style={styles.inputText}
+                    placeholder={
+                      this.state.profile.size === ""
+                        ? "Votre pointure"
+                        : this.state.profile.size
+                    }
+                    placeholderTextColor={
+                      this.state.editable === false ? "grey" : "#000"
+                    }
+                  />
+                </View>
+                {this.state.editable === false ? (
+                  <TouchableOpacity
+                    style={styles.updateButton}
+                    onPress={() => this.validateButton()}
+                  >
+                    <Text style={styles.updateButtonText}>Confirmer</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <Text />
+                )}
+              </KeyboardAvoidingView>
+            </View>
+            {this.state.userProduct.length > 0 ? (
+              <Text style={styles.titleProduct}>Vos ventes en cours</Text>
+            ) : null}
+            <SliderProduct
+              deleteCross
+              product={this.state.userProduct}
+              deleteProduct={this.deleteProduct}
+            />
+            {this.state.favProduct.length > 0 ? (
+              <Text style={styles.titleProduct}>Vos Favoris</Text>
+            ) : null}
+            <SliderProduct
+              deleteCross
+              favorite={this.state.favProduct}
+              profile={this.state.profile}
+              deleteFavorite={this.deleteFavorite}
+            />
+          </KeyboardAwareScrollView>
+        </ScrollView>
       </>
     );
   }
@@ -526,7 +560,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 10,
     top: -30,
-    backgroundColor: "#fff",
+    backgroundColor: "#f2f2f2",
     borderRadius: 50,
     width: 50,
     height: 50,
@@ -557,7 +591,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     backgroundColor: "#111",
-    marginTop: 20,
+    marginVertical: 20,
   },
   updateButtonText: {
     textAlign: "center",
@@ -573,6 +607,10 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     padding: 10,
+  },
+  titleProduct: {
+    fontSize: 25,
+    textAlign: "center",
   },
 });
 

@@ -14,6 +14,7 @@ import PasswordResetScreen from "./containers/PasswordResetScreen";
 import ChatScreen from "./containers/ChatScreen";
 import SellerProfileScreen from "./containers/SellerProfileScreen";
 import NewProductScreen from "./containers/New_Product";
+import ProfileScreen from "./containers/ProfileScreen";
 
 const AppStack = createStackNavigator({
   Tab: TabNavigator,

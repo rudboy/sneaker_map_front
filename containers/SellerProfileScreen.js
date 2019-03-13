@@ -16,6 +16,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
 // import { ImagePicker, Permissions } from "expo";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import SliderProduct from "../components/SliderProduct";
 
 class SellerProfileScreen extends React.Component {
   state = {
@@ -32,25 +33,24 @@ class SellerProfileScreen extends React.Component {
 
   async componentDidMount() {
     try {
-      // let tempToken = await AsyncStorage.getItem("userInfo");
-      // tempToken = JSON.parse(tempToken);
+      const { navigation } = this.props;
+      const creator = navigation.getParam("id"); //recuperer l'id creator de la page ProductScreen
 
       const response = await axios.get(
-        "http://localhost:5500/get_other_user_info?id=5c83ea60fa2b1d1474cfb845"
+        "https://sneaker-map-api.herokuapp.com/get_other_user_info?id=" +
+          creator
       );
 
       const productResponse = await axios.get(
-        "http://localhost:5500/get_seller_product_info?id=5c83ea60fa2b1d1474cfb845"
+        "https://sneaker-map-api.herokuapp.com/get_seller_product_info?id=" +
+          creator
       );
-
-      // console.log(response.data);
 
       this.setState({
         sellerProfile: response.data,
         sellerProduct: productResponse.data,
         isLoading: false,
       });
-      console.log(this.state);
     } catch (error) {
       alert(error);
     }
@@ -86,7 +86,6 @@ class SellerProfileScreen extends React.Component {
         </View>
       );
     }
-    console.log(this.state.sellerProduct[0].pictures[0]);
     return (
       <>
         <KeyboardAwareScrollView>
@@ -198,27 +197,10 @@ class SellerProfileScreen extends React.Component {
               </Text>
             </View>
           </View>
-          <ScrollView horizontal={true} style={{ flexDirection: "row" }}>
-            <FlatList
-              data={this.state.sellerProduct}
-              numColumns={this.state.sellerProduct.length}
-              keyExtractor={item => String(item._id)}
-              renderItem={({ item }) => (
-                <TouchableOpacity>
-                  <View>
-                    <Image
-                      style={{ width: 100, height: 100 }}
-                      source={{ uri: item.pictures[0] }}
-                    />
-
-                    <Text>{item.title}</Text>
-                    <Text>{item.description}</Text>
-                    <Text>{item.price}</Text>
-                  </View>
-                </TouchableOpacity>
-              )}
-            />
-          </ScrollView>
+          <SliderProduct
+            article="Les autres articles du vendeur"
+            product={this.state.sellerProduct}
+          />
         </KeyboardAwareScrollView>
       </>
     );

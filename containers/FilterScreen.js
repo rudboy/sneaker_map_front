@@ -53,7 +53,7 @@ class FilterScreen extends React.Component {
   // };
 
   triGeoloc = tableau => {
-    console.log(tableau[0].localisation[0]);
+    //console.log(tableau[0].localisation[0]);
     for (let i = 0; i < tableau.length; i++) {
       let lat = tableau[i].localisation[0];
       let lon = tableau[i].localisation[1];
@@ -68,15 +68,23 @@ class FilterScreen extends React.Component {
           5000
         );
       });
-      console.log(everyPointInCircle);
+      //console.log(everyPointInCircle);
       if (everyPointInCircle === true) {
         let temptab = [...this.state.localisationTab];
-        console.log(tableau[i]);
+        //console.log(tableau[i]);
         temptab.push(tableau[i]);
         this.setState({ localisationTab: temptab });
       }
     }
-    console.log(this.state.localisationTab);
+    console.log("avec tri geoloc", this.state.localisationTab);
+    console.log("sans tri", this.state.tab_location);
+
+    this.props.navigation.navigate("ResultView", {
+      result:
+        this.state.localisationTab.length !== 0
+          ? this.state.localisationTab
+          : this.state.tab_location
+    });
   };
 
   GooglePlacesInput = () => {
@@ -241,7 +249,7 @@ class FilterScreen extends React.Component {
         }
       );
       //console.log(this.state.usager);
-      console.log(response.data);
+      // console.log(response.data);
       this.setState({ tab_location: response.data });
       this.triGeoloc(this.state.tab_location);
     } catch (error) {

@@ -15,7 +15,14 @@ import ChatScreen from "./containers/ChatScreen";
 import SellerProfileScreen from "./containers/SellerProfileScreen";
 import NewProductScreen from "./containers/New_Product";
 import FilterScreen from "./containers/FilterScreen";
+<<<<<<< HEAD
+<<<<<<< HEAD
 import ProfileScreen from "./containers/ProfileScreen";
+=======
+>>>>>>> add filter
+=======
+import ResultScreen from "./containers/ResultView";
+>>>>>>> mapFilter
 
 const AppStack = createStackNavigator({
   Tab: TabNavigator,
@@ -27,7 +34,8 @@ const AppStack = createStackNavigator({
   Chat: ChatScreen,
   Filter: FilterScreen,
   SellerProfile: SellerProfileScreen,
-  New_Product: NewProductScreen
+  New_Product: NewProductScreen,
+  ResultView: ResultScreen
 });
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 

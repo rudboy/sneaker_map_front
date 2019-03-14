@@ -37,6 +37,7 @@ class SellerProfileScreen extends React.Component {
       const creator = navigation.getParam("id"); //recuperer l'id creator de la page ProductScreen
 
       const response = await axios.get(
+<<<<<<< HEAD
         "https://sneaker-map-api.herokuapp.com/get_other_user_info?id=" +
           creator
       );
@@ -44,6 +45,13 @@ class SellerProfileScreen extends React.Component {
       const productResponse = await axios.get(
         "https://sneaker-map-api.herokuapp.com/get_seller_product_info?id=" +
           creator
+=======
+        "https://sneaker-map-api.herokuapp.com/get_other_user_info?id=5c83ea60fa2b1d1474cfb845"
+      );
+
+      const productResponse = await axios.get(
+        "https://sneaker-map-api.herokuapp.com/get_seller_product_info?id=5c83ea60fa2b1d1474cfb845"
+>>>>>>> add filter
       );
 
       this.setState({

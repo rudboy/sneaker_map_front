@@ -334,7 +334,11 @@ class ProductScreen extends React.Component {
           />
           <View style={styles.footer}>
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("Chat")}
+              onPress={() =>
+                this.props.navigation.navigate("Chat", {
+                  sellerId: this.state.creator // envoie l'id creator vers le chat
+                })
+              }
               style={styles.iconWrapper}
             >
               <Ionicons name="ios-chatboxes" size={30} color="black" />

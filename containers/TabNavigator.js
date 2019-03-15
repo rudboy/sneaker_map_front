@@ -6,6 +6,7 @@ import {
 import HomeScreen from "./HomeScreen";
 import ProfileScreen from "./ProfileScreen";
 import NewProductScreen from "./New_Product";
+import MessageScreen from "./MessageScreen";
 import SellerProfileScreen from "./SellerProfileScreen";
 import ChatScreen from "./ChatScreen";
 // import SettingsScreen from "./SettingsScreen";
@@ -17,7 +18,8 @@ const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeScreen,
     Profile: ProfileScreen,
-    NewProduct: NewProductScreen
+    NewProduct: NewProductScreen,
+    Messages: MessageScreen
     // Chat: ChatScreen,
     // Settings: SettingsScreen,
   },
@@ -38,6 +40,9 @@ const TabNavigator = createBottomTabNavigator(
 
           case "NewProduct":
             iconName = "ios-add";
+            break;
+          case "Messages":
+            iconName = "ios-chatbubbles";
             break;
           // case "Settings":
           //   iconName = "ios-settings";
@@ -78,8 +83,8 @@ TabNavigator.navigationOptions = ({ navigation }) => {
       headerTitle = "Ajouter Produit";
       break;
 
-    case "Settings":
-      headerTitle = "Paramètres";
+    case "Messages":
+      headerTitle = "Messages";
       break;
 
     default:

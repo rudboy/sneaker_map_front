@@ -16,9 +16,9 @@ import SellerProfileScreen from "./containers/SellerProfileScreen";
 import NewProductScreen from "./containers/New_Product";
 import FilterScreen from "./containers/FilterScreen";
 import ProfileScreen from "./containers/ProfileScreen";
+import MessageScreen from "./containers/MessageScreen";
 
 import ResultScreen from "./containers/ResultView";
-
 
 const AppStack = createStackNavigator({
   Tab: TabNavigator,
@@ -31,7 +31,8 @@ const AppStack = createStackNavigator({
   Filter: FilterScreen,
   SellerProfile: SellerProfileScreen,
   New_Product: NewProductScreen,
-  ResultView: ResultScreen
+  ResultView: ResultScreen,
+  Messages: MessageScreen
 });
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 

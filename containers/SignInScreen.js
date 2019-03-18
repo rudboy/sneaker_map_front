@@ -88,7 +88,7 @@ export default class LogIn extends React.Component {
       });
       // console.log("result user : ", result.user);
       // console.log("result idToken : ", result.idToken);
-      // console.log("result : ", result);
+      //console.log("result : ", result);
       this.setState({ googleConnect: false });
 
       if (result.type === "success") {
@@ -107,14 +107,15 @@ export default class LogIn extends React.Component {
             givenName: result.user.givenName,
             username: result.user.name,
             email: result.user.email,
-            password: result.idToken
+            password: result.idToken,
+            photoProfile: this.state.photoUrl
           }
         );
         //console.log(response.data);
         if (response.data.token) {
           const value = JSON.stringify(response.data);
           alert("Login OK");
-          console.log(value);
+          //console.log(value);
           await AsyncStorage.setItem("userInfo", value);
           this.props.navigation.navigate("Home", {
             name: result.user.familyName

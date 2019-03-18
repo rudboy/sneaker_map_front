@@ -9,10 +9,11 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
+import { withNavigation } from "react-navigation";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 
-class Name extends React.Component {
+class SliderProduct extends React.Component {
   deleteFn = async (id, index) => {
     await axios.post(
       "https://sneaker-map-api.herokuapp.com/delete_product?id=" + id
@@ -23,7 +24,7 @@ class Name extends React.Component {
     this.props.deleteProduct(newTab);
   };
 
-  Alert = (id, index) => {
+  AlertCross = (id, index) => {
     Alert.alert(
       undefined,
       "Êtes vous sûr de vouloir supprimer ce produit ?",
@@ -50,7 +51,7 @@ class Name extends React.Component {
   deleteCross = (id, index) => {
     if (this.props.deleteCross) {
       return (
-        <TouchableOpacity onPress={() => this.Alert(id, index)}>
+        <TouchableOpacity onPress={() => this.AlertCross(id, index)}>
           <Ionicons
             style={styles.deleteCross}
             name="ios-close-circle-outline"
@@ -64,7 +65,7 @@ class Name extends React.Component {
     }
   };
 
-  handleFavorite = async (id, index) => {
+  deleteFavFn = async (id, index) => {
     // Modifier tableau de favoris de l'utilisateur:
     // appeler la route update user
     await axios.post(
@@ -85,15 +86,39 @@ class Name extends React.Component {
     this.props.deleteFavorite(newTab);
   };
 
+  AlertFav = (id, index) => {
+    Alert.alert(
+      undefined,
+      "Êtes vous sûr de vouloir supprimer ce favoris ?",
+      // "My Alert Msg",
+      [
+        // {
+        //   text: "Ask me later",
+        //   onPress: () => console.log("Ask me later pressed"),
+        // },
+        {
+          text: "Annuler",
+          // onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => this.deleteFavFn(id, index),
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   deleteFav = (id, index) => {
     if (this.props.deleteFavorite) {
       return (
-        <TouchableOpacity onPress={() => this.handleFavorite(id, index)}>
+        <TouchableOpacity onPress={() => this.AlertFav(id, index)}>
           <Ionicons
-            style={styles.deleteFavorite}
-            name="ios-close-circle-outline"
+            style={styles.deleteCross}
+            name="ios-heart"
             size={32}
-            color="#000"
+            color="red"
           />
         </TouchableOpacity>
       );
@@ -121,6 +146,7 @@ class Name extends React.Component {
 
   render() {
     // const { deleteCross } = this.props;
+
     return (
       <>
         <ScrollView
@@ -128,21 +154,27 @@ class Name extends React.Component {
           style={{
             flexDirection: "row",
             paddingHorizontal: 15,
-            marginVertical: 30,
+            marginBottom: 30,
           }}
         >
           <FlatList
+            style={styles.flatList}
             data={this.props.product}
             horizontal
             keyExtractor={item => String(item._id)}
             renderItem={({ item, index }) => (
               <View key={item} style={styles.containerProduct}>
                 {this.deleteCross(item._id, index)}
-
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.navigation.navigate("Product", {
+                      id: item._id,
+                    })
+                  }
+                >
                   <View>
                     <Image
-                      style={{ width: 150, height: 150 }}
+                      style={styles.image}
                       source={{ uri: item.pictures[0] }}
                     />
                     <Text numberOfLines={1} style={styles.title}>
@@ -169,7 +201,7 @@ class Name extends React.Component {
           style={{
             flexDirection: "row",
             paddingHorizontal: 15,
-            marginVertical: 30,
+            marginBottom: 30,
           }}
         >
           <FlatList
@@ -180,10 +212,18 @@ class Name extends React.Component {
               <View key={item} style={styles.containerProduct}>
                 {this.deleteFav(item._id, index)}
 
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={
+                    (() =>
+                      this.props.navigation.navigate("Product", {
+                        id: item._id,
+                      }),
+                    console.log(this.props.favorite[index]._id))
+                  }
+                >
                   <View>
                     <Image
-                      style={{ width: 150, height: 150 }}
+                      style={styles.image}
                       source={{ uri: item.pictures[0] }}
                     />
                     <Text numberOfLines={1} style={styles.title}>
@@ -212,10 +252,17 @@ class Name extends React.Component {
 const styles = StyleSheet.create({
   containerProduct: {
     paddingRight: 15,
+    position: "relative",
+    zIndex: 0,
   },
   title: {
     width: 150,
   },
+  image: {
+    width: 150,
+    height: 150,
+    resizeMode: "contain",
+  },
 });
 
-export default Name;
+export default withNavigation(SliderProduct);

@@ -60,20 +60,12 @@ class ProfileScreen extends React.Component {
         tab.push(favResponse.data);
       }
 
-      // console.log("tab", tab);
-
-      //console.log("response.data.favory", response.data.favory);
-
       this.setState({
         profile: response.data,
         // userProduct: productResponse.data,
         favProduct: tab,
         isLoading: false
       });
-
-      //console.log("this.state.userProduct", this.state.userProduct);
-
-      // console.log("this.state.favProduct", this.state.favProduct);
 
       this.getCameraRollAsync();
       this.getCameraAsync();
@@ -113,12 +105,11 @@ class ProfileScreen extends React.Component {
         aspect: [4, 3]
       });
       let temp = this.state.tab_photo;
-      // console.log(result);
+
       if (!result.cancelled) {
         temp.push("data:image/jpeg;base64," + result.base64);
         this.get_photo(temp);
       }
-      // console.log(this.state.tab_photo);
     } else {
       let result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
@@ -126,7 +117,7 @@ class ProfileScreen extends React.Component {
         aspect: [4, 3]
       });
       let temp = this.state.tab_photo;
-      // console.log(result);
+
       if (!result.cancelled) {
         temp.push("data:image/jpeg;base64," + result.base64);
         this.get_photo(temp);
@@ -136,7 +127,19 @@ class ProfileScreen extends React.Component {
 
   pickImageCamera = async () => {
     if (this.state.tab_photo.length === 1) {
-      alert("Vous ne pouvez pas ajouter plus d' 1 image");
+      // alert("Vous ne pouvez pas ajouter plus d' une image");
+      this.setState({ tab_photo: [] });
+      let result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        base64: true,
+        aspect: [4, 3],
+      });
+      let temp = this.state.tab_photo;
+
+      if (!result.cancelled) {
+        temp.push("data:image/jpeg;base64," + result.base64);
+        this.get_photo(temp);
+      }
     } else {
       let result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
@@ -144,12 +147,26 @@ class ProfileScreen extends React.Component {
         aspect: [4, 3]
       });
       let temp = this.state.tab_photo;
-      // console.log(result);
+
       if (!result.cancelled) {
         temp.push("data:image/jpeg;base64," + result.base64);
         this.get_photo(temp);
       }
     }
+    // if (this.state.tab_photo.length === 1) {
+    //   alert("Vous ne pouvez pas ajouter plus d' 1 image");
+    // } else {
+    //   let result = await ImagePicker.launchCameraAsync({
+    //     allowsEditing: true,
+    //     base64: true,
+    //     aspect: [4, 3],
+    //   });
+    //   let temp = this.state.tab_photo;
+    //   if (!result.cancelled) {
+    //     temp.push("data:image/jpeg;base64," + result.base64);
+    //     this.get_photo(temp);
+    //   }
+    // }
   };
 
   cameraOrRoll = () => {
@@ -502,7 +519,7 @@ class ProfileScreen extends React.Component {
               </KeyboardAvoidingView>
             </View>
             {this.state.userProduct.length > 0 ? (
-              <Text style={styles.titleProduct}>Vos ventes en cours</Text>
+              <Text style={styles.titleProduct}>Mes ventes en cours</Text>
             ) : null}
             <SliderProduct
               deleteCross
@@ -510,7 +527,7 @@ class ProfileScreen extends React.Component {
               deleteProduct={this.deleteProduct}
             />
             {this.state.favProduct.length > 0 ? (
-              <Text style={styles.titleProduct}>Vos Favoris</Text>
+              <Text style={styles.titleProduct}>Mes Favoris</Text>
             ) : null}
             <SliderProduct
               deleteCross
@@ -551,8 +568,8 @@ class ProfileScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  // mainContainer: {
-  //   backgroundColor: "#111",
+  // profileContainer: {
+  //   paddingBottom: 100,
   // },
   headerProfile: {
     paddingVertical: 20,

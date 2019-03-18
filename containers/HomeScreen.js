@@ -13,6 +13,8 @@ import {
 import SneakerCard from "../components/SneakerCard";
 import { Ionicons } from "@expo/vector-icons";
 import PriceSelect from "../components/PriceSelect";
+import axios from "axios"; // const axios = require('axios');
+
 let arrayholder = [];
 
 class HomeScreen extends React.Component {
@@ -26,21 +28,6 @@ class HomeScreen extends React.Component {
   });
 
   async componentDidMount() {
-    this.update();
-  }
-
-  SearchFilterFunction(text) {
-    const newData = arrayholder.filter(function(item) {
-      const itemData = item.title ? item.title.toUpperCase() : "".toUpperCase();
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-    this.setState({
-      sneakers: newData,
-      text: text
-    });
-  }
-  update = async () => {
     return await fetch("https://sneaker-map-api.herokuapp.com/all_product")
       .then(response => response.json())
       .then(responseJson => {
@@ -57,12 +44,33 @@ class HomeScreen extends React.Component {
       .catch(error => {
         console.error(error);
       });
+  }
+
+  SearchFilterFunction(text) {
+    const newData = arrayholder.filter(function(item) {
+      const itemData = item.title ? item.title.toUpperCase() : "".toUpperCase();
+      const textData = text.toUpperCase();
+      return itemData.indexOf(textData) > -1;
+    });
+    this.setState({
+      sneakers: newData,
+      text: text
+    });
+  }
+  update = async () => {
+    const response = await axios.get(
+      "https://sneaker-map-api.herokuapp.com/all_product"
+    );
+
+    if (response.data.length > this.state.sneakers.length) {
+      this.setState({ sneakers: response.data }, function() {
+        arrayholder = response.data;
+      });
+    }
   };
 
   render() {
-    if (this.props.isFocused) {
-      this.update();
-    }
+    this.update();
 
     if (this.state.isLoading === true) {
       return <ActivityIndicator />;
@@ -120,7 +128,7 @@ class HomeScreen extends React.Component {
               return String(item._id);
             }}
             renderItem={obj => {
-              console.log(obj.item);
+              //console.log(obj.item);
               return (
                 <TouchableOpacity
                   onPress={() => {

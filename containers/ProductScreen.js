@@ -64,7 +64,7 @@ class ProductScreen extends React.Component {
     const styleId = response.data.id_style;
     const creator = response.data.creator; // pouvoir envoyer l'id creator vers SellerProfileScreen
 
-    console.log("response.data.pictures ", response.data.pictures);
+    // console.log("response.data.pictures ", response.data.pictures);
     let userInfo = await AsyncStorage.getItem("userInfo");
     userInfo = JSON.parse(userInfo);
 
@@ -189,7 +189,7 @@ class ProductScreen extends React.Component {
   };
 
   render() {
-    console.log("this.state.picture ", this.state.picture);
+    // console.log("this.state.picture ", this.state.picture);
     if (this.state.isLoading === true) {
       return <ActivityIndicator style={{ flex: 1 }} />;
     } else {

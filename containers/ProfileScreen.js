@@ -270,6 +270,11 @@ class ProfileScreen extends React.Component {
     });
   };
 
+  logOut = async () => {
+    await AsyncStorage.setItem("userInfo", " ");
+    this.props.navigation.navigate("SignIn");
+  };
+
   render() {
     if (this.state.isLoading === true) {
       return (
@@ -513,6 +518,31 @@ class ProfileScreen extends React.Component {
               profile={this.state.profile}
               deleteFavorite={this.deleteFavorite}
             />
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: 30
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  height: 50,
+                  width: 200,
+                  backgroundColor: "black",
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+                onPress={this.logOut}
+              >
+                <Text
+                  style={{ color: "white", fontSize: 20, fontWeight: "800" }}
+                >
+                  Se Deconnecter
+                </Text>
+              </TouchableOpacity>
+            </View>
           </KeyboardAwareScrollView>
         </ScrollView>
       </>

@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Ionicons } from "@expo/vector-icons";
+import { withNavigationFocus } from "react-navigation";
 import axios from "axios"; // const axios = require('axios');
 import Picker_mark from "../components/picker_mark";
 import Picker_category from "../components/picker_category";
@@ -132,7 +133,7 @@ class NewProduct extends React.Component {
           }
         );
         if (response.data.creator._id) {
-          this.props.navigation.navigate("Home");
+          this.props.navigation.navigate("Home", { realod: "realod" });
           this.reset_state();
         }
       } catch (error) {
@@ -163,7 +164,7 @@ class NewProduct extends React.Component {
           }
         );
         if (response.data.creator._id) {
-          this.props.navigation.navigate("Home");
+          this.props.navigation.navigate("Home", { realod: "realod" });
           this.reset_state();
         }
       } catch (error) {
@@ -305,4 +306,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default NewProduct;
+export default withNavigationFocus(NewProduct);

@@ -1,55 +1,100 @@
 import React from "react";
-import { Text, AsyncStorage, FlatList, TouchableOpacity } from "react-native";
+import {
+  Text,
+  AsyncStorage,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  View
+} from "react-native";
 import axios from "axios";
 
 class MessageScreen extends React.Component {
   state = {
-    tabMessage: {}
+    tabMessage: [],
+    profilPicture: "",
+    currentuser: ""
   };
   componentDidMount = async () => {
+    //recupere le username de l'asynstorage
     let user = await AsyncStorage.getItem("userInfo");
     user = JSON.parse(user);
-
-    // console.log(user._id);
-
+    //recupere la liste des rooms du le user id est inclus ds le nom de la room
     const response = await axios.get(
-      //   "https://sneaker-map-api.herokuapp.com/get_messages?id=" + user._id
-      "http://localhost:5000/get_messages?id=" + user._id
+      "https://sneaker-map-api.herokuapp.com/get_messages?id=" + user._id
     );
-    console.log("response :", response.data);
+    this.setState({
+      tabMessage: response.data,
+      currentuser: user.account.poster_profile[0]
+    });
+  };
 
-    this.setState({ tabMessage: response.data });
-  };
-  displayFlatlist = () => {
-    return (
-      <FlatList
-        data={Object.keys(this.state.tabMessage)}
-        keyExtractor={item => {
-          return String(item._id);
-        }}
-        renderItem={obj => {
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate("ChatRoom", {
-                  conversation: obj.item
-                });
-              }}
-            >
-              <Text>Text</Text>
-            </TouchableOpacity>
-          );
-        }}
-      />
-    );
-  };
+  //affiche chaque conversation ds une listeView
+  // displayFlatlist = () => {
+  //   return (
+
+  //   );
+  // };
   render() {
-    console.log("this.state.tabMessage ", this.state.tabMessage);
+    //console.log(this.getPhoto(item.sellerId, item.userId));
 
     return (
       <>
-        <Text>Messages</Text>
-        {this.displayFlatlist()}
+        <FlatList
+          data={this.state.tabMessage}
+          keyExtractor={item => item._id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={{
+                height: 60,
+                marginTop: 10,
+                borderBottomColor: "grey",
+                borderBottomWidth: 0.5
+              }}
+              onPress={() => {
+                this.props.navigation.navigate("Chat", {
+                  conversation: item
+                });
+              }}
+            >
+              <View style={{ flexDirection: "row" }}>
+                <Image
+                  style={{
+                    width: 55,
+                    height: 55,
+                    marginLeft: 10,
+                    marginRight: 10,
+                    borderRadius: 10
+                  }}
+                  source={{
+                    uri:
+                      this.state.currentuser === item.userId
+                        ? item.sellerId
+                        : item.userId
+                  }}
+                />
+                <View>
+                  <Text style={{ fontWeight: "700" }}>{item.username}</Text>
+                  <Text style={{ color: "grey", marginTop: 10 }}>
+                    {item.message.length > 30
+                      ? item.message[item.message.length - 1].text.substring(
+                          0,
+                          30
+                        ) + "..."
+                      : item.message[item.message.length - 1].text}
+                  </Text>
+                </View>
+                <Text style={{ marginLeft: 150 }}>
+                  {item.message[item.message.length - 1].createdAt.substring(
+                    0,
+                    10
+                  )}
+                </Text>
+                <View />
+              </View>
+            </TouchableOpacity>
+          )}
+        />
       </>
     );
   }

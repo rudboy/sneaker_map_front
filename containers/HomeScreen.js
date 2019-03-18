@@ -8,7 +8,7 @@ import {
   TextInput,
   Dimensions,
   Text,
-  ScrollView,
+  ScrollView
 } from "react-native";
 import SneakerCard from "../components/SneakerCard";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,31 +18,14 @@ let arrayholder = [];
 class HomeScreen extends React.Component {
   state = {
     sneakers: [],
-    isLoading: true,
+    isLoading: true
   };
 
   static navigationOptions = ({ navigation }) => ({
-    title: "Welcome",
+    title: "Welcome"
   });
 
-  async componentDidMount() {
-    return await fetch("https://sneaker-map-api.herokuapp.com/all_product")
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState(
-          {
-            isLoading: false,
-            sneakers: responseJson,
-          },
-          function() {
-            arrayholder = responseJson;
-          }
-        );
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
+  async componentDidMount() {}
 
   SearchFilterFunction(text) {
     const newData = arrayholder.filter(function(item) {
@@ -52,13 +35,30 @@ class HomeScreen extends React.Component {
     });
     this.setState({
       sneakers: newData,
-      text: text,
+      text: text
     });
   }
+  update = async () => {
+    return await fetch("https://sneaker-map-api.herokuapp.com/all_product")
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState(
+          {
+            isLoading: false,
+            sneakers: responseJson
+          },
+          function() {
+            arrayholder = responseJson;
+          }
+        );
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
   render() {
-    {
-    }
+    this.update();
     if (this.state.isLoading === true) {
       return <ActivityIndicator />;
     }
@@ -70,7 +70,7 @@ class HomeScreen extends React.Component {
               color: "white",
               marginTop: 30,
               fontSize: 30,
-              fontWeight: "500",
+              fontWeight: "500"
             }}
           >
             Bienvenue
@@ -92,7 +92,7 @@ class HomeScreen extends React.Component {
               justifyContent: "center",
               alignItems: "center",
               alignContent: "center",
-              marginBottom: 10,
+              marginBottom: 10
             }}
             onPress={() =>
               this.props.navigation.navigate("Filter", { name: "Filtres" })
@@ -100,7 +100,7 @@ class HomeScreen extends React.Component {
           >
             <Text
               style={{
-                color: "white",
+                color: "white"
               }}
             >
               FILTRER
@@ -119,7 +119,7 @@ class HomeScreen extends React.Component {
                 <TouchableOpacity
                   onPress={() => {
                     this.props.navigation.navigate("Product", {
-                      id: obj.item._id,
+                      id: obj.item._id
                     });
                   }}
                 >
@@ -138,15 +138,15 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "black",
     flex: 1,
-    alignItems: "center",
+    alignItems: "center"
   },
   searchbar: {
     width: Dimensions.get("window").width,
     height: 50,
     backgroundColor: "white",
     textAlign: "center",
-    marginTop: 20,
-  },
+    marginTop: 20
+  }
 });
 
 export default HomeScreen;

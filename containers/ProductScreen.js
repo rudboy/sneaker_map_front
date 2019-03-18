@@ -9,7 +9,9 @@ import {
   ActivityIndicator,
   AppRegistry,
   AsyncStorage,
-  FlatList
+  FlatList,
+  Share,
+  Button
 } from "react-native";
 import { MapView } from "expo";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
@@ -34,7 +36,8 @@ class ProductScreen extends React.Component {
     phone: null,
     picture: [],
     styleId: null,
-    creator: ""
+    creator: "",
+    visible: false
   };
 
   static navigationOptions = ({ navigation }) => {
@@ -43,6 +46,34 @@ class ProductScreen extends React.Component {
         height: 40
       }
     };
+  };
+
+  onShare = async () => {
+    try {
+      const result = await Share.share({
+        dialogTitle: "Regarde se que j'ai trouvé sur SnearkerMap",
+        title: "Regarde se que j'ai trouvé sur SnearkerMap",
+        message:
+          "Regarde ce que j'ai trouvé sur SnearkerMap" +
+          " " +
+          this.state.description +
+          " " +
+          this.state.price +
+          "€"
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   componentDidMount = async () => {
@@ -126,6 +157,7 @@ class ProductScreen extends React.Component {
           <Text style={styles.p}>
             {this.state.description + " StyleId : " + this.state.styleId}
           </Text>
+
           <Ionicons
             style={{ textAlign: "center" }}
             name="ios-arrow-up"
@@ -225,15 +257,21 @@ class ProductScreen extends React.Component {
                 }}
               >
                 {this.renderFavorite()}
-                <Ionicons
-                  // style={{
-                  //   position: "absolute",
-                  //   right: 12,
-                  //   top: 48
-                  // }}
-                  name="md-share"
-                  size={32}
-                />
+                <TouchableOpacity
+                  style={{ height: 30 }}
+                  onPress={this.onShare}
+                  title="Share"
+                >
+                  <Ionicons
+                    // style={{
+                    //   position: "absolute",
+                    //   right: 12,
+                    //   top: 48
+                    // }}
+                    name="md-share"
+                    size={32}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
             <View style={styles.contentWrapper}>

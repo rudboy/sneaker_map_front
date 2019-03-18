@@ -13,7 +13,8 @@ class MessageScreen extends React.Component {
   state = {
     tabMessage: [],
     profilPicture: "",
-    currentuser: ""
+    currentuser: "",
+    currentusername: ""
   };
   componentDidMount = async () => {
     //recupere le username de l'asynstorage
@@ -25,7 +26,8 @@ class MessageScreen extends React.Component {
     );
     this.setState({
       tabMessage: response.data,
-      currentuser: user.account.poster_profile[0]
+      currentuser: user.account.poster_profile[0],
+      currentusername: user.username
     });
   };
 
@@ -74,7 +76,11 @@ class MessageScreen extends React.Component {
                   }}
                 />
                 <View>
-                  <Text style={{ fontWeight: "700" }}>{item.username}</Text>
+                  <Text style={{ fontWeight: "700" }}>
+                    {item.username === this.state.currentusername
+                      ? item.username
+                      : item.message[0].user.name}
+                  </Text>
                   <Text style={{ color: "grey", marginTop: 10 }}>
                     {item.message.length > 30
                       ? item.message[item.message.length - 1].text.substring(

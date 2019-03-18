@@ -133,7 +133,7 @@ class NewProduct extends React.Component {
           }
         );
         if (response.data.creator._id) {
-          this.props.navigation.navigate("Home", { realod: "realod" });
+          this.props.navigation.navigate("Home", { reload: "reload" });
           this.reset_state();
         }
       } catch (error) {

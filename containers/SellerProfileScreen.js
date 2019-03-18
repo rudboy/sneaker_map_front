@@ -186,20 +186,6 @@ class SellerProfileScreen extends React.Component {
                   : "N.C."}
               </Text>
             </View>
-            <View>
-              <MaterialCommunityIcons
-                style={{ position: "absolute", top: "25%" }}
-                name="shoe-formal"
-                size={20}
-                color="#000"
-              />
-
-              <Text style={styles.inputText}>
-                {this.state.sellerProfile.size
-                  ? this.state.sellerProfile.size
-                  : "N.C."}
-              </Text>
-            </View>
           </View>
           <SliderProduct
             article="Les autres articles du vendeur"

@@ -12,6 +12,7 @@ import {
 import { withNavigation } from "react-navigation";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
+import { withNavigationFocus } from "react-navigation";
 
 class SliderProduct extends React.Component {
   deleteFn = async (id, index) => {
@@ -145,8 +146,6 @@ class SliderProduct extends React.Component {
   // };
 
   render() {
-    // const { deleteCross } = this.props;
-
     return (
       <>
         <ScrollView
@@ -167,9 +166,13 @@ class SliderProduct extends React.Component {
                 {this.deleteCross(item._id, index)}
                 <TouchableOpacity
                   onPress={() =>
-                    this.props.navigation.navigate("Product", {
-                      id: item._id,
-                    })
+                    this.props.navigation.navigate(
+                      "Product",
+                      {
+                        id: item._id,
+                      }
+                      // console.log(item._id)
+                    )
                   }
                 >
                   <View>
@@ -213,12 +216,10 @@ class SliderProduct extends React.Component {
                 {this.deleteFav(item._id, index)}
 
                 <TouchableOpacity
-                  onPress={
-                    (() =>
-                      this.props.navigation.navigate("Product", {
-                        id: item._id,
-                      }),
-                    console.log(this.props.favorite[index]._id))
+                  onPress={() =>
+                    this.props.navigation.navigate("Product", {
+                      id: item._id,
+                    })
                   }
                 >
                   <View>
@@ -265,4 +266,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withNavigation(SliderProduct);
+export default withNavigationFocus(SliderProduct);

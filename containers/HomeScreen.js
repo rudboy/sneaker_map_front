@@ -31,6 +31,7 @@ class HomeScreen extends React.Component {
     return await fetch("https://sneaker-map-api.herokuapp.com/all_product")
       .then(response => response.json())
       .then(responseJson => {
+
         const reverse = responseJson.reverse();
         this.setState(
           {
@@ -71,6 +72,12 @@ class HomeScreen extends React.Component {
     }
   };
 
+  // reload = () => {
+  //   this.setState({
+  //     reload: true
+  //   });
+  // };
+
   render() {
     this.update();
 
@@ -102,12 +109,13 @@ class HomeScreen extends React.Component {
           <TouchableOpacity
             style={{
               backgroundColor: "grey",
-              fontSize: 15,
-              fontWeight: "500",
+              height: 30,
+              fontSize: 18,
+              fontWeight: "600",
               justifyContent: "center",
               alignItems: "center",
               alignContent: "center",
-              marginBottom: 10
+              marginVertical: 10
             }}
             onPress={() =>
               this.props.navigation.navigate("Filter", { name: "Filtres" })
@@ -130,7 +138,6 @@ class HomeScreen extends React.Component {
               return String(item._id);
             }}
             renderItem={obj => {
-              //console.log(obj.item);
               return (
                 <TouchableOpacity
                   onPress={() => {
@@ -157,7 +164,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   searchbar: {
-    width: Dimensions.get("window").width,
+    width: Dimensions.get("window").width - 28,
     height: 50,
     backgroundColor: "white",
     textAlign: "center",

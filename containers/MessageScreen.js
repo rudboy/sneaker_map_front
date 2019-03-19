@@ -24,6 +24,7 @@ class MessageScreen extends React.Component {
     const response = await axios.get(
       "https://sneaker-map-api.herokuapp.com/get_messages?id=" + user._id
     );
+    // console.log("user ", user.account.username);
     this.setState({
       tabMessage: response.data,
       currentuser: user.account.poster_profile[0],
@@ -66,6 +67,22 @@ class MessageScreen extends React.Component {
       }
     }
   };
+
+
+
+
+  getName = (userName, message) => {
+    if (userName === this.state.currentusername) {
+      for (let i = 0; i < message.length; i++) {
+        if (message[i].user.name !== this.state.currentusername) {
+          return message[i].user.name;
+        }
+      }
+    } else {
+      return userName;
+    }
+  };
+
 
   render() {
     this.update();

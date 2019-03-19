@@ -33,11 +33,13 @@ class ProductScreen extends React.Component {
     isOpen: false,
     favory: [],
     userToken: null,
+    userId: null,
     phone: null,
     picture: [],
     styleId: null,
     creator: "",
-    visible: false
+    visible: false,
+    olditemId: ""
   };
 
   static navigationOptions = ({ navigation }) => {
@@ -79,11 +81,9 @@ class ProductScreen extends React.Component {
   componentDidMount = async () => {
     const { navigation } = this.props;
     const itemId = navigation.getParam("id");
-    //console.log(itemId);
     const response = await axios.get(
       "https://sneaker-map-api.herokuapp.com/get_product_info?id=" + itemId // remplacer l'id par la props reçue de la page précédente
     );
-    //console.log("response.data ", response.data);
     const title = response.data.title;
     const description = response.data.description;
     const price = response.data.price;
@@ -95,7 +95,74 @@ class ProductScreen extends React.Component {
     const styleId = response.data.id_style;
     const creator = response.data.creator; // pouvoir envoyer l'id creator vers SellerProfileScreen
 
-    // console.log("response.data.pictures ", response.data.pictures);
+    let userInfo = await AsyncStorage.getItem("userInfo");
+    userInfo = JSON.parse(userInfo);
+
+    const userResponse = await axios.get(
+      "https://sneaker-map-api.herokuapp.com/get_my_user_info?token=" +
+        userInfo.token
+    );
+    console.log("creator : ", creator);
+    console.log("userId : ", userResponse.data._id);
+    this.setState(
+      {
+        isLoading: false,
+        productId: productId,
+        title: title,
+        description: description,
+        price: price,
+        etat: etat,
+        size: size,
+        picture: picture,
+        favory: userResponse.data.favory,
+        userToken: userResponse.data.token,
+        userId: userResponse.data._id,
+        phone: userResponse.data.phone,
+        localisation: localisation,
+        styleId: styleId,
+        creator: creator,
+        olditemId: itemId
+      },
+      () => {
+        // vérifier si l'id produit se trouve dans le tableau de favoris
+        // si oui : changer le state favory en `true``
+        // si non : le mettre en false
+        const favs = this.state.favory;
+        let isInFavs = false;
+        for (let i = 0; i < favs.length; i++) {
+          if (this.state.productId === favs[i]) {
+            isInFavs = true;
+          }
+        }
+        if (isInFavs) {
+          if (this.state.isFavorite === false) {
+            this.setState({
+              isFavorite: true
+            });
+          }
+        }
+
+        //////////////////
+      }
+    );
+  };
+
+  update = async itemId => {
+    const response = await axios.get(
+      "https://sneaker-map-api.herokuapp.com/get_product_info?id=" + itemId // remplacer l'id par la props reçue de la page précédente
+    );
+
+    const title = response.data.title;
+    const description = response.data.description;
+    const price = response.data.price;
+    const etat = response.data.etat;
+    const size = response.data.size;
+    const productId = response.data._id;
+    const localisation = response.data.localisation;
+    const picture = response.data.pictures;
+    const styleId = response.data.id_style;
+    const creator = response.data.creator; // pouvoir envoyer l'id creator vers SellerProfileScreen
+
     let userInfo = await AsyncStorage.getItem("userInfo");
     userInfo = JSON.parse(userInfo);
 
@@ -119,7 +186,8 @@ class ProductScreen extends React.Component {
         phone: userResponse.data.phone,
         localisation: localisation,
         styleId: styleId,
-        creator: creator
+        creator: creator,
+        olditemId: itemId
       },
       () => {
         // vérifier si l'id produit se trouve dans le tableau de favoris
@@ -134,14 +202,9 @@ class ProductScreen extends React.Component {
         }
         if (isInFavs) {
           if (this.state.isFavorite === false) {
-            this.setState(
-              {
-                isFavorite: true
-              },
-              () => {
-                console.log("this.state.isFavorite ", this.state.isFavorite);
-              }
-            );
+            this.setState({
+              isFavorite: true
+            });
           }
         }
 
@@ -188,14 +251,19 @@ class ProductScreen extends React.Component {
   };
 
   renderFavorite = () => {
-    return (
-      <Ionicons
-        onPress={this.handleFavorite}
-        name="ios-heart"
-        size={36}
-        color={this.state.isFavorite === true ? "red" : "#ECE9E8"}
-      />
-    );
+    const creator = this.state.creator;
+    const user = this.state.userId;
+
+    if (creator !== user) {
+      return (
+        <Ionicons
+          onPress={this.handleFavorite}
+          name="ios-heart"
+          size={36}
+          color={this.state.isFavorite === true ? "red" : "#ECE9E8"}
+        />
+      );
+    }
   };
 
   handleFavorite = async () => {
@@ -220,8 +288,64 @@ class ProductScreen extends React.Component {
     });
   };
 
+  renderFooter = () => {
+    let creator = this.state.creator;
+    let user = this.state.userId;
+    if (user !== creator) {
+      return (
+        <>
+          <View style={styles.footer}>
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate("Chat", {
+                  sellerId: this.state.creator // envoie l'id creator vers le chat
+                })
+              }
+              style={styles.iconWrapper}
+            >
+              <Ionicons name="ios-chatboxes" size={30} color="black" />
+              <Text>Message</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.iconWrapper}
+              disabled={this.state.phone === "" ? true : false}
+              onPress={() => Communications.phonecall(this.state.phone, true)}
+            >
+              <FontAwesome
+                name="phone"
+                size={30}
+                color={this.state.phone === "" ? "grey" : "black"}
+              />
+              <Text
+                style={this.state.phone === "" ? styles.grey : styles.black}
+              >
+                Contacter
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate("SellerProfile", {
+                  id: this.state.creator // envoie l'id creator vers SellerProfileScreen
+                })
+              }
+              style={styles.iconWrapper}
+            >
+              <Ionicons name="ios-person" size={30} color="black" />
+              <Text>Profil vendeur</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      );
+    }
+  };
+
   render() {
-    // console.log("this.state.picture ", this.state.picture);
+    const { navigation } = this.props;
+    const itemId = navigation.getParam("id");
+    if (itemId !== this.state.olditemId) {
+      this.update(itemId);
+    }
+
     if (this.state.isLoading === true) {
       return <ActivityIndicator style={{ flex: 1 }} />;
     } else {
@@ -275,6 +399,9 @@ class ProductScreen extends React.Component {
               </View>
             </View>
             <View style={styles.contentWrapper}>
+              {this.state.creator === this.state.userId ? (
+                <Text style={styles.owner}>Cette paire est à toi</Text>
+              ) : null}
               <Text style={styles.title}>{this.state.title}</Text>
               <Text style={styles.subtitle}>Description</Text>
               <TouchableOpacity onPress={this.handlePress}>
@@ -370,46 +497,7 @@ class ProductScreen extends React.Component {
               borderBottomColor: "black"
             }}
           />
-          <View style={styles.footer}>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("Chat", {
-                  sellerId: this.state.creator // envoie l'id creator vers le chat
-                })
-              }
-              style={styles.iconWrapper}
-            >
-              <Ionicons name="ios-chatboxes" size={30} color="black" />
-              <Text>Message</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.iconWrapper}
-              disabled={this.state.phone === null ? true : false}
-              onPress={() => Communications.phonecall(this.state.phone, true)}
-            >
-              <FontAwesome
-                name="phone"
-                size={30}
-                color={this.state.phone === null ? "grey" : "black"}
-              />
-              <Text
-                style={this.state.phone === null ? styles.grey : styles.black}
-              >
-                Contacter
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("SellerProfile", {
-                  id: this.state.creator // envoie l'id creator vers SellerProfileScreen
-                })
-              }
-              style={styles.iconWrapper}
-            >
-              <Ionicons name="ios-person" size={30} color="black" />
-              <Text>Profil vendeur</Text>
-            </TouchableOpacity>
-          </View>
+          {this.renderFooter()}
         </>
       );
     }
@@ -466,5 +554,8 @@ const styles = StyleSheet.create({
   },
   black: {
     color: "black"
+  },
+  owner: {
+    fontSize: 14
   }
 });

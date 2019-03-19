@@ -45,7 +45,7 @@ class SellerProfileScreen extends React.Component {
         "https://sneaker-map-api.herokuapp.com/get_seller_product_info?id=" +
           creator
       );
-
+      console.log(productResponse.data);
       this.setState({
         sellerProfile: response.data,
         sellerProduct: productResponse.data,
@@ -187,10 +187,7 @@ class SellerProfileScreen extends React.Component {
               </Text>
             </View>
           </View>
-          <SliderProduct
-            article="Les autres articles du vendeur"
-            product={this.state.sellerProduct}
-          />
+          <SliderProduct product={this.state.sellerProduct} />
         </KeyboardAwareScrollView>
       </>
     );

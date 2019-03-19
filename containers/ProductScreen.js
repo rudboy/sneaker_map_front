@@ -11,7 +11,7 @@ import {
   AsyncStorage,
   FlatList,
   Share,
-  Button
+  Button,
 } from "react-native";
 import { MapView } from "expo";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
@@ -37,14 +37,15 @@ class ProductScreen extends React.Component {
     picture: [],
     styleId: null,
     creator: "",
-    visible: false
+    visible: false,
+    olditemId: "",
   };
 
   static navigationOptions = ({ navigation }) => {
     return {
       headerStyle: {
-        height: 40
-      }
+        height: 40,
+      },
     };
   };
 
@@ -59,7 +60,7 @@ class ProductScreen extends React.Component {
           this.state.description +
           " " +
           this.state.price +
-          "€"
+          "€",
       });
 
       if (result.action === Share.sharedAction) {
@@ -79,11 +80,9 @@ class ProductScreen extends React.Component {
   componentDidMount = async () => {
     const { navigation } = this.props;
     const itemId = navigation.getParam("id");
-    //console.log(itemId);
     const response = await axios.get(
       "https://sneaker-map-api.herokuapp.com/get_product_info?id=" + itemId // remplacer l'id par la props reçue de la page précédente
     );
-    //console.log("response.data ", response.data);
     const title = response.data.title;
     const description = response.data.description;
     const price = response.data.price;
@@ -95,7 +94,6 @@ class ProductScreen extends React.Component {
     const styleId = response.data.id_style;
     const creator = response.data.creator; // pouvoir envoyer l'id creator vers SellerProfileScreen
 
-    // console.log("response.data.pictures ", response.data.pictures);
     let userInfo = await AsyncStorage.getItem("userInfo");
     userInfo = JSON.parse(userInfo);
 
@@ -119,7 +117,8 @@ class ProductScreen extends React.Component {
         phone: userResponse.data.phone,
         localisation: localisation,
         styleId: styleId,
-        creator: creator
+        creator: creator,
+        olditemId: itemId,
       },
       () => {
         // vérifier si l'id produit se trouve dans le tableau de favoris
@@ -134,14 +133,75 @@ class ProductScreen extends React.Component {
         }
         if (isInFavs) {
           if (this.state.isFavorite === false) {
-            this.setState(
-              {
-                isFavorite: true
-              },
-              () => {
-                console.log("this.state.isFavorite ", this.state.isFavorite);
-              }
-            );
+            this.setState({
+              isFavorite: true,
+            });
+          }
+        }
+
+        //////////////////
+      }
+    );
+  };
+
+  update = async itemId => {
+    const response = await axios.get(
+      "https://sneaker-map-api.herokuapp.com/get_product_info?id=" + itemId // remplacer l'id par la props reçue de la page précédente
+    );
+
+    const title = response.data.title;
+    const description = response.data.description;
+    const price = response.data.price;
+    const etat = response.data.etat;
+    const size = response.data.size;
+    const productId = response.data._id;
+    const localisation = response.data.localisation;
+    const picture = response.data.pictures;
+    const styleId = response.data.id_style;
+    const creator = response.data.creator; // pouvoir envoyer l'id creator vers SellerProfileScreen
+
+    let userInfo = await AsyncStorage.getItem("userInfo");
+    userInfo = JSON.parse(userInfo);
+
+    const userResponse = await axios.get(
+      "https://sneaker-map-api.herokuapp.com/get_my_user_info?token=" +
+        userInfo.token
+    );
+
+    this.setState(
+      {
+        isLoading: false,
+        productId: productId,
+        title: title,
+        description: description,
+        price: price,
+        etat: etat,
+        size: size,
+        picture: picture,
+        favory: userResponse.data.favory,
+        userToken: userResponse.data.token,
+        phone: userResponse.data.phone,
+        localisation: localisation,
+        styleId: styleId,
+        creator: creator,
+        olditemId: itemId,
+      },
+      () => {
+        // vérifier si l'id produit se trouve dans le tableau de favoris
+        // si oui : changer le state favory en `true``
+        // si non : le mettre en false
+        const favs = this.state.favory;
+        let isInFavs = false;
+        for (let i = 0; i < favs.length; i++) {
+          if (this.state.productId === favs[i]) {
+            isInFavs = true;
+          }
+        }
+        if (isInFavs) {
+          if (this.state.isFavorite === false) {
+            this.setState({
+              isFavorite: true,
+            });
           }
         }
 
@@ -183,7 +243,7 @@ class ProductScreen extends React.Component {
 
   handlePress = () => {
     this.setState({
-      isOpen: this.state.isOpen === true ? false : true
+      isOpen: this.state.isOpen === true ? false : true,
     });
   };
 
@@ -205,23 +265,28 @@ class ProductScreen extends React.Component {
       "https://sneaker-map-api.herokuapp.com/update_user_info",
       {
         //body
-        favory: this.state.productId
+        favory: this.state.productId,
       },
       {
         headers: {
-          authorization: "Bearer " + this.state.userToken
-        }
+          authorization: "Bearer " + this.state.userToken,
+        },
       }
     );
     //////////test:
     // Changer le state :
     this.setState({
-      isFavorite: this.state.isFavorite === true ? false : true
+      isFavorite: this.state.isFavorite === true ? false : true,
     });
   };
 
   render() {
-    // console.log("this.state.picture ", this.state.picture);
+    const { navigation } = this.props;
+    const itemId = navigation.getParam("id");
+    if (itemId !== this.state.olditemId) {
+      this.update(itemId);
+    }
+
     if (this.state.isLoading === true) {
       return <ActivityIndicator style={{ flex: 1 }} />;
     } else {
@@ -243,7 +308,7 @@ class ProductScreen extends React.Component {
                       resizeMode="contain"
                       style={styles.productPic}
                       source={{
-                        uri: photo
+                        uri: photo,
                       }}
                     />
                   );
@@ -253,7 +318,7 @@ class ProductScreen extends React.Component {
                 style={{
                   position: "absolute",
                   right: 12,
-                  top: 12
+                  top: 12,
                 }}
               >
                 {this.renderFavorite()}
@@ -284,13 +349,13 @@ class ProductScreen extends React.Component {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  alignItems: "center"
+                  alignItems: "center",
                 }}
               >
                 <View
                   style={{
                     alignItems: "center",
-                    flex: 1
+                    flex: 1,
                   }}
                 >
                   <Text style={styles.subtitle}>Pointure</Text>
@@ -300,7 +365,7 @@ class ProductScreen extends React.Component {
                 <View
                   style={{
                     alignItems: "center",
-                    flex: 1
+                    flex: 1,
                   }}
                 >
                   <Text style={styles.subtitle}>Prix</Text>
@@ -310,7 +375,7 @@ class ProductScreen extends React.Component {
                 <View
                   style={{
                     alignItems: "center",
-                    flex: 1
+                    flex: 1,
                   }}
                 >
                   <Text style={styles.subtitle}>Etat</Text>
@@ -329,13 +394,13 @@ class ProductScreen extends React.Component {
                 latitude: this.state.localisation[0],
                 longitude: this.state.localisation[1],
                 latitudeDelta: 0.025,
-                longitudeDelta: 0.0029
+                longitudeDelta: 0.0029,
               }}
             >
               <MapView.Marker
                 coordinate={{
                   latitude: this.state.localisation[0],
-                  longitude: this.state.localisation[1]
+                  longitude: this.state.localisation[1],
                 }}
                 title={"La sneaker dont tu rêves"}
                 description={"Elle est là, elle t'attend !"}
@@ -345,19 +410,19 @@ class ProductScreen extends React.Component {
                     width: 60,
                     height: 60,
                     borderRadius: 30,
-                    backgroundColor: "white"
+                    backgroundColor: "white",
                   }}
                 >
                   <Image
                     source={{
-                      uri: this.state.picture[0]
+                      uri: this.state.picture[0],
                     }}
                     resizeMode="contain"
                     style={{
                       width: 45,
                       height: 45,
                       marginTop: 5,
-                      marginLeft: 6
+                      marginLeft: 6,
                     }}
                   />
                 </View>
@@ -367,14 +432,14 @@ class ProductScreen extends React.Component {
           <View
             style={{
               borderBottomWidth: StyleSheet.hairlineWidth,
-              borderBottomColor: "black"
+              borderBottomColor: "black",
             }}
           />
           <View style={styles.footer}>
             <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("Chat", {
-                  sellerId: this.state.creator // envoie l'id creator vers le chat
+                  sellerId: this.state.creator, // envoie l'id creator vers le chat
                 })
               }
               style={styles.iconWrapper}
@@ -401,7 +466,7 @@ class ProductScreen extends React.Component {
             <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("SellerProfile", {
-                  id: this.state.creator // envoie l'id creator vers SellerProfileScreen
+                  id: this.state.creator, // envoie l'id creator vers SellerProfileScreen
                 })
               }
               style={styles.iconWrapper}
@@ -424,27 +489,27 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
     // paddingHorizontal: 16,
     // paddingBottom: 50,
-    marginTop: 0
+    marginTop: 0,
   },
   contentWrapper: {
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   productPic: {
-    flex: 1
+    flex: 1,
   },
   title: {
     fontSize: 20,
     marginTop: 10,
-    marginBottom: 8
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
     fontWeight: "700",
     marginTop: 15,
-    marginBottom: 8
+    marginBottom: 8,
   },
   p: {
-    fontSize: 13
+    fontSize: 13,
   },
   footer: {
     flexDirection: "row",
@@ -453,18 +518,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginTop: 6,
     marginBottom: 20,
-    height: 56
+    height: 56,
   },
   iconWrapper: {
     flex: 1,
     height: "100%",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   grey: {
-    color: "grey"
+    color: "grey",
   },
   black: {
-    color: "black"
-  }
+    color: "black",
+  },
 });

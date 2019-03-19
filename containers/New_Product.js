@@ -238,7 +238,12 @@ class NewProduct extends React.Component {
             title={this.state.title}
             url={this.state.url}
           />
-          <TouchableOpacity style={styles.valider} onPress={this.addToDB}>
+          <TouchableOpacity
+            style={styles.valider}
+            onPress={() => {
+              this.addToDB();
+            }}
+          >
             <Text
               style={{
                 color: "black",

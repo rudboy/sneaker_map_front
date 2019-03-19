@@ -24,10 +24,11 @@ class MessageScreen extends React.Component {
     const response = await axios.get(
       "https://sneaker-map-api.herokuapp.com/get_messages?id=" + user._id
     );
+    // console.log("user ", user.account.username);
     this.setState({
       tabMessage: response.data,
       currentuser: user.account.poster_profile[0],
-      currentusername: user.username
+      currentusername: user.account.username
     });
   };
 
@@ -37,6 +38,19 @@ class MessageScreen extends React.Component {
 
   //   );
   // };
+
+  getName = (userName, message) => {
+    if (userName === this.state.currentusername) {
+      for (let i = 0; i < message.length; i++) {
+        if (message[i].user.name !== this.state.currentusername) {
+          return message[i].user.name;
+        }
+      }
+    } else {
+      return userName;
+    }
+  };
+
   render() {
     //console.log(this.getPhoto(item.sellerId, item.userId));
 
@@ -77,9 +91,7 @@ class MessageScreen extends React.Component {
                 />
                 <View>
                   <Text style={{ fontWeight: "700" }}>
-                    {item.username === this.state.currentusername
-                      ? item.username
-                      : item.message[0].user.name}
+                    {this.getName(item.username, item.message)}
                   </Text>
                   <Text style={{ color: "grey", marginTop: 10 }}>
                     {item.message.length > 30

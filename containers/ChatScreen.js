@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, AsyncStorage, YellowBox } from "react-native";
+import { View, AsyncStorage, YellowBox } from "react-native";
 import SocketIOClient from "socket.io-client";
 import axios from "axios";
 import { GiftedChat } from "react-native-gifted-chat";

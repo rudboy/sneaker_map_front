@@ -31,10 +31,11 @@ class HomeScreen extends React.Component {
     return await fetch("https://sneaker-map-api.herokuapp.com/all_product")
       .then(response => response.json())
       .then(responseJson => {
+        const reverse = responseJson.reverse();
         this.setState(
           {
             isLoading: false,
-            sneakers: responseJson
+            sneakers: reverse
           },
           function() {
             arrayholder = responseJson;
@@ -63,7 +64,8 @@ class HomeScreen extends React.Component {
     );
 
     if (response.data.length > this.state.sneakers.length) {
-      this.setState({ sneakers: response.data }, function() {
+      const reverse = response.data.reverse();
+      this.setState({ sneakers: reverse }, function() {
         arrayholder = response.data;
       });
     }

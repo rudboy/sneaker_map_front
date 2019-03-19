@@ -102,6 +102,8 @@ class ProductScreen extends React.Component {
       "https://sneaker-map-api.herokuapp.com/get_my_user_info?token=" +
         userInfo.token
     );
+    console.log("creator : ", creator);
+    console.log("userId : ", userResponse.data._id);
     this.setState(
       {
         isLoading: false,
@@ -249,14 +251,19 @@ class ProductScreen extends React.Component {
   };
 
   renderFavorite = () => {
-    return (
-      <Ionicons
-        onPress={this.handleFavorite}
-        name="ios-heart"
-        size={36}
-        color={this.state.isFavorite === true ? "red" : "#ECE9E8"}
-      />
-    );
+    const creator = this.state.creator;
+    const user = this.state.userId;
+
+    if (creator !== user) {
+      return (
+        <Ionicons
+          onPress={this.handleFavorite}
+          name="ios-heart"
+          size={36}
+          color={this.state.isFavorite === true ? "red" : "#ECE9E8"}
+        />
+      );
+    }
   };
 
   handleFavorite = async () => {
@@ -392,6 +399,9 @@ class ProductScreen extends React.Component {
               </View>
             </View>
             <View style={styles.contentWrapper}>
+              {this.state.creator === this.state.userId ? (
+                <Text style={styles.owner}>Cette paire est à toi</Text>
+              ) : null}
               <Text style={styles.title}>{this.state.title}</Text>
               <Text style={styles.subtitle}>Description</Text>
               <TouchableOpacity onPress={this.handlePress}>
@@ -544,5 +554,8 @@ const styles = StyleSheet.create({
   },
   black: {
     color: "black"
+  },
+  owner: {
+    fontSize: 14
   }
 });

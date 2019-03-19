@@ -72,11 +72,11 @@ class HomeScreen extends React.Component {
     }
   };
 
-  reload = () => {
-    this.setState({
-      reload: true
-    });
-  };
+  // reload = () => {
+  //   this.setState({
+  //     reload: true
+  //   });
+  // };
 
   render() {
     this.update();

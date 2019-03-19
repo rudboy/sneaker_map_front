@@ -11,7 +11,7 @@ import {
   AsyncStorage,
   FlatList,
   Share,
-  Button,
+  Button
 } from "react-native";
 import { MapView } from "expo";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
@@ -33,19 +33,20 @@ class ProductScreen extends React.Component {
     isOpen: false,
     favory: [],
     userToken: null,
+    userId: null,
     phone: null,
     picture: [],
     styleId: null,
     creator: "",
     visible: false,
-    olditemId: "",
+    olditemId: ""
   };
 
   static navigationOptions = ({ navigation }) => {
     return {
       headerStyle: {
-        height: 40,
-      },
+        height: 40
+      }
     };
   };
 
@@ -60,7 +61,7 @@ class ProductScreen extends React.Component {
           this.state.description +
           " " +
           this.state.price +
-          "€",
+          "€"
       });
 
       if (result.action === Share.sharedAction) {
@@ -101,7 +102,6 @@ class ProductScreen extends React.Component {
       "https://sneaker-map-api.herokuapp.com/get_my_user_info?token=" +
         userInfo.token
     );
-
     this.setState(
       {
         isLoading: false,
@@ -114,11 +114,12 @@ class ProductScreen extends React.Component {
         picture: picture,
         favory: userResponse.data.favory,
         userToken: userResponse.data.token,
+        userId: userResponse.data._id,
         phone: userResponse.data.phone,
         localisation: localisation,
         styleId: styleId,
         creator: creator,
-        olditemId: itemId,
+        olditemId: itemId
       },
       () => {
         // vérifier si l'id produit se trouve dans le tableau de favoris
@@ -134,7 +135,7 @@ class ProductScreen extends React.Component {
         if (isInFavs) {
           if (this.state.isFavorite === false) {
             this.setState({
-              isFavorite: true,
+              isFavorite: true
             });
           }
         }
@@ -184,7 +185,7 @@ class ProductScreen extends React.Component {
         localisation: localisation,
         styleId: styleId,
         creator: creator,
-        olditemId: itemId,
+        olditemId: itemId
       },
       () => {
         // vérifier si l'id produit se trouve dans le tableau de favoris
@@ -200,7 +201,7 @@ class ProductScreen extends React.Component {
         if (isInFavs) {
           if (this.state.isFavorite === false) {
             this.setState({
-              isFavorite: true,
+              isFavorite: true
             });
           }
         }
@@ -243,7 +244,7 @@ class ProductScreen extends React.Component {
 
   handlePress = () => {
     this.setState({
-      isOpen: this.state.isOpen === true ? false : true,
+      isOpen: this.state.isOpen === true ? false : true
     });
   };
 
@@ -265,19 +266,70 @@ class ProductScreen extends React.Component {
       "https://sneaker-map-api.herokuapp.com/update_user_info",
       {
         //body
-        favory: this.state.productId,
+        favory: this.state.productId
       },
       {
         headers: {
-          authorization: "Bearer " + this.state.userToken,
-        },
+          authorization: "Bearer " + this.state.userToken
+        }
       }
     );
     //////////test:
     // Changer le state :
     this.setState({
-      isFavorite: this.state.isFavorite === true ? false : true,
+      isFavorite: this.state.isFavorite === true ? false : true
     });
+  };
+
+  renderFooter = () => {
+    let creator = this.state.creator;
+    let user = this.state.userId;
+    if (user !== creator) {
+      return (
+        <>
+          <View style={styles.footer}>
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate("Chat", {
+                  sellerId: this.state.creator // envoie l'id creator vers le chat
+                })
+              }
+              style={styles.iconWrapper}
+            >
+              <Ionicons name="ios-chatboxes" size={30} color="black" />
+              <Text>Message</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.iconWrapper}
+              disabled={this.state.phone === "" ? true : false}
+              onPress={() => Communications.phonecall(this.state.phone, true)}
+            >
+              <FontAwesome
+                name="phone"
+                size={30}
+                color={this.state.phone === "" ? "grey" : "black"}
+              />
+              <Text
+                style={this.state.phone === "" ? styles.grey : styles.black}
+              >
+                Contacter
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate("SellerProfile", {
+                  id: this.state.creator // envoie l'id creator vers SellerProfileScreen
+                })
+              }
+              style={styles.iconWrapper}
+            >
+              <Ionicons name="ios-person" size={30} color="black" />
+              <Text>Profil vendeur</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      );
+    }
   };
 
   render() {
@@ -308,7 +360,7 @@ class ProductScreen extends React.Component {
                       resizeMode="contain"
                       style={styles.productPic}
                       source={{
-                        uri: photo,
+                        uri: photo
                       }}
                     />
                   );
@@ -318,7 +370,7 @@ class ProductScreen extends React.Component {
                 style={{
                   position: "absolute",
                   right: 12,
-                  top: 12,
+                  top: 12
                 }}
               >
                 {this.renderFavorite()}
@@ -349,13 +401,13 @@ class ProductScreen extends React.Component {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  alignItems: "center",
+                  alignItems: "center"
                 }}
               >
                 <View
                   style={{
                     alignItems: "center",
-                    flex: 1,
+                    flex: 1
                   }}
                 >
                   <Text style={styles.subtitle}>Pointure</Text>
@@ -365,7 +417,7 @@ class ProductScreen extends React.Component {
                 <View
                   style={{
                     alignItems: "center",
-                    flex: 1,
+                    flex: 1
                   }}
                 >
                   <Text style={styles.subtitle}>Prix</Text>
@@ -375,7 +427,7 @@ class ProductScreen extends React.Component {
                 <View
                   style={{
                     alignItems: "center",
-                    flex: 1,
+                    flex: 1
                   }}
                 >
                   <Text style={styles.subtitle}>Etat</Text>
@@ -394,13 +446,13 @@ class ProductScreen extends React.Component {
                 latitude: this.state.localisation[0],
                 longitude: this.state.localisation[1],
                 latitudeDelta: 0.025,
-                longitudeDelta: 0.0029,
+                longitudeDelta: 0.0029
               }}
             >
               <MapView.Marker
                 coordinate={{
                   latitude: this.state.localisation[0],
-                  longitude: this.state.localisation[1],
+                  longitude: this.state.localisation[1]
                 }}
                 title={"La sneaker dont tu rêves"}
                 description={"Elle est là, elle t'attend !"}
@@ -410,19 +462,19 @@ class ProductScreen extends React.Component {
                     width: 60,
                     height: 60,
                     borderRadius: 30,
-                    backgroundColor: "white",
+                    backgroundColor: "white"
                   }}
                 >
                   <Image
                     source={{
-                      uri: this.state.picture[0],
+                      uri: this.state.picture[0]
                     }}
                     resizeMode="contain"
                     style={{
                       width: 45,
                       height: 45,
                       marginTop: 5,
-                      marginLeft: 6,
+                      marginLeft: 6
                     }}
                   />
                 </View>
@@ -432,49 +484,10 @@ class ProductScreen extends React.Component {
           <View
             style={{
               borderBottomWidth: StyleSheet.hairlineWidth,
-              borderBottomColor: "black",
+              borderBottomColor: "black"
             }}
           />
-          <View style={styles.footer}>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("Chat", {
-                  sellerId: this.state.creator, // envoie l'id creator vers le chat
-                })
-              }
-              style={styles.iconWrapper}
-            >
-              <Ionicons name="ios-chatboxes" size={30} color="black" />
-              <Text>Message</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.iconWrapper}
-              disabled={this.state.phone === null ? true : false}
-              onPress={() => Communications.phonecall(this.state.phone, true)}
-            >
-              <FontAwesome
-                name="phone"
-                size={30}
-                color={this.state.phone === null ? "grey" : "black"}
-              />
-              <Text
-                style={this.state.phone === null ? styles.grey : styles.black}
-              >
-                Contacter
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("SellerProfile", {
-                  id: this.state.creator, // envoie l'id creator vers SellerProfileScreen
-                })
-              }
-              style={styles.iconWrapper}
-            >
-              <Ionicons name="ios-person" size={30} color="black" />
-              <Text>Profil vendeur</Text>
-            </TouchableOpacity>
-          </View>
+          {this.renderFooter()}
         </>
       );
     }
@@ -489,27 +502,27 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
     // paddingHorizontal: 16,
     // paddingBottom: 50,
-    marginTop: 0,
+    marginTop: 0
   },
   contentWrapper: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 16
   },
   productPic: {
-    flex: 1,
+    flex: 1
   },
   title: {
     fontSize: 20,
     marginTop: 10,
-    marginBottom: 8,
+    marginBottom: 8
   },
   subtitle: {
     fontSize: 16,
     fontWeight: "700",
     marginTop: 15,
-    marginBottom: 8,
+    marginBottom: 8
   },
   p: {
-    fontSize: 13,
+    fontSize: 13
   },
   footer: {
     flexDirection: "row",
@@ -518,18 +531,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginTop: 6,
     marginBottom: 20,
-    height: 56,
+    height: 56
   },
   iconWrapper: {
     flex: 1,
     height: "100%",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "space-between"
   },
   grey: {
-    color: "grey",
+    color: "grey"
   },
   black: {
-    color: "black",
-  },
+    color: "black"
+  }
 });

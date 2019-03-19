@@ -41,8 +41,7 @@ const initialState = {
   title: null,
   styleID: null,
   tab_photo: [],
-  url: "",
-  token: null
+  url: ""
 };
 
 class NewProduct extends React.Component {
@@ -133,8 +132,8 @@ class NewProduct extends React.Component {
           }
         );
         if (response.data.creator._id) {
-          this.props.navigation.navigate("Home", { reload: "reload" });
           this.reset_state();
+          this.props.navigation.navigate("Home", { reload: "reload" });
         }
       } catch (error) {
         console.log(error);
@@ -164,8 +163,8 @@ class NewProduct extends React.Component {
           }
         );
         if (response.data.creator._id) {
-          this.props.navigation.navigate("Home", { realod: "realod" });
           this.reset_state();
+          this.props.navigation.navigate("Home", { realod: "realod" });
         }
       } catch (error) {
         console.log(error);

@@ -31,7 +31,7 @@ class HomeScreen extends React.Component {
     return await fetch("https://sneaker-map-api.herokuapp.com/all_product")
       .then(response => response.json())
       .then(responseJson => {
-        // console.log("responseJson ", responseJson);
+
         const reverse = responseJson.reverse();
         this.setState(
           {

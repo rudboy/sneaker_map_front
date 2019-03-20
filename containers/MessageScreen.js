@@ -5,7 +5,9 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-  View
+  View,
+  Dimensions,
+  StyleSheet,
 } from "react-native";
 import axios from "axios";
 
@@ -14,7 +16,7 @@ class MessageScreen extends React.Component {
     tabMessage: [],
     profilPicture: "",
     currentuser: "",
-    currentusername: ""
+    currentusername: "",
   };
   componentDidMount = async () => {
     try {
@@ -32,7 +34,7 @@ class MessageScreen extends React.Component {
           this.setState({
             tabMessage: response.data,
             currentuser: user.account.poster_profile[0],
-            currentusername: user.account.username
+            currentusername: user.account.username,
           });
         }
       );
@@ -49,7 +51,7 @@ class MessageScreen extends React.Component {
     );
     if (response.data.length > this.state.tabMessage) {
       this.setState({
-        tabMessage: response.data
+        tabMessage: response.data,
       });
     }
     for (let i = 0; i < response.data.length; i++) {
@@ -58,12 +60,11 @@ class MessageScreen extends React.Component {
         this.state.tabMessage[i].message.length
       ) {
         this.setState({
-          tabMessage: response.data
+          tabMessage: response.data,
         });
       }
     }
   };
-
 
   getName = (userName, message) => {
     if (userName === this.state.currentusername) {
@@ -78,7 +79,7 @@ class MessageScreen extends React.Component {
   };
 
   render() {
-    //this.update();
+    let { width } = Dimensions.get("window");
 
     return (
       <>
@@ -88,14 +89,14 @@ class MessageScreen extends React.Component {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={{
-                height: 60,
+                height: 65,
                 marginTop: 10,
-                borderBottomColor: "#d5d9e0",
-                borderBottomWidth: 0.5
+                borderBottomColor: "grey",
+                borderBottomWidth: StyleSheet.hairlineWidth,
               }}
               onPress={() => {
                 this.props.navigation.navigate("Chat", {
-                  conversation: item
+                  conversation: item,
                 });
               }}
             >
@@ -106,19 +107,36 @@ class MessageScreen extends React.Component {
                     height: 55,
                     marginLeft: 10,
                     marginRight: 10,
-                    borderRadius: 10
+                    borderRadius: 10,
+                    marginBottom: 90,
                   }}
                   source={{
                     uri:
                       this.state.currentuser === item.userId
                         ? item.sellerId
-                        : item.userId
+                        : item.userId,
                   }}
                 />
                 <View>
-                  <Text style={{ fontWeight: "700" }}>
-                    {this.getName(item.username, item.message)}
-                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      width: width - 85,
+                    }}
+                  >
+                    <Text
+                      numberOfLines={1}
+                      style={{ fontWeight: "700", width: width / 3.5 }}
+                    >
+                      {this.getName(item.username, item.message)}
+                    </Text>
+                    <Text>
+                      {item.message[
+                        item.message.length - 1
+                      ].createdAt.substring(0, 10)}
+                    </Text>
+                  </View>
                   <Text style={{ color: "grey", marginTop: 10 }}>
                     {item.message.length > 30
                       ? item.message[item.message.length - 1].text.substring(
@@ -128,12 +146,6 @@ class MessageScreen extends React.Component {
                       : item.message[item.message.length - 1].text}
                   </Text>
                 </View>
-                <Text style={{ marginLeft: 150 }}>
-                  {item.message[item.message.length - 1].createdAt.substring(
-                    0,
-                    10
-                  )}
-                </Text>
                 <View />
               </View>
             </TouchableOpacity>

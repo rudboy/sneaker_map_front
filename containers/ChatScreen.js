@@ -107,6 +107,7 @@ class Chat extends React.Component {
           userInfo._id
       );
       this.getRoomInfo(navigation.getParam("sellerId"), userInfo._id);
+      console.log("response2.data ", response2.data);
 
       this.setState({
         userName: userInfo.account.username,
@@ -154,13 +155,15 @@ class Chat extends React.Component {
       messages: GiftedChat.append(previousState.messages, messages)
     }));
     //console.log("ici ", this.state.messages[0].text);
-
+    // console.log("this.state.sellerUserName ", this.state.sellerUserName);
+    // console.log("this.state.sellerPhoto ", this.state.sellerPhoto);
+    // console.log("this.state.userId ", this.state.userId);
     this.socket.emit("message", {
       room: this.state.roomName,
       message: messages[0],
       username: this.state.sellerUserName.toString(),
       sellerId: this.state.sellerPhoto.toString(),
-      userId: this.state.userPhoto.toString()
+      userPhoto: this.state.userPhoto.toString()
     });
     // const value = JSON.stringify(this.state.messages);
     // await AsyncStorage.setItem(this.state.roomName, value);

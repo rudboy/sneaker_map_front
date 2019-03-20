@@ -7,7 +7,7 @@ import {
   Image,
   View,
   Dimensions,
-  StyleSheet,
+  StyleSheet
 } from "react-native";
 import axios from "axios";
 
@@ -16,7 +16,7 @@ class MessageScreen extends React.Component {
     tabMessage: [],
     profilPicture: "",
     currentuser: "",
-    currentusername: "",
+    currentusername: ""
   };
   componentDidMount = async () => {
     try {
@@ -34,7 +34,7 @@ class MessageScreen extends React.Component {
           this.setState({
             tabMessage: response.data,
             currentuser: user.account.poster_profile[0],
-            currentusername: user.account.username,
+            currentusername: user.account.username
           });
         }
       );
@@ -51,7 +51,7 @@ class MessageScreen extends React.Component {
     );
     if (response.data.length > this.state.tabMessage) {
       this.setState({
-        tabMessage: response.data,
+        tabMessage: response.data
       });
     }
     for (let i = 0; i < response.data.length; i++) {
@@ -60,7 +60,7 @@ class MessageScreen extends React.Component {
         this.state.tabMessage[i].message.length
       ) {
         this.setState({
-          tabMessage: response.data,
+          tabMessage: response.data
         });
       }
     }
@@ -92,11 +92,11 @@ class MessageScreen extends React.Component {
                 height: 65,
                 marginTop: 10,
                 borderBottomColor: "grey",
-                borderBottomWidth: StyleSheet.hairlineWidth,
+                borderBottomWidth: StyleSheet.hairlineWidth
               }}
               onPress={() => {
                 this.props.navigation.navigate("Chat", {
-                  conversation: item,
+                  conversation: item
                 });
               }}
             >
@@ -108,13 +108,13 @@ class MessageScreen extends React.Component {
                     marginLeft: 10,
                     marginRight: 10,
                     borderRadius: 10,
-                    marginBottom: 90,
+                    marginBottom: 90
                   }}
                   source={{
                     uri:
                       this.state.currentuser === item.userId
                         ? item.sellerId
-                        : item.userId,
+                        : item.userId
                   }}
                 />
                 <View>
@@ -122,7 +122,7 @@ class MessageScreen extends React.Component {
                     style={{
                       flexDirection: "row",
                       justifyContent: "space-between",
-                      width: width - 85,
+                      width: width - 85
                     }}
                   >
                     <Text

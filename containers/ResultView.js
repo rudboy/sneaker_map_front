@@ -121,14 +121,14 @@ class ResultView extends React.Component {
 
     return (
       <>
-        <View
+        {/* <View
           style={{
             paddingTop: Platform.OS === "ios" ? 40 : 0,
             backgroundColor: "white"
           }}
         >
           <Text jbkjk />
-        </View>
+        </View> */}
 
         <TabView
           navigationState={this.state}
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   },
   tabBarText: {
     fontSize: 20,
-    color: "white"
+    color: "black"
   },
   tabBar: {
     flexDirection: "row",

@@ -41,8 +41,7 @@ const initialState = {
   title: null,
   styleID: null,
   tab_photo: [],
-  url: "",
-  token: null
+  url: ""
 };
 
 class NewProduct extends React.Component {
@@ -133,8 +132,8 @@ class NewProduct extends React.Component {
           }
         );
         if (response.data.creator._id) {
-          this.props.navigation.navigate("Home", { reload: "reload" });
           this.reset_state();
+          this.props.navigation.navigate("Home", { reload: "reload" });
         }
       } catch (error) {
         console.log(error);
@@ -164,8 +163,8 @@ class NewProduct extends React.Component {
           }
         );
         if (response.data.creator._id) {
-          this.props.navigation.navigate("Home", { realod: "realod" });
           this.reset_state();
+          this.props.navigation.navigate("Home", { realod: "realod" });
         }
       } catch (error) {
         console.log(error);
@@ -261,16 +260,22 @@ class NewProduct extends React.Component {
 
   componentDidMount = async () => {
     try {
-      // On charge les données ici
-      for (let i = 0; i < jordan.length; i++) {
-        const response = await axios.get(
-          "http://sneakersmap.fr/sneaker_map/jordan/" +
-            jordan[i].value +
-            ".json"
-        );
-        const value = JSON.stringify(response.data);
-        await AsyncStorage.setItem(jordan[i].value, value);
-      }
+      this._navListener = this.props.navigation.addListener(
+        "didFocus",
+        async () => {
+          this.reset_state();
+          // On charge les données ici
+          for (let i = 0; i < jordan.length; i++) {
+            const response = await axios.get(
+              "http://sneakersmap.fr/sneaker_map/jordan/" +
+                jordan[i].value +
+                ".json"
+            );
+            const value = JSON.stringify(response.data);
+            await AsyncStorage.setItem(jordan[i].value, value);
+          }
+        }
+      );
     } catch (error) {
       console.log(error);
     }

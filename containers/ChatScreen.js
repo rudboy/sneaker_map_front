@@ -1,7 +1,15 @@
 import React from "react";
-import { View, AsyncStorage, YellowBox } from "react-native";
+import {
+  Text,
+  AsyncStorage,
+  YellowBox,
+  View,
+  TouchableOpacity
+} from "react-native";
+import { withNavigationFocus } from "react-navigation";
 import SocketIOClient from "socket.io-client";
 import axios from "axios";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { GiftedChat } from "react-native-gifted-chat";
 console.ignoredYellowBox = ["Remote debugger"];
 
@@ -30,6 +38,22 @@ class Chat extends React.Component {
     sellerPhoto: "",
     userPhoto: "",
     roomName: ""
+  };
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: null
+
+      // title: "Rooms",
+      // headerStyle: {
+      //   backgroundColor: "black"
+      // },
+      // headerTintColor: "white",
+      // headerTitleStyle: {
+      //   fontSize: 30,
+      //   fontWeight: "200"
+      // }
+    };
   };
 
   getRoomInfo = async (seller_id, user_id) => {
@@ -72,6 +96,7 @@ class Chat extends React.Component {
 
     // on recupere les infos user de la page productScreen
     const { navigation } = this.props;
+
     if (navigation.getParam("sellerId")) {
       const response = await axios.get(
         "https://sneaker-map-api.herokuapp.com/get_other_user_info?id=" +
@@ -103,7 +128,6 @@ class Chat extends React.Component {
         this.setState({ messages: temp2 });
       }
       let toto = temp.nom.replace(userInfo._id, "");
-      console.log(toto);
       this.setState({
         userId: userInfo._id,
         sellerId: toto,
@@ -149,6 +173,11 @@ class Chat extends React.Component {
     // const value = JSON.stringify(messages);
     // await AsyncStorage.setItem(this.state.roomName, value);
   };
+  gotTo = () => {
+    this.props.navigation.navigate("Messages", {
+      reload: "reload"
+    });
+  };
 
   render() {
     // console.log(typeof this.state.sellerId);
@@ -160,6 +189,36 @@ class Chat extends React.Component {
     // console.log("this.state.sellerId ", this.state.sellerId);
     return (
       <>
+        <View
+          style={{
+            flexDirection: "row",
+            backgroundColor: "black",
+            height: 87,
+            justifyContent: "center"
+          }}
+        >
+          <TouchableOpacity onPress={this.gotTo}>
+            <Ionicons
+              style={{
+                color: "white",
+                marginLeft: -100,
+                marginTop: 40
+              }}
+              name="md-arrow-back"
+              size={35}
+            />
+          </TouchableOpacity>
+          <Text
+            style={{
+              color: "white",
+              fontSize: 30,
+              fontWeight: "200",
+              marginTop: 47
+            }}
+          >
+            Messagerie
+          </Text>
+        </View>
         <GiftedChat
           messages={this.state.messages}
           onSend={messages => this.handleSend(messages)}
@@ -178,4 +237,4 @@ class Chat extends React.Component {
   };
 }
 
-export default Chat;
+export default withNavigationFocus(Chat);

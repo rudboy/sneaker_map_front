@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  createBottomTabNavigator,
+  createBottomTabNavigator
   // createDrawerNavigator,
 } from "react-navigation";
 import { TouchableOpacity, Alert, AsyncStorage } from "react-native";
@@ -15,40 +15,12 @@ import ChatScreen from "./ChatScreen";
 
 import { Ionicons } from "@expo/vector-icons";
 
-const logOut = async () => {
-  await AsyncStorage.clear();
-  this.props.navigation.navigate("SignIn");
-};
-const AlertCross = () => {
-  Alert.alert(
-    undefined,
-    "Se déconnecter ?",
-    // "My Alert Msg",
-    [
-      // {
-      //   text: "Ask me later",
-      //   onPress: () => console.log("Ask me later pressed"),
-      // },
-      {
-        text: "Annuler",
-        // onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
-      },
-      {
-        text: "OK",
-        onPress: () => logOut(),
-      },
-    ],
-    { cancelable: false }
-  );
-};
-
 const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeScreen,
     Profile: ProfileScreen,
     NewProduct: NewProductScreen,
-    Messages: MessageScreen,
+    Messages: MessageScreen
     // Chat: ChatScreen,
     // Settings: SettingsScreen,
   },
@@ -85,12 +57,15 @@ const TabNavigator = createBottomTabNavigator(
         }
 
         return <Ionicons name={iconName} size={25} color={tintColor} />;
-      },
+      }
     }),
     tabBarOptions: {
-      activeTintColor: "tomato",
-      inactiveTintColor: "gray",
-    },
+      labelStyle: {
+        marginVertical: -10
+      },
+      activeTintColor: "black",
+      inactiveTintColor: "gray"
+    }
   }
 );
 
@@ -124,13 +99,13 @@ TabNavigator.navigationOptions = ({ navigation }) => {
     headerTitle,
     headerBackTitle,
     headerStyle: {
-      backgroundColor: "#111",
+      backgroundColor: "#111"
     },
     headerTitleStyle: {
       fontSize: 30,
-      fontWeight: "200",
+      fontWeight: "200"
     },
-    headerTintColor: "#fff",
+    headerTintColor: "#fff"
   };
 };
 

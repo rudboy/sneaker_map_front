@@ -16,14 +16,16 @@ class SneakerCard extends React.Component {
           <ImageBackground
             source={{ uri: sneaker.pictures[0] }}
             style={styles.pictures}
+            imageStyle={{ borderRadius: 8 }}
           >
             <View
               style={{
-                backgroundColor: "rgba(52, 52, 52, 0.8)",
+                backgroundColor: "rgba(135, 135, 135, 0.8)",
                 position: "absolute",
                 bottom: 0,
                 width: "100%",
                 padding: 6
+                //borderRadius: 8
               }}
             >
               <Text numberOfLines={1} style={styles.text}>
@@ -54,7 +56,7 @@ class SneakerCard extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "black",
+    backgroundColor: "white",
     flex: 1,
     height: "100%",
     padding: 2
@@ -63,7 +65,18 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 2 - 10,
     height: 120,
     width: 170,
-    resizeMode: "contain"
+    resizeMode: "contain",
+    marginRight: 6,
+    marginBottom: 10,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 4
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+
+    elevation: 9
   },
   text: {
     width: 150,

@@ -7,7 +7,7 @@ import {
   View,
   Image,
   StyleSheet,
-  Alert,
+  Alert
 } from "react-native";
 import { withNavigation } from "react-navigation";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,7 +16,7 @@ import { withNavigationFocus } from "react-navigation";
 
 class SliderProduct extends React.Component {
   deleteFn = async (id, index) => {
-    await axios.post(
+    await axios.get(
       "https://sneaker-map-api.herokuapp.com/delete_product?id=" + id
     );
 
@@ -38,12 +38,12 @@ class SliderProduct extends React.Component {
         {
           text: "Annuler",
           // onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
+          style: "cancel"
         },
         {
           text: "OK",
-          onPress: () => this.deleteFn(id, index),
-        },
+          onPress: () => this.deleteFn(id, index)
+        }
       ],
       { cancelable: false }
     );
@@ -73,12 +73,12 @@ class SliderProduct extends React.Component {
       "https://sneaker-map-api.herokuapp.com/update_user_info",
       {
         //body
-        favory: id,
+        favory: id
       },
       {
         headers: {
-          authorization: "Bearer " + this.props.profile.token,
-        },
+          authorization: "Bearer " + this.props.profile.token
+        }
       }
     );
 
@@ -100,12 +100,12 @@ class SliderProduct extends React.Component {
         {
           text: "Annuler",
           // onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
+          style: "cancel"
         },
         {
           text: "OK",
-          onPress: () => this.deleteFavFn(id, index),
-        },
+          onPress: () => this.deleteFavFn(id, index)
+        }
       ],
       { cancelable: false }
     );
@@ -153,7 +153,7 @@ class SliderProduct extends React.Component {
           style={{
             flexDirection: "row",
             paddingHorizontal: 15,
-            marginBottom: 30,
+            marginBottom: 30
           }}
         >
           <FlatList
@@ -169,7 +169,7 @@ class SliderProduct extends React.Component {
                     this.props.navigation.navigate(
                       "Product",
                       {
-                        id: item._id,
+                        id: item._id
                       }
                       // console.log(item._id)
                     )
@@ -186,7 +186,7 @@ class SliderProduct extends React.Component {
                     <View
                       style={{
                         flexDirection: "row",
-                        justifyContent: "space-between",
+                        justifyContent: "space-between"
                       }}
                     >
                       <Text>{item.size}</Text>
@@ -204,7 +204,7 @@ class SliderProduct extends React.Component {
           style={{
             flexDirection: "row",
             paddingHorizontal: 15,
-            marginBottom: 30,
+            marginBottom: 30
           }}
         >
           <FlatList
@@ -218,7 +218,7 @@ class SliderProduct extends React.Component {
                 <TouchableOpacity
                   onPress={() =>
                     this.props.navigation.navigate("Product", {
-                      id: item._id,
+                      id: item._id
                     })
                   }
                 >
@@ -233,7 +233,7 @@ class SliderProduct extends React.Component {
                     <View
                       style={{
                         flexDirection: "row",
-                        justifyContent: "space-between",
+                        justifyContent: "space-between"
                       }}
                     >
                       <Text>{item.size}</Text>
@@ -254,16 +254,16 @@ const styles = StyleSheet.create({
   containerProduct: {
     paddingRight: 15,
     position: "relative",
-    zIndex: 0,
+    zIndex: 0
   },
   title: {
-    width: 150,
+    width: 150
   },
   image: {
     width: 150,
     height: 150,
-    resizeMode: "contain",
-  },
+    resizeMode: "contain"
+  }
 });
 
 export default withNavigationFocus(SliderProduct);

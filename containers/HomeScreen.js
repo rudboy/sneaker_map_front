@@ -11,7 +11,7 @@ import {
   ScrollView
 } from "react-native";
 import SneakerCard from "../components/SneakerCard";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import PriceSelect from "../components/PriceSelect";
 import axios from "axios"; // const axios = require('axios');
 
@@ -28,24 +28,32 @@ class HomeScreen extends React.Component {
   });
 
   async componentDidMount() {
-    return await fetch("https://sneaker-map-api.herokuapp.com/all_product")
-      .then(response => response.json())
-      .then(responseJson => {
-        // console.log("responseJson ", responseJson);
-        const reverse = responseJson.reverse();
-        this.setState(
-          {
-            isLoading: false,
-            sneakers: reverse
-          },
-          function() {
-            arrayholder = responseJson;
-          }
-        );
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    try {
+      this._navListener = this.props.navigation.addListener(
+        "didFocus",
+        async () => {
+          return await fetch(
+            "https://sneaker-map-api.herokuapp.com/all_product"
+          )
+            .then(response => response.json())
+            .then(responseJson => {
+              const reverse = responseJson.reverse();
+              this.setState(
+                {
+                  isLoading: false,
+                  sneakers: reverse
+                },
+                function() {
+                  arrayholder = responseJson;
+                }
+              );
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        }
+      );
+    } catch (error) {}
   }
 
   SearchFilterFunction(text) {
@@ -72,21 +80,15 @@ class HomeScreen extends React.Component {
     }
   };
 
-  // reload = () => {
-  //   this.setState({
-  //     reload: true
-  //   });
-  // };
-
   render() {
-    this.update();
+    // this.update();
 
     if (this.state.isLoading === true) {
       return <ActivityIndicator />;
     }
     return (
       <View style={styles.container}>
-        <View>
+        {/* <View>
           <Text
             style={{
               color: "white",
@@ -97,8 +99,14 @@ class HomeScreen extends React.Component {
           >
             Bienvenue
           </Text>
-        </View>
-        <View style={{ position: "relative" }}>
+        </View> */}
+        <View
+          style={{
+            position: "relative",
+            flexDirection: "row",
+            marginBottom: 25
+          }}
+        >
           <TextInput
             style={styles.searchbar}
             onChangeText={text => this.SearchFilterFunction(text)}
@@ -107,27 +115,18 @@ class HomeScreen extends React.Component {
             placeholder="Que recherchez-vous ?"
           />
           <TouchableOpacity
-            style={{
-              backgroundColor: "grey",
-              height: 30,
-              fontSize: 18,
-              fontWeight: "600",
-              justifyContent: "center",
-              alignItems: "center",
-              alignContent: "center",
-              marginVertical: 10
-            }}
+            style={{ marginTop: 30 }}
             onPress={() =>
               this.props.navigation.navigate("Filter", { name: "Filtres" })
             }
           >
-            <Text
+            <MaterialIcons
               style={{
-                color: "white"
+                color: "grey"
               }}
-            >
-              FILTRER
-            </Text>
+              name="playlist-add"
+              size={35}
+            />
           </TouchableOpacity>
         </View>
         <ScrollView>
@@ -159,16 +158,18 @@ class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "black",
+    backgroundColor: "white",
     flex: 1,
     alignItems: "center"
   },
   searchbar: {
-    width: Dimensions.get("window").width - 28,
+    width: Dimensions.get("window").width - 100,
     height: 50,
     backgroundColor: "white",
     textAlign: "center",
-    marginTop: 20
+    marginTop: 20,
+    borderBottomColor: "grey",
+    borderBottomWidth: 1
   }
 });
 

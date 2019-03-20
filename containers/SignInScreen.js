@@ -14,6 +14,8 @@ import {
 import axios from "axios"; // const axios = require('axios');
 import { Constants, Google, Facebook, Permissions } from "expo";
 
+const defaultPhoto = require("../assets/images/user-profile.png");
+
 const googleCreds = {
   androidClientID:
     "218040000398-cvv2mgdrhhber8m0tn66uc4mj37uu8jm.apps.googleusercontent.com",

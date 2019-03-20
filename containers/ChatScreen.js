@@ -42,17 +42,17 @@ class Chat extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      header: null
+      // header: null
 
-      // title: "Rooms",
-      // headerStyle: {
-      //   backgroundColor: "black"
-      // },
-      // headerTintColor: "white",
-      // headerTitleStyle: {
-      //   fontSize: 30,
-      //   fontWeight: "200"
-      // }
+      title: "Messagerie",
+      headerStyle: {
+        backgroundColor: "black"
+      },
+      headerTintColor: "white",
+      headerTitleStyle: {
+        fontSize: 30,
+        fontWeight: "200"
+      }
     };
   };
 
@@ -107,7 +107,6 @@ class Chat extends React.Component {
           userInfo._id
       );
       this.getRoomInfo(navigation.getParam("sellerId"), userInfo._id);
-      console.log("response2.data ", response2.data);
 
       this.setState({
         userName: userInfo.account.username,
@@ -162,7 +161,7 @@ class Chat extends React.Component {
       room: this.state.roomName,
       message: messages[0],
       username: this.state.sellerUserName.toString(),
-      sellerId: this.state.sellerPhoto.toString(),
+      sellerPhoto: this.state.sellerPhoto.toString(),
       userPhoto: this.state.userPhoto.toString()
     });
     // const value = JSON.stringify(this.state.messages);
@@ -192,36 +191,6 @@ class Chat extends React.Component {
     // console.log("this.state.sellerId ", this.state.sellerId);
     return (
       <>
-        <View
-          style={{
-            flexDirection: "row",
-            backgroundColor: "black",
-            height: 87,
-            justifyContent: "center"
-          }}
-        >
-          <TouchableOpacity onPress={this.gotTo}>
-            <Ionicons
-              style={{
-                color: "white",
-                marginLeft: -100,
-                marginTop: 40
-              }}
-              name="md-arrow-back"
-              size={35}
-            />
-          </TouchableOpacity>
-          <Text
-            style={{
-              color: "white",
-              fontSize: 30,
-              fontWeight: "200",
-              marginTop: 47
-            }}
-          >
-            Messagerie
-          </Text>
-        </View>
         <GiftedChat
           messages={this.state.messages}
           onSend={messages => this.handleSend(messages)}

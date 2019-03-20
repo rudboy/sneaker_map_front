@@ -112,9 +112,9 @@ class MessageScreen extends React.Component {
                   }}
                   source={{
                     uri:
-                      this.state.currentuser === item.userId
-                        ? item.sellerId
-                        : item.userId
+                      this.state.currentuser === item.userPhoto
+                        ? item.sellerPhoto
+                        : item.userPhoto
                   }}
                 />
                 <View>

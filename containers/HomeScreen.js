@@ -54,6 +54,7 @@ class HomeScreen extends React.Component {
         }
       );
     } catch (error) {}
+
   }
 
   SearchFilterFunction(text) {

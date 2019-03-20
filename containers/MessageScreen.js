@@ -64,6 +64,7 @@ class MessageScreen extends React.Component {
     }
   };
 
+
   getName = (userName, message) => {
     if (userName === this.state.currentusername) {
       for (let i = 0; i < message.length; i++) {
@@ -78,6 +79,7 @@ class MessageScreen extends React.Component {
 
   render() {
     //this.update();
+
     return (
       <>
         <FlatList

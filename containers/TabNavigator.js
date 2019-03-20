@@ -64,6 +64,7 @@ const TabNavigator = createBottomTabNavigator(
         marginVertical: -10
       },
       activeTintColor: "black",
+
       inactiveTintColor: "gray"
     }
   }

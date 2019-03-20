@@ -17,32 +17,28 @@ class MessageScreen extends React.Component {
     currentusername: ""
   };
   componentDidMount = async () => {
-    //recupere le username de l'asynstorage
-    let user = await AsyncStorage.getItem("userInfo");
-    user = JSON.parse(user);
-    //recupere la liste des rooms du le user id est inclus ds le nom de la room
-    const response = await axios.get(
-      "https://sneaker-map-api.herokuapp.com/get_messages?id=" + user._id
-    );
-    // console.log("user ", user.account.username);
-    this.setState({
-      tabMessage: response.data,
-      currentuser: user.account.poster_profile[0],
-      currentusername: user.account.username
-    });
+    try {
+      this._navListener = this.props.navigation.addListener(
+        "didFocus",
+        async () => {
+          //recupere le username de l'asynstorage
+          let user = await AsyncStorage.getItem("userInfo");
+          user = JSON.parse(user);
+          //recupere la liste des rooms du le user id est inclus ds le nom de la room
+          const response = await axios.get(
+            "https://sneaker-map-api.herokuapp.com/get_messages?id=" + user._id
+          );
+          // console.log("user ", user.account.username);
+          this.setState({
+            tabMessage: response.data,
+            currentuser: user.account.poster_profile[0],
+            currentusername: user.account.username
+          });
+        }
+      );
+    } catch (error) {}
   };
 
-  getName = (userName, message) => {
-    if (userName === this.state.currentusername) {
-      for (let i = 0; i < message.length; i++) {
-        if (message[i].user.name !== this.state.currentusername) {
-          return message[i].user.name;
-        }
-      }
-    } else {
-      return userName;
-    }
-  };
   update = async () => {
     //recupere le username de l'asynstorage
     let user = await AsyncStorage.getItem("userInfo");
@@ -69,8 +65,6 @@ class MessageScreen extends React.Component {
   };
 
 
-
-
   getName = (userName, message) => {
     if (userName === this.state.currentusername) {
       for (let i = 0; i < message.length; i++) {
@@ -83,9 +77,9 @@ class MessageScreen extends React.Component {
     }
   };
 
-
   render() {
-    this.update();
+    //this.update();
+
     return (
       <>
         <FlatList

@@ -60,7 +60,11 @@ const TabNavigator = createBottomTabNavigator(
       }
     }),
     tabBarOptions: {
-      activeTintColor: "tomato",
+      labelStyle: {
+        marginVertical: -10
+      },
+      activeTintColor: "black",
+
       inactiveTintColor: "gray"
     }
   }

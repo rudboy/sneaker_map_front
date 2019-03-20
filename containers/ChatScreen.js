@@ -7,7 +7,6 @@ import {
   TouchableOpacity
 } from "react-native";
 import { withNavigationFocus } from "react-navigation";
-import { View, AsyncStorage, YellowBox } from "react-native";
 import SocketIOClient from "socket.io-client";
 import axios from "axios";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";

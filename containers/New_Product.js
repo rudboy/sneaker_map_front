@@ -260,16 +260,22 @@ class NewProduct extends React.Component {
 
   componentDidMount = async () => {
     try {
-      // On charge les données ici
-      for (let i = 0; i < jordan.length; i++) {
-        const response = await axios.get(
-          "http://sneakersmap.fr/sneaker_map/jordan/" +
-            jordan[i].value +
-            ".json"
-        );
-        const value = JSON.stringify(response.data);
-        await AsyncStorage.setItem(jordan[i].value, value);
-      }
+      this._navListener = this.props.navigation.addListener(
+        "didFocus",
+        async () => {
+          this.reset_state();
+          // On charge les données ici
+          for (let i = 0; i < jordan.length; i++) {
+            const response = await axios.get(
+              "http://sneakersmap.fr/sneaker_map/jordan/" +
+                jordan[i].value +
+                ".json"
+            );
+            const value = JSON.stringify(response.data);
+            await AsyncStorage.setItem(jordan[i].value, value);
+          }
+        }
+      );
     } catch (error) {
       console.log(error);
     }

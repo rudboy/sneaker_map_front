@@ -11,9 +11,9 @@ class AuthLoadingScreen extends React.Component {
         "https://sneaker-map-api.herokuapp.com/get_my_user_info?token=" +
           userInfo.token
       );
-      //console.log("response ", response.data);
+      // console.log("response ", response.data);
 
-      if (response.data === undefined) {
+      if (response.data === undefined || response.data === null) {
         this.props.navigation.navigate("Auth");
       } else {
         this.props.navigation.navigate("App");

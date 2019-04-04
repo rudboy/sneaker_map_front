@@ -5,20 +5,19 @@ import {
   StyleSheet,
   AsyncStorage,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from "react-native";
 import axios from "axios"; // const axios = require('axios');
 import Picker_mark from "../components/filter_pickerMark";
 import Picker_category from "../components/filter_pickerCategory";
 import Picker_model from "../components/filter_pickerModel";
-import Picker_size from "../components/picker_size";
 import Etat from "../components/etat";
 import PriceSelect from "../components/PriceSelect";
+import Rayon from "../components/Rayon";
 import SizeSelect from "../components/filter_pickerSize";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import geolib from "geolib";
-
-const jordan = require("../assets/json/Jordan/Jordan.json");
 
 class FilterScreen extends React.Component {
   state = {
@@ -40,7 +39,8 @@ class FilterScreen extends React.Component {
     url: "",
     latitude: "",
     longitude: "",
-    localisationTab: []
+    localisationTab: [],
+    rayon: [0]
   };
 
   static navigationOptions = ({ navigation }) => {
@@ -72,7 +72,7 @@ class FilterScreen extends React.Component {
             latitude: Number(this.state.latitude),
             longitude: Number(this.state.longitude)
           },
-          5000
+          Number(this.state.rayon) * 1000
         );
       });
       if (everyPointInCircle === true) {
@@ -86,9 +86,25 @@ class FilterScreen extends React.Component {
         result: this.state.localisationTab
       });
     } else {
-      this.props.navigation.navigate("ResultView", {
-        result: this.state.tab_location
-      });
+      Alert.alert(
+        undefined,
+        "Aucun résultat dans la zone choisie, voulez-vous voir le résultat hors zone?",
+        [
+          {
+            text: "Annuler",
+            style: "cancel"
+          },
+          {
+            text: "OK",
+            onPress: () => {
+              this.props.navigation.navigate("ResultView", {
+                result: this.state.tab_location
+              });
+            }
+          }
+        ],
+        { cancelable: false }
+      );
     }
   };
   //function pour obtenir les coordonées d'une adresse rentrer
@@ -223,8 +239,6 @@ class FilterScreen extends React.Component {
   };
 
   getinfo = async () => {
-    console.log(this.state.category);
-
     let token = await AsyncStorage.getItem("userInfo");
     token = JSON.parse(token);
     try {
@@ -267,6 +281,7 @@ class FilterScreen extends React.Component {
           }
         }
       );
+
       if (response.data.length > 0) {
         this.setState({ tab_location: response.data });
         this.triGeoloc(this.state.tab_location);
@@ -288,14 +303,24 @@ class FilterScreen extends React.Component {
   getPrice = price => {
     this.setState({ price: price });
   };
+  GetRayon = rayon => {
+    this.setState({ rayon: rayon });
+  };
 
   render() {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.principal}>
-          <View style={{ height: 80, width: 300 }}>
+          <View
+            style={{
+              height: 75,
+              width: 300
+            }}
+          >
             {this.GooglePlacesInput()}
           </View>
+          <Rayon Get_rayon={this.GetRayon} rayon={this.state.rayon} />
+
           <Picker_mark Get_Category={this.Get_Category} />
           <Picker_category
             Get_Model={this.Get_Model}

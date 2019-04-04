@@ -10,7 +10,7 @@ import {
   ScrollView,
   FlatList,
   TouchableHighlight,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
@@ -28,7 +28,21 @@ class SellerProfileScreen extends React.Component {
     etat: "",
     size: "",
     localisation: null,
-    sellerProduct: [],
+    sellerProduct: []
+  };
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: "Profile Vendeur",
+      headerStyle: {
+        backgroundColor: "white"
+      },
+      headerTintColor: "grey",
+      headerTitleStyle: {
+        fontSize: 28,
+        fontWeight: "600"
+      }
+    };
   };
 
   async componentDidMount() {
@@ -45,11 +59,11 @@ class SellerProfileScreen extends React.Component {
         "https://sneaker-map-api.herokuapp.com/get_seller_product_info?id=" +
           creator
       );
-      console.log(productResponse.data);
+      //console.log(productResponse.data);
       this.setState({
         sellerProfile: response.data,
         sellerProduct: productResponse.data,
-        isLoading: false,
+        isLoading: false
       });
     } catch (error) {
       alert(error);
@@ -61,17 +75,24 @@ class SellerProfileScreen extends React.Component {
       return (
         <Image
           source={{ uri: this.state.sellerProfile.poster_profile[0] }}
-          style={{ width: 110, height: 110, borderRadius: 55 }}
+          style={{
+            width: 220,
+            height: 220,
+            borderRadius: 110
+          }}
         />
       );
     }
     if (!this.state.sellerProfile.poster_profile[0]) {
       return (
-        <Ionicons
-          style={styles.posterBorder}
-          name="ios-person"
-          size={100}
-          color="#fff"
+        <Image
+          source={require("../assets/images/user-profile.png")}
+          style={{
+            width: 220,
+            height: 220,
+            borderRadius: 110,
+            backgroundColor: "white"
+          }}
         />
       );
     }
@@ -96,22 +117,38 @@ class SellerProfileScreen extends React.Component {
           <StatusBar barStyle="light-content" />
           <View style={styles.headerProfile}>
             <Text />
-            <View style={{ alignItems: "center", position: "relative" }}>
+            <View
+              style={{
+                alignItems: "center",
+                position: "relative",
+                width: 220,
+                height: 220,
+                borderRadius: 110,
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 7
+                },
+                shadowOpacity: 0.41,
+                shadowRadius: 9.11,
+                elevation: 14
+              }}
+            >
               {this.renderPosterProfile()}
             </View>
 
-            <View style={styles.usernameContainer}>
+            {/* <View style={styles.usernameContainer}>
               <Text style={styles.usernameInput}>
                 {this.state.sellerProfile.username}
               </Text>
-            </View>
+            </View> */}
           </View>
 
           <View
             style={{
               position: "relative",
               paddingHorizontal: 15,
-              paddingTop: 30,
+              paddingTop: 30
             }}
           >
             <View>
@@ -137,14 +174,14 @@ class SellerProfileScreen extends React.Component {
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "space-between",
+                justifyContent: "space-between"
               }}
             >
               <View style={{ width: "50%" }}>
                 <Ionicons
                   style={{
                     position: "absolute",
-                    top: "25%",
+                    top: "25%"
                   }}
                   name="ios-phone-portrait"
                   size={20}
@@ -200,42 +237,42 @@ const styles = StyleSheet.create({
   // },
   headerProfile: {
     paddingVertical: 20,
-    backgroundColor: "#111",
-    alignItems: "center",
+    backgroundColor: "white",
+    alignItems: "center"
   },
   posterBorder: {
     borderWidth: 2,
-    borderColor: "#fff",
+    borderColor: "grey",
     borderRadius: 55,
     width: 110,
     justifyContent: "center",
     alignItems: "center",
-    textAlign: "center",
+    textAlign: "center"
   },
   usernameContainer: {
     position: "relative",
-    marginTop: 20,
+    marginTop: 20
   },
   usernameInput: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 20
   },
   inputTextName: {
     fontSize: 30,
-    marginTop: 5,
+    marginTop: 5
   },
   inputText: {
     fontSize: 16,
     marginTop: 10,
     marginBottom: 10,
-    paddingLeft: 25,
+    paddingLeft: 25
   },
   separator: {
     width: "100%",
     height: 1,
     backgroundColor: "grey",
-    marginVertical: 20,
-  },
+    marginVertical: 20
+  }
 });
 
 export default SellerProfileScreen;

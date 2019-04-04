@@ -44,8 +44,14 @@ class ProductScreen extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
+      title: "Sneaker Info",
       headerStyle: {
-        height: 40
+        backgroundColor: "white"
+      },
+      headerTintColor: "grey",
+      headerTitleStyle: {
+        fontSize: 28,
+        fontWeight: "600"
       }
     };
   };
@@ -53,8 +59,8 @@ class ProductScreen extends React.Component {
   onShare = async () => {
     try {
       const result = await Share.share({
-        dialogTitle: "Regarde se que j'ai trouvé sur SnearkerMap",
-        title: "Regarde se que j'ai trouvé sur SnearkerMap",
+        dialogTitle: "Regarde ce que j'ai trouvé sur SnearkerMap",
+        title: "Regarde ce que j'ai trouvé sur SnearkerMap",
         message:
           "Regarde ce que j'ai trouvé sur SnearkerMap" +
           " " +
@@ -102,8 +108,8 @@ class ProductScreen extends React.Component {
       "https://sneaker-map-api.herokuapp.com/get_my_user_info?token=" +
         userInfo.token
     );
-    console.log("creator : ", creator);
-    console.log("userId : ", userResponse.data._id);
+    //console.log("creator : ", creator);
+    //console.log("userId : ", userResponse.data._id);
     this.setState(
       {
         isLoading: false,
@@ -141,8 +147,6 @@ class ProductScreen extends React.Component {
             });
           }
         }
-
-        //////////////////
       }
     );
   };
@@ -207,8 +211,6 @@ class ProductScreen extends React.Component {
             });
           }
         }
-
-        //////////////////
       }
     );
   };
@@ -449,52 +451,80 @@ class ProductScreen extends React.Component {
               </View>
               <Text style={styles.subtitle}>Localisation</Text>
             </View>
-
-            <MapView
-              style={{ height: 250 }}
-              initialRegion={{
-                latitude: this.state.localisation[0],
-                longitude: this.state.localisation[1],
-                latitudeDelta: 0.025,
-                longitudeDelta: 0.0029
+            <View
+              style={{
+                height: 350,
+                width: 350,
+                alignItems: "center",
+                justifyContent: "center"
               }}
             >
-              <MapView.Marker
-                coordinate={{
-                  latitude: this.state.localisation[0],
-                  longitude: this.state.localisation[1]
+              <MapView
+                style={{
+                  height: 300,
+                  width: 300,
+                  backgroundColor: "white",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 7
+                  },
+                  shadowOpacity: 0.41,
+                  shadowRadius: 9.11,
+                  elevation: 14
                 }}
-                title={"La sneaker dont tu rêves"}
-                description={"Elle est là, elle t'attend !"}
+                initialRegion={{
+                  latitude: this.state.localisation[0],
+                  longitude: this.state.localisation[1],
+                  latitudeDelta: 0.025,
+                  longitudeDelta: 0.0029
+                }}
               >
-                <View
-                  style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 30,
-                    backgroundColor: "white"
+                <MapView.Marker
+                  coordinate={{
+                    latitude: this.state.localisation[0],
+                    longitude: this.state.localisation[1]
                   }}
+                  title={"La sneaker dont tu rêves"}
+                  description={"Elle est là, elle t'attend !"}
                 >
-                  <Image
-                    source={{
-                      uri: this.state.picture[0]
-                    }}
-                    resizeMode="contain"
+                  <View
                     style={{
-                      width: 45,
-                      height: 45,
-                      marginTop: 5,
-                      marginLeft: 6
+                      width: 60,
+                      height: 60,
+                      borderRadius: 30,
+                      backgroundColor: "white",
+                      shadowColor: "#000",
+                      shadowOffset: {
+                        width: 0,
+                        height: 7
+                      },
+                      shadowOpacity: 0.41,
+                      shadowRadius: 9.11,
+                      elevation: 14
                     }}
-                  />
-                </View>
-              </MapView.Marker>
-            </MapView>
+                  >
+                    <Image
+                      source={{
+                        uri: this.state.picture[0]
+                      }}
+                      resizeMode="contain"
+                      style={{
+                        width: 45,
+                        height: 45,
+                        marginTop: 5,
+                        marginLeft: 6
+                      }}
+                    />
+                  </View>
+                </MapView.Marker>
+              </MapView>
+            </View>
           </ScrollView>
           <View
             style={{
               borderBottomWidth: StyleSheet.hairlineWidth,
-              borderBottomColor: "black"
+              borderBottomColor: "grey"
             }}
           />
           {this.renderFooter()}

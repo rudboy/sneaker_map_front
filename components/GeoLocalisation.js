@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, ActionSheetIOS, Image } from "react-native";
+import { View, StyleSheet, ActionSheetIOS, Image, Text } from "react-native";
 import { MapView, Location, Permissions } from "expo";
 import InputGeoloc from "./googleAutoComplete";
 
@@ -86,7 +86,7 @@ class GeoLocalisation extends React.Component {
                   //  borderWidth: 1,
                   // borderColor: "grey",
                   backgroundColor: "white",
-                  display: this.props.url === "" ? "none" : ""
+                  display: this.props.url === "" ? "none" : "flex"
                 }}
               >
                 {/* customa du marquer avec la photo de la sneaker */}
@@ -122,27 +122,6 @@ class GeoLocalisation extends React.Component {
           marginTop: 20
         }}
       >
-        {/* <TouchableOpacity
-          style={{
-            color: "black",
-            backgroundColor: "white",
-            borderRadius: 5,
-            // justifyContent: "center",
-            // alignItems: "center",
-            height: 40,
-          }}
-          onPress={this.pickgeoloc}
-        >
-          <Text
-            style={{
-              color: "black",
-              fontSize: 20,
-              fontWeight: "600",
-            }}
-          >
-            AJOUTER UNE LOCALISATION
-          </Text>
-        </TouchableOpacity> */}
         <View>{this.mapview(this.state.location)}</View>
       </View>
     );

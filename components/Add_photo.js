@@ -10,6 +10,15 @@ import {
 } from "react-native";
 import { ImagePicker, Permissions } from "expo";
 import { Entypo } from "@expo/vector-icons";
+import { ActionSheetCustom as ActionSheet } from "react-native-actionsheet";
+
+const options = [
+  <Text style={{ color: "black", fontSize: 20 }}>Prendre une photo</Text>,
+  <Text style={{ color: "black", fontSize: 20 }}>
+    Choisir une photo de puis la galerie
+  </Text>,
+  <Text style={{ color: "red", fontSize: 20 }}>Cancel</Text>
+];
 
 class Add_photo extends React.Component {
   state = {
@@ -18,6 +27,10 @@ class Add_photo extends React.Component {
     image: null,
     image2: null,
     image3: null
+  };
+
+  showActionSheet = () => {
+    this.ActionSheet.show();
   };
 
   //recupere une image de la librairie photo du telephone
@@ -49,7 +62,7 @@ class Add_photo extends React.Component {
         aspect: [4, 3]
       });
       let temp = this.props.tab_photo;
-      console.log(result);
+      //console.log(result);
       if (!result.cancelled) {
         temp.push("data:image/jpeg;base64," + result.base64);
         this.props.get_photo(temp);
@@ -60,7 +73,7 @@ class Add_photo extends React.Component {
   cameraOrRoll = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ["Cancel", "Prendre une photo", "Choisir une photo"],
+        options: { options },
         title: "Which one do you like ?",
         rollButtonIndex: 2,
         cameraButtonIndex: 1,
@@ -138,37 +151,50 @@ class Add_photo extends React.Component {
     {
     }
     return (
-      <View
-        style={{
-          marginTop: 25
-        }}
-      >
-        <TouchableOpacity
-          style={{
-            color: "black",
-            backgroundColor: "white",
-            borderRadius: 5,
-            justifyContent: "center",
-            alignItems: "center",
-            height: 40,
-            width: 250
-          }}
-          onPress={this.cameraOrRoll}
-        >
-          <Text
+      <View>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <TouchableOpacity
             style={{
-              color: "black",
-              fontSize: 20,
-              fontWeight: "600"
+              color: "grey",
+              borderColor: "grey",
+              borderRadius: 5,
+              borderWidth: 0.5,
+              justifyContent: "center",
+              alignItems: "center",
+              height: 30,
+              width: 200
             }}
+            onPress={this.showActionSheet}
           >
-            AJOUTER PHOTOS
-          </Text>
-        </TouchableOpacity>
+            <ActionSheet
+              ref={o => (this.ActionSheet = o)}
+              title={"Which one do you like ?"}
+              options={options}
+              cancelButtonIndex={2}
+              destructiveButtonIndex={1}
+              onPress={index => {
+                if (index === 0) {
+                  this.pickImageCamera();
+                } else if (index === 1) {
+                  this.pickImageLibrary();
+                }
+              }}
+            />
+            <Text
+              style={{
+                color: "grey",
+                fontSize: 20,
+                fontWeight: "600"
+              }}
+            >
+              AJOUTER PHOTOS
+            </Text>
+          </TouchableOpacity>
+        </View>
         <View
           style={{
             flexDirection: "row",
-            display: this.props.tab_photo.length === 0 ? "none" : ""
+            display: this.props.tab_photo.length === 0 ? "none" : "flex"
           }}
         >
           <View style={styles.cadre}>

@@ -20,9 +20,9 @@ class Etat extends React.Component {
     }
     return (
       <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <Text
+        {/* <Text
           style={{
-            color: "white",
+            color: "grey",
             fontSize: 20,
             fontWeight: "600",
             marginRight: 10,
@@ -30,16 +30,17 @@ class Etat extends React.Component {
           }}
         >
           Condition
-        </Text>
+        </Text> */}
         <View
           style={{
-            width: 250,
-            flexDirection: "row"
+            //width: 250,
+            flexDirection: "row",
+            marginTop: 15
           }}
         >
           <Text
             style={{
-              color: "white",
+              color: "grey",
               fontSize: 20,
               fontWeight: "600",
               marginRight: 10
@@ -58,7 +59,7 @@ class Etat extends React.Component {
           />
           <Text
             style={{
-              color: "white",
+              color: "grey",
               fontSize: 20,
               fontWeight: "600",
               marginRight: 10

@@ -1,6 +1,5 @@
 [
+  { "label": "Adidas", "value": "Adidas" },
   { "label": "Jordan", "value": "Jordan" },
-  { "label": "Nike", "value": "Nike" },
-  { "label": "Adidas", "value": "adidas" },
-  { "label": "Other", "value": "Other" }
+  { "label": "Nike", "value": "Nike" }
 ]

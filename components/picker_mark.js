@@ -1,11 +1,11 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Entypo } from "@expo/vector-icons";
 
 const marque = require("../assets/json/marque.json");
 const placeholder = {
-  label: "Selectionner une Marque...",
+  label: "Marque...",
   value: null,
   color: "#9EA0A4"
 };
@@ -46,9 +46,9 @@ class NewProduct extends React.Component {
           }}
           value={this.state.mark}
           useNativeAndroidPickerStyle={false}
-          textInputProps={{ underlineColor: "yellow" }}
+          textInputProps={{ underlineColor: "red" }}
           Icon={() => {
-            return <Ionicons name="md-arrow-down" size={24} color="white" />;
+            return <Entypo name="chevron-small-down" size={24} color="grey" />;
           }}
         />
       </View>
@@ -61,22 +61,24 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 12,
     paddingHorizontal: 10,
-    borderWidth: 1,
-    marginBottom: 20,
-
+    // borderWidth: 1,
+    borderBottomWidth: 1,
+    marginBottom: 15,
     borderColor: "gray",
     borderRadius: 4,
-    color: "white",
+    color: "black",
     paddingRight: 30 // to ensure the text is never behind the icon
   },
   inputAndroid: {
     fontSize: 16,
+    marginBottom: 15,
     paddingHorizontal: 10,
     paddingVertical: 8,
-    borderWidth: 0.5,
+    //borderWidth: 0.5,
+    borderBottomWidth: 1,
     borderColor: "grey",
     borderRadius: 8,
-    color: "white",
+    color: "black",
     paddingRight: 30 // to ensure the text is never behind the icon
   }
 });

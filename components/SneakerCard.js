@@ -1,50 +1,33 @@
 import React from "react";
-import {
-  StyleSheet,
-  ImageBackground,
-  View,
-  Text,
-  Dimensions
-} from "react-native";
+import { StyleSheet, Image, View, Text, Dimensions } from "react-native";
 
 class SneakerCard extends React.Component {
   renderImages(sneaker) {
     //console.log(sneaker);
     return (
-      <View style={styles.container}>
-        <View>
-          <ImageBackground
+      <>
+        <View style={{ margin: 8 }}>
+          <Image
             source={{ uri: sneaker.pictures[0] }}
             style={styles.pictures}
-            imageStyle={{ borderRadius: 8 }}
-          >
-            <View
-              style={{
-                backgroundColor: "rgba(135, 135, 135, 0.8)",
-                position: "absolute",
-                bottom: 0,
-                width: "100%",
-                padding: 6
-                //borderRadius: 8
-              }}
-            >
-              <Text numberOfLines={1} style={styles.text}>
-                {sneaker.title}{" "}
-              </Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.price}>
-                  {sneaker.price}
-                  {" €"}
-                </Text>
-                <Text style={styles.price}>
-                  {"                       "}
-                  {sneaker.size}
-                </Text>
-              </View>
-            </View>
-          </ImageBackground>
+            imageStyle={{}}
+          />
+
+          <Text numberOfLines={1} style={styles.text}>
+            {sneaker.title}
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.price}>
+              {sneaker.price}
+              {" €"}
+            </Text>
+            <Text style={styles.price}>
+              {"                   "}
+              {sneaker.size}
+            </Text>
+          </View>
         </View>
-      </View>
+      </>
     );
   }
 
@@ -56,35 +39,32 @@ class SneakerCard extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    borderRadius: 3,
     backgroundColor: "white",
-    flex: 1,
-    height: "100%",
-    padding: 2
-  },
-  pictures: {
-    width: Dimensions.get("window").width / 2 - 10,
-    height: 120,
-    width: 170,
-    resizeMode: "contain",
-    marginRight: 6,
-    marginBottom: 10,
-    shadowColor: "black",
+    margin: 7,
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 4
+      height: 2
     },
-    shadowOpacity: 0.32,
-    shadowRadius: 5.46,
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
 
-    elevation: 9
+    elevation: 4
+  },
+
+  pictures: {
+    height: 100,
+    width: 140,
+    resizeMode: "contain"
   },
   text: {
-    width: 150,
-    color: "white",
+    width: 130,
+    color: "black",
     fontWeight: "bold"
   },
   price: {
-    color: "white"
+    color: "black"
   }
 });
 

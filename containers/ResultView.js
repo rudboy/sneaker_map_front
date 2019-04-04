@@ -17,13 +17,6 @@ import { MapView, Location, Permissions } from "expo";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 import SneakerCard from "../components/SneakerCard";
 
-const Images = [
-  { uri: "https://i.imgur.com/sNam9iJ.jpg" },
-  { uri: "https://i.imgur.com/N7rlQYt.jpg" },
-  { uri: "https://i.imgur.com/UDrH0wm.jpg" },
-  { uri: "https://i.imgur.com/Ka8kNST.jpg" }
-];
-
 const { width, height } = Dimensions.get("window");
 
 const CARD_HEIGHT = height / 4;
@@ -45,20 +38,43 @@ class ResultView extends React.Component {
     isLoading: true,
     region: {}
   };
+  static navigationOptions = ({ navigation }) => {
+    return {
+      // header: null
+
+      title: "Recherche",
+      headerStyle: {
+        backgroundColor: "white"
+      },
+      headerTintColor: "grey",
+      headerTitleStyle: {
+        fontSize: 28,
+        fontWeight: "600",
+        textAlign: "center",
+        flexGrow: 0.5,
+        alignSelf: "center"
+      }
+    };
+  };
 
   renderTabs = props => (
     <>
       <TabBar
         {...props}
-        indicatorStyle={{ backgroundColor: "blue" }}
-        style={{ backgroundColor: "#EA3554" }}
+        indicatorStyle={{
+          backgroundColor: "white",
+          height: 5,
+          borderBottomColor: "grey",
+          borderBottomWidth: 2
+        }}
+        style={{ backgroundColor: "grey" }}
       />
     </>
   );
 
   _renderTabs = props => {
     return (
-      <View>
+      <View style={{ flexDirection: "row" }}>
         {props.navigationState.routes.map((route, i) => {
           return (
             <TouchableOpacity
@@ -300,8 +316,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   tabBarText: {
-    fontSize: 20,
-    color: "white"
+    fontSize: 10,
+    color: "black"
   },
 
   scrollView: {

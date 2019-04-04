@@ -30,7 +30,7 @@ class MessageScreen extends React.Component {
           const response = await axios.get(
             "https://sneaker-map-api.herokuapp.com/get_messages?id=" + user._id
           );
-          // console.log("user ", user.account.username);
+          //console.log("user ", response.data);
           this.setState({
             tabMessage: response.data,
             currentuser: user.account.poster_profile[0],

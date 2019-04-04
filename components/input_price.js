@@ -12,12 +12,13 @@ class inputPrice extends React.Component {
         style={{
           width: 250,
           flexDirection: "row",
-          marginTop: 25
+          marginTop: 25,
+          marginBottom: 25
         }}
       >
         <Text
           style={{
-            color: "white",
+            color: "grey",
             fontSize: 20,
             fontWeight: "600",
             marginRight: 10
@@ -28,10 +29,10 @@ class inputPrice extends React.Component {
         <TextInput
           keyboardType="numeric"
           style={{
-            borderBottomColor: "white",
-            borderBottomWidth: 2,
+            borderBottomColor: "grey",
+            borderBottomWidth: 1,
             width: 100,
-            color: "white",
+            color: "black",
             fontSize: 20
           }}
           onChangeText={price => {
@@ -39,6 +40,16 @@ class inputPrice extends React.Component {
           }}
           value={this.props.price}
         />
+        <Text
+          style={{
+            color: "grey",
+            fontSize: 20,
+            fontWeight: "600",
+            marginRight: 10
+          }}
+        >
+          €
+        </Text>
       </View>
     );
   }

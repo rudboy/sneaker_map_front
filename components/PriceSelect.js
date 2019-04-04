@@ -8,31 +8,29 @@ class PriceSelect extends React.Component {
   };
 
   multiSliderValuesChange = values => {
-    this.setState({
-      values
-    }),
-      this.props.price(this.state.values);
+    this.props.price(values);
   };
 
   render() {
     return (
       <View
         style={{
-          color: "white",
+          color: "grey",
           alignItems: "center",
           justifyContent: "center"
         }}
       >
         <Text
           style={{
-            color: "white"
+            color: "grey",
+            fontSize: 20
           }}
         >
           {this.props.pricevalue[0]} € - {this.props.pricevalue[1]} €
         </Text>
         <MultiSlider
           //enabledOne={false}
-          values={[this.state.values[0], this.state.values[1]]}
+          values={[this.props.pricevalue[0], this.props.pricevalue[1]]}
           trackStyle={{
             height: 5,
             backgroundColor: "white"
@@ -41,8 +39,8 @@ class PriceSelect extends React.Component {
             height: 50
           }}
           touchDimensions={{
-            height: 50,
-            width: 50,
+            height: 100,
+            width: 100,
             borderRadius: 20,
             slipDisplacement: 40
           }}

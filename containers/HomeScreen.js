@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import SneakerCard from "../components/SneakerCard";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import PriceSelect from "../components/PriceSelect";
 import axios from "axios"; // const axios = require('axios');
 
 let arrayholder = [];
@@ -22,10 +21,6 @@ class HomeScreen extends React.Component {
     sneakers: [],
     isLoading: true
   };
-
-  static navigationOptions = ({ navigation }) => ({
-    title: "Welcome"
-  });
 
   async componentDidMount() {
     try {
@@ -54,7 +49,6 @@ class HomeScreen extends React.Component {
         }
       );
     } catch (error) {}
-
   }
 
   SearchFilterFunction(text) {
@@ -89,23 +83,13 @@ class HomeScreen extends React.Component {
     }
     return (
       <View style={styles.container}>
-        {/* <View>
-          <Text
-            style={{
-              color: "white",
-              marginTop: 30,
-              fontSize: 30,
-              fontWeight: "500"
-            }}
-          >
-            Bienvenue
-          </Text>
-        </View> */}
         <View
           style={{
             position: "relative",
             flexDirection: "row",
-            marginBottom: 25
+            marginBottom: 10,
+            alignItems: "center",
+            justifyContent: "center"
           }}
         >
           <TextInput
@@ -123,11 +107,16 @@ class HomeScreen extends React.Component {
           >
             <MaterialIcons
               style={{
-                color: "grey"
+                color: "grey",
+                marginTop: 30,
+                marginLeft: 10
               }}
               name="playlist-add"
               size={35}
             />
+            <Text style={{ marginLeft: 5, color: "grey", fontWeight: "400" }}>
+              Avancer
+            </Text>
           </TouchableOpacity>
         </View>
         <ScrollView>
@@ -161,14 +150,14 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flex: 1,
-    alignItems: "center"
+    marginLeft: 10
   },
   searchbar: {
     width: Dimensions.get("window").width - 100,
     height: 50,
     backgroundColor: "white",
     textAlign: "center",
-    marginTop: 20,
+    marginTop: 50,
     borderBottomColor: "grey",
     borderBottomWidth: 1
   }

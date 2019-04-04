@@ -19,6 +19,15 @@ import axios from "axios";
 import { ImagePicker, Permissions } from "expo";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import SliderProduct from "../components/SliderProduct";
+import { ActionSheetCustom as ActionSheet } from "react-native-actionsheet";
+
+const options = [
+  <Text style={{ color: "black", fontSize: 20 }}>Prendre une photo</Text>,
+  <Text style={{ color: "black", fontSize: 20 }}>
+    Choisir une photo de puis la galerie
+  </Text>,
+  <Text style={{ color: "red", fontSize: 20 }}>Cancel</Text>
+];
 
 class ProfileScreen extends React.Component {
   state = {
@@ -30,6 +39,10 @@ class ProfileScreen extends React.Component {
     userProduct: [],
     favProduct: [],
     refreshing: false
+  };
+
+  showActionSheet = () => {
+    this.ActionSheet.show();
   };
 
   async componentDidMount() {
@@ -202,7 +215,13 @@ class ProfileScreen extends React.Component {
       return (
         <Image
           source={{ uri: this.state.profile.poster_profile[0] }}
-          style={{ width: 110, height: 110, borderRadius: 55 }}
+          style={{
+            width: 220,
+            height: 220,
+            borderRadius: 110,
+            position: "relative",
+            zIndex: -1
+          }}
         />
       );
     }
@@ -210,17 +229,24 @@ class ProfileScreen extends React.Component {
       return (
         <Image
           source={{ uri: this.state.tab_photo[0] }}
-          style={{ width: 110, height: 110, borderRadius: 55 }}
+          style={{
+            width: 220,
+            height: 220,
+            borderRadius: 110
+          }}
         />
       );
     }
     if (!this.state.profile.poster_profile[0]) {
       return (
-        <Ionicons
-          style={styles.posterBorder}
-          name="ios-person"
-          size={100}
-          color="#fff"
+        <Image
+          source={require("../assets/images/user-profile.png")}
+          style={{
+            width: 220,
+            height: 220,
+            borderRadius: 110,
+            backgroundColor: "white"
+          }}
         />
       );
     }
@@ -315,27 +341,44 @@ class ProfileScreen extends React.Component {
       <>
         <ScrollView>
           <KeyboardAwareScrollView>
-            <StatusBar barStyle="light-content" />
+            {/* <StatusBar barStyle="light-content" /> */}
             <View style={styles.headerProfile}>
-              <Text />
-              <View style={{ alignItems: "center", position: "relative" }}>
-                {this.renderPosterProfile()}
-                {this.state.editable === false ? (
-                  <TouchableHighlight onPress={() => this.cameraOrRoll()}>
-                    <View style={styles.cameraView}>
-                      <Ionicons
-                        style={{ textAlign: "center" }}
-                        name="ios-camera"
-                        size={30}
-                        color="#000"
-                      />
-                    </View>
-                  </TouchableHighlight>
-                ) : null}
-              </View>
+              {/* <View style={{ alignItems: "center", position: "relative" }}> */}
+              <View style={styles.ProfileP}>{this.renderPosterProfile()}</View>
+              {this.state.editable === false ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    this.showActionSheet();
+                  }}
+                >
+                  <View style={styles.cameraView}>
+                    <Ionicons
+                      style={{ textAlign: "center" }}
+                      name="ios-camera"
+                      size={30}
+                      color="#000"
+                    />
+                  </View>
+                </TouchableOpacity>
+              ) : null}
+              {/* </View> */}
+              <ActionSheet
+                ref={o => (this.ActionSheet = o)}
+                title={"Which one do you like ?"}
+                options={options}
+                cancelButtonIndex={2}
+                destructiveButtonIndex={1}
+                onPress={index => {
+                  if (index === 0) {
+                    this.pickImageCamera();
+                  } else if (index === 1) {
+                    this.pickImageLibrary();
+                  }
+                }}
+              />
 
               <View style={styles.usernameContainer}>
-                <TextInput
+                {/* <TextInput
                   keyboardType="numeric"
                   style={styles.usernameInput}
                   editable={this.state.editable === true ? false : true}
@@ -346,7 +389,7 @@ class ProfileScreen extends React.Component {
                       : this.state.profile.username
                   }
                   placeholderTextColor={"#fff"}
-                />
+                /> */}
               </View>
               {this.state.profileModified === true ? (
                 <Text style={styles.profileModified}>Profil modifié</Text>
@@ -552,20 +595,13 @@ class ProfileScreen extends React.Component {
               }}
             >
               <TouchableOpacity
-                style={{
-                  height: 50,
-                  width: 200,
-                  backgroundColor: "black",
-                  borderRadius: 10,
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
+                style={styles.deconnexion}
                 onPress={this.logOut}
               >
                 <Text
-                  style={{ color: "white", fontSize: 20, fontWeight: "800" }}
+                  style={{ color: "grey", fontSize: 20, fontWeight: "800" }}
                 >
-                  Se Deconnecter
+                  Déconnexion
                 </Text>
               </TouchableOpacity>
             </View>
@@ -581,9 +617,43 @@ const styles = StyleSheet.create({
   //   paddingBottom: 100,
   // },
   headerProfile: {
+    marginTop: 20,
     paddingVertical: 20,
-    backgroundColor: "#111",
-    alignItems: "center"
+    backgroundColor: "white",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4
+  },
+  deconnexion: {
+    height: 50,
+    width: 200,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "grey",
+    borderWidth: 0.5
+  },
+  ProfileP: {
+    width: 220,
+    height: 220,
+    borderRadius: 110,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 7
+    },
+    shadowOpacity: 0.41,
+    shadowRadius: 9.11,
+    elevation: 14,
+    position: "relative",
+    zIndex: -1
   },
   posterBorder: {
     borderWidth: 2,
@@ -595,14 +665,23 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   cameraView: {
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     borderRadius: 30,
     width: 40,
     height: 40,
     justifyContent: "center",
-    position: "absolute",
+    //position: "absolute",
     bottom: 0,
-    left: 30
+    marginLeft: 100,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 7
+    },
+    shadowOpacity: 0.41,
+    shadowRadius: 9.11,
+
+    elevation: 14
   },
   usernameContainer: {
     position: "relative",
@@ -616,15 +695,20 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 10,
     top: -30,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "white",
     borderRadius: 50,
     width: 50,
     height: 50,
     justifyContent: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2
+    shadowOffset: {
+      width: 0,
+      height: 7
+    },
+    shadowOpacity: 0.41,
+    shadowRadius: 9.11,
+
+    elevation: 14
   },
   inputTextName: {
     fontSize: 30,
@@ -665,8 +749,11 @@ const styles = StyleSheet.create({
     padding: 10
   },
   titleProduct: {
-    fontSize: 25,
-    textAlign: "center"
+    fontSize: 28,
+    textAlign: "center",
+    fontWeight: "600",
+    color: "grey"
+    // backgroundColor: "pink"
   }
 });
 

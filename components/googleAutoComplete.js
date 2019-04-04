@@ -47,17 +47,17 @@ class googlegeoloc extends React.Component {
         }}
         styles={{
           textInputContainer: {
-            width: "100%",
-            backgroundColor: "white"
+            width: "100%"
+            //backgroundColor: "white"
           },
           textInput: {
-            backgroundColor: "#2d2d2d",
+            backgroundColor: "white",
             height: 30,
-            color: "white"
+            color: "black"
           },
           description: {
             fontWeight: "bold",
-            color: "white"
+            color: "black"
           },
           predefinedPlacesDescription: {
             color: "#1faadb"
@@ -96,7 +96,22 @@ class googlegeoloc extends React.Component {
 
   render() {
     return (
-      <View style={{ height: 80, width: 300 }}>{this.GooglePlacesInput()}</View>
+      <>
+        <View style={{ height: 80, width: 300, position: "absolute" }}>
+          {this.GooglePlacesInput()}
+        </View>
+        <Text
+          style={{
+            color: "grey",
+            marginTop: 38,
+            marginLeft: 12,
+            marginBottom: 30,
+            position: "relative"
+          }}
+        >
+          *l'adresse exacte ne sera pas divulguée
+        </Text>
+      </>
     );
   }
 }

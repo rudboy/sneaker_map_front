@@ -44,14 +44,14 @@ class Chat extends React.Component {
     return {
       // header: null
 
-      title: "Messagerie",
+      title: "Message",
       headerStyle: {
-        backgroundColor: "black"
+        backgroundColor: "white"
       },
-      headerTintColor: "white",
+      headerTintColor: "grey",
       headerTitleStyle: {
-        fontSize: 30,
-        fontWeight: "200"
+        fontSize: 28,
+        fontWeight: "600"
       }
     };
   };

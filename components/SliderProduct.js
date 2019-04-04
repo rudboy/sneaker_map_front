@@ -52,7 +52,15 @@ class SliderProduct extends React.Component {
   deleteCross = (id, index) => {
     if (this.props.deleteCross) {
       return (
-        <TouchableOpacity onPress={() => this.AlertCross(id, index)}>
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            zIndex: 1,
+            marginTop: 10,
+            marginLeft: 10
+          }}
+          onPress={() => this.AlertCross(id, index)}
+        >
           <Ionicons
             style={styles.deleteCross}
             name="ios-close-circle-outline"
@@ -114,9 +122,17 @@ class SliderProduct extends React.Component {
   deleteFav = (id, index) => {
     if (this.props.deleteFavorite) {
       return (
-        <TouchableOpacity onPress={() => this.AlertFav(id, index)}>
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            zIndex: 1,
+            marginTop: 10,
+            marginLeft: 10
+          }}
+          onPress={() => this.AlertFav(id, index)}
+        >
           <Ionicons
-            style={styles.deleteCross}
+            //={styles.deleteCross}
             name="ios-heart"
             size={32}
             color="red"
@@ -128,23 +144,6 @@ class SliderProduct extends React.Component {
     }
   };
 
-  // deleteCross = (id, index) => {
-  //   if (this.props.deleteCross) {
-  //     return (
-  //       <TouchableOpacity onPress={() => this.deleteFn(id, index)}>
-  //         <Ionicons
-  //           style={styles.deleteCross}
-  //           name="ios-close-circle-outline"
-  //           size={32}
-  //           color="#000"
-  //         />
-  //       </TouchableOpacity>
-  //     );
-  //   } else {
-  //     return null;
-  //   }
-  // };
-
   render() {
     return (
       <>
@@ -154,10 +153,10 @@ class SliderProduct extends React.Component {
             flexDirection: "row",
             paddingHorizontal: 15,
             marginBottom: 30
+            //  backgroundColor: "blue"
           }}
         >
           <FlatList
-            style={styles.flatList}
             data={this.props.product}
             horizontal
             keyExtractor={item => String(item._id)}
@@ -175,23 +174,21 @@ class SliderProduct extends React.Component {
                     )
                   }
                 >
-                  <View>
-                    <Image
-                      style={styles.image}
-                      source={{ uri: item.pictures[0] }}
-                    />
-                    <Text numberOfLines={1} style={styles.title}>
-                      {item.title}
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between"
-                      }}
-                    >
-                      <Text>{item.size}</Text>
-                      <Text>{item.price}</Text>
-                    </View>
+                  <Image
+                    style={styles.image}
+                    source={{ uri: item.pictures[0] }}
+                  />
+                  <Text numberOfLines={1} style={styles.title}>
+                    {item.title}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between"
+                    }}
+                  >
+                    <Text>{item.size}</Text>
+                    <Text>{item.price + " €"}</Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -205,6 +202,7 @@ class SliderProduct extends React.Component {
             flexDirection: "row",
             paddingHorizontal: 15,
             marginBottom: 30
+            //     backgroundColor: "green"
           }}
         >
           <FlatList
@@ -214,7 +212,6 @@ class SliderProduct extends React.Component {
             renderItem={({ item, index }) => (
               <View key={item} style={styles.containerProduct}>
                 {this.deleteFav(item._id, index)}
-
                 <TouchableOpacity
                   onPress={() =>
                     this.props.navigation.navigate("Product", {
@@ -222,23 +219,21 @@ class SliderProduct extends React.Component {
                     })
                   }
                 >
-                  <View>
-                    <Image
-                      style={styles.image}
-                      source={{ uri: item.pictures[0] }}
-                    />
-                    <Text numberOfLines={1} style={styles.title}>
-                      {item.title}
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between"
-                      }}
-                    >
-                      <Text>{item.size}</Text>
-                      <Text>{item.price}</Text>
-                    </View>
+                  <Image
+                    style={styles.image}
+                    source={{ uri: item.pictures[0] }}
+                  />
+                  <Text numberOfLines={1} style={styles.title}>
+                    {item.title}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between"
+                    }}
+                  >
+                    <Text>{item.size}</Text>
+                    <Text>{item.price + " €"}</Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -252,9 +247,22 @@ class SliderProduct extends React.Component {
 
 const styles = StyleSheet.create({
   containerProduct: {
-    paddingRight: 15,
+    margin: 10,
+    padding: 10,
     position: "relative",
-    zIndex: 0
+    zIndex: 0,
+    backgroundColor: "white",
+    borderRadius: 5,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+
+    elevation: 4
   },
   title: {
     width: 150

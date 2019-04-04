@@ -22,11 +22,10 @@ import Etat from "../components/etat";
 import Add_photo from "../components/Add_photo";
 import GeoLocalisation from "../components/GeoLocalisation";
 
-const jordan = require("../assets/json/Jordan/Jordan.json");
+//const jordan = require("../assets/json/Jordan/Jordan.json");
 const initialState = {
   mark: null,
   tab_model: [],
-  tab_async: [],
   tabcategory: [],
   tabsize: [],
   category: null,
@@ -48,7 +47,6 @@ class NewProduct extends React.Component {
   state = {
     mark: null,
     tab_model: [],
-    tab_async: [],
     tabcategory: [],
     tabsize: [],
     category: null,
@@ -67,22 +65,36 @@ class NewProduct extends React.Component {
     token: null
   };
 
-  Get_Category = mark => {
+  Get_Category = async mark => {
     //console.log(this.state.mark);
-    if (mark === "Jordan") {
+    if (mark === "Adidas") {
+      let temp = await AsyncStorage.getItem("category" + mark);
+      temp = JSON.parse(temp);
       this.setState({
-        tabcategory: require("../assets/json/Jordan/Jordan.json")
+        tabcategory: temp
+      });
+    }
+    if (mark === "Jordan") {
+      let temp = await AsyncStorage.getItem("category" + mark);
+      temp = JSON.parse(temp);
+      this.setState({
+        tabcategory: temp
+      });
+    }
+    if (mark === "Nike") {
+      let temp = await AsyncStorage.getItem("category" + mark);
+      temp = JSON.parse(temp);
+      this.setState({
+        tabcategory: temp
       });
     }
   };
   Get_Model = async category => {
-    for (let i = 0; i < jordan.length; i++) {
-      if (category === jordan[i].value) {
-        this.setState({
-          tab_async: await AsyncStorage.getItem(category)
-        });
-        this.setState({ tab_async: JSON.parse(this.state.tab_async) });
-        this.setState({ tab_model: this.state.tab_async });
+    for (let i = 0; i < this.state.tabcategory.length; i++) {
+      if (category === this.state.tabcategory[i].value) {
+        let temp = await AsyncStorage.getItem("modele" + category);
+        temp = JSON.parse(temp);
+        this.setState({ tab_model: temp });
       }
     }
   };
@@ -198,9 +210,6 @@ class NewProduct extends React.Component {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.principal}>
-          <View style={{ marginBottom: 40 }}>
-            <Text style={styles.text}>Ajouter une Sneaker a Vendre</Text>
-          </View>
           <Picker_mark Get_Category={this.Get_Category} />
 
           <Picker_category
@@ -231,28 +240,32 @@ class NewProduct extends React.Component {
             get_photo={this.get_photo}
             tab_photo={this.state.tab_photo}
           />
+
           <GeoLocalisation
             get_location={this.get_location}
             location={this.state.tab_location}
             title={this.state.title}
             url={this.state.url}
           />
-          <TouchableOpacity
-            style={styles.valider}
-            onPress={() => {
-              this.addToDB();
-            }}
-          >
-            <Text
-              style={{
-                color: "black",
-                fontSize: 20,
-                fontWeight: "600"
+
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <TouchableOpacity
+              style={styles.valider}
+              onPress={() => {
+                this.addToDB();
               }}
             >
-              VALIDER
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={{
+                  color: "grey",
+                  fontSize: 20,
+                  fontWeight: "600"
+                }}
+              >
+                VALIDER
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     );
@@ -265,15 +278,6 @@ class NewProduct extends React.Component {
         async () => {
           this.reset_state();
           // On charge les données ici
-          for (let i = 0; i < jordan.length; i++) {
-            const response = await axios.get(
-              "http://sneakersmap.fr/sneaker_map/jordan/" +
-                jordan[i].value +
-                ".json"
-            );
-            const value = JSON.stringify(response.data);
-            await AsyncStorage.setItem(jordan[i].value, value);
-          }
         }
       );
     } catch (error) {
@@ -289,14 +293,15 @@ class NewProduct extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    backgroundColor: "#212429",
-    color: "white"
+    backgroundColor: "white",
+    color: "grey"
   },
   principal: {
     justifyContent: "center",
-    alignItems: "center",
-    marginTop: 30
+    // alignItems: "center",
+    marginTop: 30,
+    marginLeft: 30,
+    marginRight: 30
   },
   text: {
     fontSize: 25,
@@ -304,7 +309,7 @@ const styles = StyleSheet.create({
     color: "white"
   },
   valider: {
-    color: "black",
+    color: "grey",
     backgroundColor: "white",
     borderRadius: 5,
     marginTop: 20,
@@ -312,7 +317,9 @@ const styles = StyleSheet.create({
     width: 250,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 40
+    marginBottom: 40,
+    borderColor: "grey",
+    borderWidth: 0.5
   }
 });
 

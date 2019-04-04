@@ -13,13 +13,18 @@ import ChatScreen from "./ChatScreen";
 // import SettingsScreen from "./SettingsScreen";
 // import ChatScreen from "./ChatScreen";
 
-import { Ionicons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  AntDesign,
+  Feather
+} from "@expo/vector-icons";
 
 const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeScreen,
     Profile: ProfileScreen,
-    NewProduct: NewProductScreen,
+    Vendre: NewProductScreen,
     Messages: MessageScreen
     // Chat: ChatScreen,
     // Settings: SettingsScreen,
@@ -32,21 +37,32 @@ const TabNavigator = createBottomTabNavigator(
 
         switch (routeName) {
           case "Home":
-            iconName = "ios-home";
+            return <Feather name="home" size={25} color={tintColor} />;
             break;
 
           case "Profile":
-            iconName = "ios-person";
+            return (
+              <MaterialCommunityIcons
+                name="account-outline"
+                size={28}
+                color={tintColor}
+              />
+            );
             break;
 
-          case "NewProduct":
-            iconName = "ios-add";
+          case "Vendre":
+            return (
+              <MaterialCommunityIcons
+                name="shoe-formal"
+                size={30}
+                color={tintColor}
+              />
+            );
             break;
           case "Messages":
-            iconName = "ios-chatbubbles";
+            return <AntDesign name="message1" size={25} color={tintColor} />;
+
             break;
-          // case "Settings":
-          //   iconName = "ios-settings";
 
           case "NewProduct":
             iconName = "ios-settings";
@@ -77,19 +93,28 @@ TabNavigator.navigationOptions = ({ navigation }) => {
 
   switch (routeName) {
     case "Home":
-      headerTitle = "Home";
+      // headerTitle = "Home";
+      return {
+        header: null
+      };
       break;
 
     case "Profile":
-      headerTitle = "Profil";
+      //headerTitle = "Profil";
+      return {
+        header: null
+      };
       break;
 
-    case "NewProduct":
-      headerTitle = "Ajouter Produit";
+    case "Vendre":
+      headerTitle = "Mettre en Vente";
+      // return {
+      //   header: null
+      //};
       break;
 
     case "Messages":
-      headerTitle = "Messages";
+      headerTitle = "Messagerie";
       break;
 
     default:
@@ -100,13 +125,16 @@ TabNavigator.navigationOptions = ({ navigation }) => {
     headerTitle,
     headerBackTitle,
     headerStyle: {
-      backgroundColor: "#111"
+      backgroundColor: "white"
     },
     headerTitleStyle: {
-      fontSize: 30,
-      fontWeight: "200"
+      fontSize: 28,
+      fontWeight: "600",
+      textAlign: "center",
+      flexGrow: 1,
+      alignSelf: "center"
     },
-    headerTintColor: "#fff"
+    headerTintColor: "grey"
   };
 };
 

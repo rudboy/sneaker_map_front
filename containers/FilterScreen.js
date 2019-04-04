@@ -43,17 +43,24 @@ class FilterScreen extends React.Component {
     localisationTab: []
   };
 
-  // checks if 51.525, 7.4575 is within a radius of 5km from 51.5175, 7.4678
-  // triGeoloc = () => {
-  //   return geolib.isPointInCircle(
-  //     { latitude: 48.874883, longitude: 2.373836 },
-  //     { latitude: this.state.latitude, longitude: this.state.longitude },
-  //     5000
-  //   );
-  // };
+  static navigationOptions = ({ navigation }) => {
+    return {
+      // header: null
 
+      title: "Rechercher Avancée",
+      headerStyle: {
+        backgroundColor: "white"
+      },
+      headerTintColor: "grey",
+      headerTitleStyle: {
+        fontSize: 28,
+        fontWeight: "600"
+      }
+    };
+  };
+
+  // pour de coordonne geoloc autour d'un point precis
   triGeoloc = tableau => {
-    //console.log(tableau[0].localisation[0]);
     for (let i = 0; i < tableau.length; i++) {
       let lat = tableau[i].localisation[0];
       let lon = tableau[i].localisation[1];
@@ -68,10 +75,8 @@ class FilterScreen extends React.Component {
           5000
         );
       });
-      //console.log(everyPointInCircle);
       if (everyPointInCircle === true) {
         let temptab = [...this.state.localisationTab];
-        // console.log(tableau[i]);
         temptab.push(tableau[i]);
         this.setState({ localisationTab: temptab });
       }
@@ -85,13 +90,12 @@ class FilterScreen extends React.Component {
         result: this.state.tab_location
       });
     }
-    //console.log(this.state.localisationTab);
   };
-
+  //function pour obtenir les coordonées d'une adresse rentrer
   GooglePlacesInput = () => {
     return (
       <GooglePlacesAutocomplete
-        placeholder="Entrer une Adresse de localisation"
+        placeholder="Entrer une Zone de recherche, ville ou adress.."
         minLength={2} // minimum length of text to search
         autoFocus={false}
         returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
@@ -107,13 +111,10 @@ class FilterScreen extends React.Component {
               longitude: details.geometry.location.lng
             }
           };
-          // this.props.get_location(coords);
-          // this.props.mapViewer(coords);
           this.setState({
             latitude: coords.coords.latitude,
             longitude: coords.coords.longitude
           });
-          // console.log(coords);
         }}
         getDefaultValue={() => ""}
         query={{
@@ -128,13 +129,13 @@ class FilterScreen extends React.Component {
             backgroundColor: "white"
           },
           textInput: {
-            backgroundColor: "#2d2d2d",
+            backgroundColor: "white",
             height: 30,
-            color: "white"
+            color: "grey"
           },
           description: {
             fontWeight: "bold",
-            color: "white"
+            color: "grey"
           },
           predefinedPlacesDescription: {
             color: "#1faadb"
@@ -171,26 +172,39 @@ class FilterScreen extends React.Component {
     );
   };
 
-  Get_Category = mark => {
-    if (mark === "Jordan") {
+  Get_Category = async mark => {
+    if (mark === "Adidas") {
+      let temp = await AsyncStorage.getItem("category" + mark);
+      temp = JSON.parse(temp);
       this.setState({
-        tabcategory: require("../assets/json/Jordan/Jordan.json")
+        tabcategory: temp
       });
     }
-    this.setState({ mark: mark });
-  };
-  Get_Model = async category => {
-    for (let i = 0; i < jordan.length; i++) {
-      if (category === jordan[i].value) {
-        this.setState({
-          tab_async: await AsyncStorage.getItem(category)
-        });
-        this.setState({ tab_async: JSON.parse(this.state.tab_async) });
-        this.setState({ tab_model: this.state.tab_async });
-      }
-      this.setState({ category: category });
+    if (mark === "Jordan") {
+      let temp = await AsyncStorage.getItem("category" + mark);
+      temp = JSON.parse(temp);
+      this.setState({
+        tabcategory: temp
+      });
+    }
+    if (mark === "Nike") {
+      let temp = await AsyncStorage.getItem("category" + mark);
+      temp = JSON.parse(temp);
+      this.setState({
+        tabcategory: temp
+      });
     }
   };
+  Get_Model = async category => {
+    for (let i = 0; i < this.state.tabcategory.length; i++) {
+      if (category === this.state.tabcategory[i].value) {
+        let temp = await AsyncStorage.getItem("modele" + category);
+        temp = JSON.parse(temp);
+        this.setState({ tab_model: temp });
+      }
+    }
+  };
+
   Get_Size = () => {
     if (this.state.mark !== "Adidas") {
       let temp = require("../assets/json/size.json");
@@ -199,7 +213,6 @@ class FilterScreen extends React.Component {
   };
   toggleSwitch = value => {
     this.setState({ neuf: value });
-    //console.log("Switch 1 is: " + value);
   };
 
   toggleSwitch2 = value => {
@@ -209,28 +222,29 @@ class FilterScreen extends React.Component {
   getinfo = async () => {
     let token = await AsyncStorage.getItem("userInfo");
     token = JSON.parse(token);
-
     try {
       let findThisText = "";
+      let idstyle = "";
       if (
-        this.state.model === "" &&
-        this.state.category === "" &&
+        this.state.styleID === "" &&
+        this.state.category === null &&
         this.state.mark !== ""
       ) {
         findThisText = this.state.mark;
       } else if (
-        this.state.model === "" &&
+        this.state.styleID === "" &&
         this.state.category !== "" &&
         this.state.mark !== ""
       ) {
         findThisText = this.state.category;
       } else {
-        findThisText = this.state.model;
+        idstyle = this.state.styleID;
       }
       const response = await axios.post(
         "https://sneaker-map-api.herokuapp.com/Product",
         {
           title: findThisText,
+          id_style: idstyle,
           size: this.state.size,
           etat:
             this.state.neuf && this.state.usager
@@ -249,13 +263,14 @@ class FilterScreen extends React.Component {
           }
         }
       );
-      //console.log(this.state.usager);
-      //console.log(response.data);
-      this.setState({ tab_location: response.data });
-      this.triGeoloc(this.state.tab_location);
-    } catch (error) {
-      // console.log(error);
-    }
+      // console.log(response.data);
+      if (response.data.length > 0) {
+        this.setState({ tab_location: response.data });
+        this.triGeoloc(this.state.tab_location);
+      } else {
+        alert("Aucun Résultat, Veuilliez modifier votre recherche");
+      }
+    } catch (error) {}
   };
 
   get_size_db = size => {
@@ -268,7 +283,6 @@ class FilterScreen extends React.Component {
     this.setState({ url: url });
   };
   getPrice = price => {
-    //console.log(price);
     this.setState({ price: price });
   };
 
@@ -276,16 +290,6 @@ class FilterScreen extends React.Component {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.principal}>
-          <Text
-            style={{
-              color: "white",
-              fontSize: 30,
-              fontWeight: "400",
-              marginBottom: 30
-            }}
-          >
-            TRIER PAR
-          </Text>
           <View style={{ height: 80, width: 300 }}>
             {this.GooglePlacesInput()}
           </View>
@@ -315,7 +319,7 @@ class FilterScreen extends React.Component {
           />
           <Text
             style={{
-              color: "white",
+              color: "grey",
               fontSize: 20,
               fontWeight: "600",
               marginRight: 10,
@@ -323,7 +327,7 @@ class FilterScreen extends React.Component {
               marginTop: 20
             }}
           >
-            Prix
+            Prix Min - Max
           </Text>
           <PriceSelect price={this.getPrice} pricevalue={this.state.price} />
           <TouchableOpacity
@@ -334,7 +338,7 @@ class FilterScreen extends React.Component {
           >
             <Text
               style={{
-                color: "black",
+                color: "grey",
                 fontSize: 20,
                 fontWeight: "600"
               }}
@@ -351,8 +355,8 @@ class FilterScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
-    color: "white",
+    backgroundColor: "white",
+    color: "black",
     paddingTop: 30
   },
   principal: {
@@ -377,7 +381,9 @@ const styles = StyleSheet.create({
     width: 250,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 40
+    marginBottom: 40,
+    borderColor: "grey",
+    borderWidth: 0.5
   }
 });
 

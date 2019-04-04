@@ -223,15 +223,16 @@ class FilterScreen extends React.Component {
   };
 
   getinfo = async () => {
+    console.log(this.state.category);
+
     let token = await AsyncStorage.getItem("userInfo");
     token = JSON.parse(token);
     try {
       let findThisText = "";
       let idstyle = "";
       if (
-        this.state.styleID === "" &&
-        this.state.category === null &&
-        this.state.mark !== ""
+        (this.state.styleID === "" && this.state.category === null) ||
+        (this.state.category === "" && this.state.mark !== "")
       ) {
         findThisText = this.state.mark;
       } else if (
@@ -266,7 +267,6 @@ class FilterScreen extends React.Component {
           }
         }
       );
-      console.log(response.data);
       if (response.data.length > 0) {
         this.setState({ tab_location: response.data });
         this.triGeoloc(this.state.tab_location);

@@ -177,21 +177,24 @@ class FilterScreen extends React.Component {
       let temp = await AsyncStorage.getItem("category" + mark);
       temp = JSON.parse(temp);
       this.setState({
-        tabcategory: temp
+        tabcategory: temp,
+        mark: mark
       });
     }
     if (mark === "Jordan") {
       let temp = await AsyncStorage.getItem("category" + mark);
       temp = JSON.parse(temp);
       this.setState({
-        tabcategory: temp
+        tabcategory: temp,
+        mark: mark
       });
     }
     if (mark === "Nike") {
       let temp = await AsyncStorage.getItem("category" + mark);
       temp = JSON.parse(temp);
       this.setState({
-        tabcategory: temp
+        tabcategory: temp,
+        mark: mark
       });
     }
   };
@@ -200,7 +203,7 @@ class FilterScreen extends React.Component {
       if (category === this.state.tabcategory[i].value) {
         let temp = await AsyncStorage.getItem("modele" + category);
         temp = JSON.parse(temp);
-        this.setState({ tab_model: temp });
+        this.setState({ tab_model: temp, category: category });
       }
     }
   };
@@ -263,7 +266,7 @@ class FilterScreen extends React.Component {
           }
         }
       );
-      // console.log(response.data);
+      console.log(response.data);
       if (response.data.length > 0) {
         this.setState({ tab_location: response.data });
         this.triGeoloc(this.state.tab_location);

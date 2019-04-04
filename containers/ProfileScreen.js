@@ -12,7 +12,8 @@ import {
   ActionSheetIOS,
   Image,
   TouchableHighlight,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
@@ -316,6 +317,34 @@ class ProfileScreen extends React.Component {
     });
   };
 
+  deleteAccount = async () => {
+    Alert.alert(
+      "Supprimer votre compte ?",
+      "Cliquer sur 'confirmer' ou 'annuler'",
+      [
+        {
+          text: "Confirmer",
+          onPress: async () => {
+            const response = await axios.post(
+              "https://sneaker-map-api.herokuapp.com/delete_user",
+              {
+                token: this.state.profile.token
+              }
+            );
+            alert(response.data);
+            this.logOut();
+          }
+        },
+        {
+          text: "Annuler",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        }
+      ],
+      { cancelable: false }
+    );
+  };
+
   deleteFavorite = favorite => {
     this.setState({
       favProduct: favorite
@@ -602,6 +631,23 @@ class ProfileScreen extends React.Component {
                   style={{ color: "grey", fontSize: 20, fontWeight: "800" }}
                 >
                   Déconnexion
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  marginTop: 16,
+                  height: 50,
+                  width: 200,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+                onPress={this.deleteAccount}
+              >
+                <Text
+                  style={{ color: "grey", fontSize: 14, fontWeight: "600" }}
+                >
+                  Supprimer mon compte
                 </Text>
               </TouchableOpacity>
             </View>

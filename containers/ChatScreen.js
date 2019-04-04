@@ -1,15 +1,8 @@
 import React from "react";
-import {
-  Text,
-  AsyncStorage,
-  YellowBox,
-  View,
-  TouchableOpacity
-} from "react-native";
+import { AsyncStorage, YellowBox } from "react-native";
 import { withNavigationFocus } from "react-navigation";
 import SocketIOClient from "socket.io-client";
 import axios from "axios";
-import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { GiftedChat } from "react-native-gifted-chat";
 console.ignoredYellowBox = ["Remote debugger"];
 
@@ -120,7 +113,6 @@ class Chat extends React.Component {
 
     // recupere l'historique de converssation
     if (navigation.getParam("conversation")) {
-      //   console.log("toto");
       let temp2 = [...this.state.messages];
       let temp = navigation.getParam("conversation");
       for (let i = temp.message.length - 1; i >= 0; i--) {
@@ -153,10 +145,6 @@ class Chat extends React.Component {
     await this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages)
     }));
-    //console.log("ici ", this.state.messages[0].text);
-    // console.log("this.state.sellerUserName ", this.state.sellerUserName);
-    // console.log("this.state.sellerPhoto ", this.state.sellerPhoto);
-    // console.log("this.state.userId ", this.state.userId);
     this.socket.emit("message", {
       room: this.state.roomName,
       message: messages[0],
@@ -169,7 +157,6 @@ class Chat extends React.Component {
   };
 
   onReceiveMessage = async messages => {
-    // console.log("messages ", messages.message);
     this._storeMessages(messages.message);
 
     // const value = JSON.stringify(messages);
@@ -182,13 +169,10 @@ class Chat extends React.Component {
   };
 
   render() {
-    // console.log(typeof this.state.sellerId);
     const user = {
       _id: this.state.userId,
       name: this.state.userName
     };
-    // console.log("this.state.messages ", this.state.messages);
-    // console.log("this.state.sellerId ", this.state.sellerId);
     return (
       <>
         <GiftedChat

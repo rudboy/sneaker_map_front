@@ -34,7 +34,10 @@ const AppStack = createStackNavigator({
   ResultView: ResultScreen,
   Messages: MessageScreen
 });
-const AuthStack = createStackNavigator({ SignIn: SignInScreen });
+const AuthStack = createStackNavigator({
+  SignIn: SignInScreen,
+  SignUp: SignUpScreen
+});
 
 export default createAppContainer(
   createSwitchNavigator(

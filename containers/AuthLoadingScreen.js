@@ -15,9 +15,11 @@ class AuthLoadingScreen extends React.Component {
   };
 
   componentDidMount = async () => {
-    let userInfo = await AsyncStorage.getItem("userInfo");
-    userInfo = JSON.parse(userInfo);
-    if (userInfo) {
+    let userInfo = "";
+    userInfo = await AsyncStorage.getItem("userInfo");
+    //console.log(userInfo);
+    if (userInfo !== " " && userInfo !== null) {
+      userInfo = JSON.parse(userInfo);
       const response = await Axios.get(
         "https://sneaker-map-api.herokuapp.com/get_my_user_info?token=" +
           userInfo.token

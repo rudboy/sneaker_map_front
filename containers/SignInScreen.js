@@ -228,14 +228,14 @@ export default class LogIn extends React.Component {
           keyboardVerticalOffset={100}
           style={styles.container}
         >
-          <Text style={{ color: "white", fontSize: 44, marginVertical: 50 }}>
-            LOGO
+          <Text style={{ color: "grey", fontSize: 44, marginVertical: 50 }}>
+            Sneaker Map
           </Text>
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
             placeholder="Votre email"
-            placeholderTextColor="white"
+            placeholderTextColor="grey"
             style={styles.input}
             onChangeText={email => this.setState({ email })}
             value={this.state.email}
@@ -245,7 +245,7 @@ export default class LogIn extends React.Component {
             autoCapitalize="none"
             autoCorrect={false}
             placeholder="Votre mot de passe"
-            placeholderTextColor="white"
+            placeholderTextColor="grey"
             style={styles.input}
             onChangeText={password => this.setState({ password })}
             value={this.state.password}
@@ -256,14 +256,14 @@ export default class LogIn extends React.Component {
 
           <TouchableOpacity onPress={() => navigate("SignUp")}>
             {/* navigate = destructuring de `this.props.navigation` (voir ligne 197) */}
-            <Text style={{ color: "white", marginBottom: 16 }}>
+            <Text style={{ color: "grey", marginBottom: 16 }}>
               Pas encore inscrit ? Créez un compte
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigate("PasswordReset")}>
             {/* navigate = destructuring de `this.props.navigation` (voir ligne 103) */}
-            <Text style={{ color: "white" }}>J'ai oublié mon mot de passe</Text>
+            <Text style={{ color: "grey" }}>J'ai oublié mon mot de passe</Text>
           </TouchableOpacity>
 
           <View
@@ -275,7 +275,7 @@ export default class LogIn extends React.Component {
             }}
           >
             <View style={styles.separator} />
-            <Text style={{ color: "white", marginHorizontal: 10 }}>Ou</Text>
+            <Text style={{ color: "grey", marginHorizontal: 10 }}>Ou</Text>
             <View style={styles.separator} />
           </View>
           <TouchableOpacity
@@ -299,7 +299,7 @@ export default class LogIn extends React.Component {
                   "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
               }}
             />
-            <Text style={{ color: "white" }}>
+            <Text style={{ color: "grey" }}>
               Se connecter ou s'inscrire avec Google
             </Text>
           </TouchableOpacity>
@@ -324,7 +324,7 @@ export default class LogIn extends React.Component {
                   "https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png"
               }}
             />
-            <Text style={{ color: "white" }}>
+            <Text style={{ color: "grey" }}>
               Se connecter ou s'inscrire avec Facebook
             </Text>
           </TouchableOpacity>
@@ -337,12 +337,14 @@ export default class LogIn extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
     padding: 16
   },
   button: {
+    borderColor: "grey",
+    borderWidth: 1,
     backgroundColor: "white",
     height: 50,
     width: "100%",
@@ -352,11 +354,12 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   buttonText: {
+    color: "grey",
     fontSize: 18,
     fontWeight: "600"
   },
   input: {
-    borderBottomColor: "white",
+    borderBottomColor: "grey",
     borderBottomWidth: 1,
     paddingLeft: 10,
     paddingRight: 10,
@@ -365,11 +368,11 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     borderRadius: 10,
-    color: "white"
+    color: "grey"
   },
   separator: {
     flex: 1,
     borderBottomWidth: 1,
-    borderBottomColor: "white"
+    borderBottomColor: "grey"
   }
 });

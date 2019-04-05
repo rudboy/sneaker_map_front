@@ -27,9 +27,9 @@ class SignUpScreen extends React.Component {
     return {
       title: "Inscription",
       headerStyle: {
-        backgroundColor: "#111111"
+        backgroundColor: "white"
       },
-      headerTintColor: "#fff"
+      headerTintColor: "grey"
     };
   };
 
@@ -151,7 +151,7 @@ class SignUpScreen extends React.Component {
             autoCapitalize="none"
             style={styles.textInputSignUp}
             placeholder="Nom"
-            placeholderTextColor="#fff"
+            placeholderTextColor="grey"
             onChangeText={text => {
               this.handleChange(text, "nom");
             }}
@@ -161,7 +161,7 @@ class SignUpScreen extends React.Component {
             autoCapitalize="none"
             style={styles.textInputSignUp}
             placeholder="Prénom"
-            placeholderTextColor="#fff"
+            placeholderTextColor="grey"
             onChangeText={text => {
               this.handleChange(text, "prenom");
             }}
@@ -171,7 +171,7 @@ class SignUpScreen extends React.Component {
             autoCapitalize="none"
             style={styles.textInputSignUp}
             placeholder="Username *"
-            placeholderTextColor="#fff"
+            placeholderTextColor="grey"
             onChangeText={text => {
               this.handleChange(text, "username");
             }}
@@ -182,7 +182,7 @@ class SignUpScreen extends React.Component {
             keyboardType="email-address"
             style={styles.textInputSignUp}
             placeholder="Email *"
-            placeholderTextColor="#fff"
+            placeholderTextColor="grey"
             onChangeText={text => {
               this.handleChange(text, "email");
             }}
@@ -192,7 +192,7 @@ class SignUpScreen extends React.Component {
             autoCapitalize="none"
             style={styles.textInputSignUp}
             placeholder="Téléphone"
-            placeholderTextColor="#fff"
+            placeholderTextColor="grey"
             onChangeText={text => {
               this.handleChange(text, "phone");
             }}
@@ -202,7 +202,7 @@ class SignUpScreen extends React.Component {
             autoCapitalize="none"
             style={styles.textInputSignUp}
             placeholder="Password *"
-            placeholderTextColor="#fff"
+            placeholderTextColor="grey"
             onChangeText={text => {
               this.handleChange(text, "password");
             }}
@@ -212,7 +212,7 @@ class SignUpScreen extends React.Component {
             autoCapitalize="none"
             style={styles.textInputSignUp}
             placeholder="Confirm password *"
-            placeholderTextColor="#fff"
+            placeholderTextColor="grey"
             onChangeText={text => {
               this.handleChange(text, "repassword");
             }}
@@ -226,7 +226,7 @@ class SignUpScreen extends React.Component {
 
           <View style={styles.or}>
             <Text style={styles.separator} />
-            <Text style={{ color: "#fff" }}>OU</Text>
+            <Text style={{ color: "grey" }}>OU</Text>
             <Text style={styles.separator} />
           </View>
 
@@ -255,7 +255,7 @@ class SignUpScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#111",
+    backgroundColor: "white",
     flex: 1,
     paddingHorizontal: 15
   },
@@ -266,11 +266,11 @@ const styles = StyleSheet.create({
   textInputSignUp: {
     borderRadius: 4,
     borderBottomWidth: 1,
-    borderColor: "#fff",
+    borderColor: "grey",
     marginTop: 15,
     paddingVertical: 10,
     paddingHorizontal: 10,
-    color: "#fff"
+    color: "grey"
   },
   buttonSignUp: {
     marginTop: 20,
@@ -280,9 +280,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     marginTop: 40,
-    marginBottom: 20
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderColor: "grey"
   },
   buttonTextSignUp: {
+    color: "grey",
     textAlign: "center"
   },
   or: {
@@ -295,7 +298,7 @@ const styles = StyleSheet.create({
   separator: {
     width: "42%",
     height: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "grey",
     marginHorizontal: 15
   },
   googleContainer: {
@@ -306,7 +309,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   googleConnectText: {
-    color: "#fff",
+    color: "grey",
     marginLeft: 20
   }
 });

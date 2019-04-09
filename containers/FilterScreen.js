@@ -53,7 +53,7 @@ class FilterScreen extends React.Component {
       },
       headerTintColor: "grey",
       headerTitleStyle: {
-        fontSize: 28,
+        fontSize: 21,
         fontWeight: "600"
       }
     };

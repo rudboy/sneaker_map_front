@@ -17,7 +17,6 @@ import NewProductScreen from "./containers/New_Product";
 import FilterScreen from "./containers/FilterScreen";
 import ProfileScreen from "./containers/ProfileScreen";
 import MessageScreen from "./containers/MessageScreen";
-
 import ResultScreen from "./containers/ResultView";
 
 const AppStack = createStackNavigator({

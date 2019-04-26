@@ -13,16 +13,16 @@ const Home = createStackNavigator({
   Annonces: {
     screen: HomeScreen,
     navigationOptions: {
-      header: null
-      //   headerStyle: {
-      //     backgroundColor: "#F5F5F5"
-      //   },
-      //   title: "Annonces",
-      //   headerTitleStyle: {
-      //     color: "#041A39",
-      //     fontSize: 22,
-      //     fontWeight: "bold"
-      //   }
+      // header: null
+      headerStyle: {
+        backgroundColor: "#F5F5F5"
+      },
+      title: "Annonces",
+      headerTitleStyle: {
+        color: "#041A39",
+        fontSize: 22,
+        fontWeight: "bold"
+      }
     }
   }
 });

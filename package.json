@@ -38,5 +38,10 @@
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-native": "^3.6.0"
   },
-  "private": true
+  "private": true,
+  "rnpm": {
+    "assets": [
+      "assets/fonts/Chelsea_Market"
+    ]
+  }
 }

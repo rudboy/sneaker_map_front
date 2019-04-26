@@ -100,7 +100,7 @@ class HomeScreen extends React.Component {
             placeholder="Que recherchez-vous ?"
           />
           <TouchableOpacity
-            style={{ marginTop: 30 }}
+            style={{ marginTop: 0 }}
             onPress={() =>
               this.props.navigation.navigate("Filter", { name: "Filtres" })
             }
@@ -115,12 +115,16 @@ class HomeScreen extends React.Component {
               size={35}
             />
             <Text style={{ marginLeft: 5, color: "grey", fontWeight: "400" }}>
-              Avancer
+              Filtres
             </Text>
           </TouchableOpacity>
         </View>
         <ScrollView>
           <FlatList
+            contentContainerStyle={{
+              backgroundColor: "#FDFDFD"
+            }}
+            columnWrapperStyle={styles.row}
             numColumns={2}
             data={this.state.sneakers}
             keyExtractor={item => {
@@ -150,16 +154,24 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flex: 1,
-    marginLeft: 10
+    paddingBottom: 12
+    // marginLeft: 10,
+    // marginRight: 10
   },
   searchbar: {
     width: Dimensions.get("window").width - 100,
     height: 50,
     backgroundColor: "white",
-    textAlign: "center",
-    marginTop: 50,
+    textAlign: "left",
+    fontSize: 18,
+    marginTop: 0,
+    marginRight: 10,
     borderBottomColor: "grey",
     borderBottomWidth: 1
+  },
+  row: {
+    flex: 1,
+    justifyContent: "space-around"
   }
 });
 

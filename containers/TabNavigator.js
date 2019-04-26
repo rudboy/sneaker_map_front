@@ -10,8 +10,6 @@ import NewProductScreen from "./New_Product";
 import MessageScreen from "./MessageScreen";
 import SellerProfileScreen from "./SellerProfileScreen";
 import ChatScreen from "./ChatScreen";
-// import SettingsScreen from "./SettingsScreen";
-// import ChatScreen from "./ChatScreen";
 
 import {
   Ionicons,
@@ -23,11 +21,9 @@ import {
 const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeScreen,
-    Profile: ProfileScreen,
+    Profil: ProfileScreen,
     Vendre: NewProductScreen,
     Messages: MessageScreen
-    // Chat: ChatScreen,
-    // Settings: SettingsScreen,
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -40,7 +36,7 @@ const TabNavigator = createBottomTabNavigator(
             return <Feather name="home" size={25} color={tintColor} />;
             break;
 
-          case "Profile":
+          case "Profil":
             return (
               <MaterialCommunityIcons
                 name="account-outline"
@@ -93,13 +89,13 @@ TabNavigator.navigationOptions = ({ navigation }) => {
 
   switch (routeName) {
     case "Home":
-      // headerTitle = "Home";
-      return {
-        header: null
-      };
+      headerTitle = "SneakersMap";
+      // return {
+      //   header: null
+      // };
       break;
 
-    case "Profile":
+    case "Profil":
       //headerTitle = "Profil";
       return {
         header: null
@@ -128,11 +124,12 @@ TabNavigator.navigationOptions = ({ navigation }) => {
       backgroundColor: "white"
     },
     headerTitleStyle: {
-      fontSize: 28,
+      fontSize: 24,
       fontWeight: "600",
       textAlign: "center",
       flexGrow: 1,
       alignSelf: "center"
+      // fontFamily: "Chelsea Market"
     },
     headerTintColor: "grey"
   };
